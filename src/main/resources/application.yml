@@ -1,0 +1,22 @@
+# application.yml
+
+#서버 포트설정
+server:
+  port: 8080
+
+#DB 접속 정보
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_happy?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: user_happy
+    password: 1234
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+
+  #타임리프 캐시 무효화
+  thymeleaf:
+    cache: false
