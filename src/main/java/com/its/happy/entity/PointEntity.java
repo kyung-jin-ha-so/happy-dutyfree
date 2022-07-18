@@ -1,5 +1,6 @@
 package com.its.happy.entity;
 
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,13 +16,13 @@ public class PointEntity extends BaseEntity {
     @Column(name = "point_id")
     private Long pointId;
 
-    @Column(name = "point_value",nullable = false)
+    @Column(name = "point_value", nullable = false)
     private String pointValue;
 
     // 적립금(n)이 회원(1)을 참조함
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
-
-
 }
+
+
