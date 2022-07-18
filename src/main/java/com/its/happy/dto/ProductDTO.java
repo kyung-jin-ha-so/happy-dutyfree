@@ -13,11 +13,12 @@ public class ProductDTO {
     private String productDesc;
     private double productOriginalPrice;;
     private Long productDiscount;
-    private Long productPrice;
+    private double productPrice;
     private double productStar;
     private String productThumbnail;
     private Long productQuantity;
     private String productBrand;
+    private String productStatus;
 
 
 
