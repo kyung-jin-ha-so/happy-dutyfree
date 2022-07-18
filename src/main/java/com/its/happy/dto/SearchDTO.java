@@ -6,6 +6,6 @@ import lombok.Data;
 public class SearchDTO {
 
     private Long searchId;
-    private String productFileName;
+    private String searchName;
 
 }

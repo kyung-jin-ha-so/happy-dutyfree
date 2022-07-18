@@ -18,6 +18,7 @@ public class SearchEntity extends BaseEntity{
     @Column(name = "search_name", length = 30, nullable = false)
     private String searchName;
 
+    // 검색(n)이 회원(1)을 참조함
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
