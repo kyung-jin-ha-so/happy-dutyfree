@@ -17,8 +17,11 @@ public class ProductFilesEntity {
     @Column(name = "product_file_name", length = 50, nullable = false)
     private String productFileName;
 
+    // 상품파일(n)이 상품(1)을 참조함
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private ProductEntity productEntity;
+
+
 
 }
