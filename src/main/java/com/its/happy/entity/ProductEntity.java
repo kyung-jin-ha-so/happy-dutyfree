@@ -34,11 +34,34 @@ public class ProductEntity {
     private Long productQuantity;
     @Column(name = "product_brand")
     private String productBrand;
+    @Column(name = "product_status")
+    private String productStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private CategoryEntity categoryEntity;
 
-    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<ProductFilesEntity> productFilesEntityList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
+    private List<ReviewEntity> reviewEntityList = new ArrayList<>();
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
+    private List<LikeEntity> likeEntityList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
+    private List<CartEntity> cartEntityList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
+    private List<CartProductEntity> cartProductEntityList = new ArrayList<>();
+
+    @PreRemove
+    private void preRemove() {
+        productFilesEntityList.forEach(productFiles -> productFiles.setProductEntity(null));
+        reviewEntityList.forEach(review -> review.setProductEntity(null));
+        likeEntityList.forEach(like -> like.setProductEntity(null));
+        cartEntityList.forEach(cart -> cart.setProductEntity(null));
+        cartProductEntityList.forEach(cartProduct -> cartProduct.setProductEntity(null));
+    }
+
 }
