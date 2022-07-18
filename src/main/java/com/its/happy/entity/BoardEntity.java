@@ -26,7 +26,8 @@ public class BoardEntity extends BaseEntity{
     @Column
     private String eventThumbnail;
 
-    // 이벤트게시물(1)이 쿠폰(n)을 참조함
-    @OneToMany(mappedBy = "couponEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<CouponEntity> couponEntityList = new ArrayList<>();
+    // 이벤트게시물(n)이 쿠폰(1)을 참조함
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id")
+    private CouponEntity couponEntity;
 }
