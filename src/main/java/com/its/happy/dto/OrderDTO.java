@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class OrderDTO {
     private Long orderId;
-    private LocalDateTime orderDatetime;
+    private LocalDateTime orderCreatedTime;
     private String orderStatus;
 }

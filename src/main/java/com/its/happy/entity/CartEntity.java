@@ -12,10 +12,10 @@ import javax.persistence.*;
 public class CartEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_id", unique = true)
+    @Column(name = "cart_id")
     private Long cartId;
 
-    @Column
+    @Column(nullable = false)
     private String cartQty;
 
     // 장바구니(n)가 상품(1)을 참조함

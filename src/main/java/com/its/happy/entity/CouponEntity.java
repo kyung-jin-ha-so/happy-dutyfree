@@ -31,7 +31,7 @@ public class CouponEntity {
 
     // CouponEntity(1)가 BoardEntity(N)한테 참조당함
     @OneToMany(mappedBy = "couponEntity", fetch = FetchType.LAZY)
-    private List<BoardEntity> boardEntityList = new ArrayList<>();
+    private List<EventEntity> eventEntityList = new ArrayList<>();
 
     // CouponEntity(1)가 CouponMemberEntity(N)한테 참조당함
     @OneToMany(mappedBy = "couponEntity", fetch = FetchType.LAZY)
