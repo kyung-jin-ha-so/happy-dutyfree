@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class BoardFilesDTO {
-    private Long event_file_id;
-    private String event_file_name;
+    private Long eventFileId;
+    private Long eventId;
+    private String eventFileName;
 }

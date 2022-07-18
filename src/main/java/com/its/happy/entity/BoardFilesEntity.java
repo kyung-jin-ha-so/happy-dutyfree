@@ -12,11 +12,11 @@ import javax.persistence.*;
 public class BoardFilesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true)
-    private Long event_file_id;
+    @Column(name = "event_file_id", unique = true)
+    private Long eventFileId;
 
     @Column
-    private String event_file_name;
+    private String eventFileName;
 
     // BoardFile(n)이 Board(1)를 참조함
     @ManyToOne(fetch = FetchType.LAZY)
