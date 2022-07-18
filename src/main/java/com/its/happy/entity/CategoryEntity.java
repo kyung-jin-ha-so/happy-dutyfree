@@ -19,7 +19,11 @@ public class CategoryEntity {
     @Column(name = "category_name", length = 30, nullable = false)
     public String categoryName;
 
-    @OneToMany(mappedBy = "categoryEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "categoryEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<ProductEntity> productEntityList = new ArrayList<>();
 
+    @PreRemove
+    private void preRemove() {
+        productEntityList.forEach(product -> product.setCategoryEntity(null));
+    }
 }
