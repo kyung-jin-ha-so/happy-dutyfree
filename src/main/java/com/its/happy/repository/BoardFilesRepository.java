@@ -1,4 +1,7 @@
 package com.its.happy.repository;
 
-public class BoardFilesRepository {
+import com.its.happy.entity.BoardFilesEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BoardFilesRepository extends JpaRepository<BoardFilesEntity, Long> {
 }
