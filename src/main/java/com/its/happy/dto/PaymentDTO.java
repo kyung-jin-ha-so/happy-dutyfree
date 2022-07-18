@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PaymentDTO {
     private Long paymentId;
-    private double orderWon;
-    private double orderDollar;
+    private double paymentWon;
+    private double paymentDollar;
     private long pointUseValue;
 }
