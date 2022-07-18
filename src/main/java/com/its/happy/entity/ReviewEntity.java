@@ -19,14 +19,17 @@ public class ReviewEntity extends BaseEntity{
     @Column(name = "review_star", nullable = false)
     private double reviewStar;
 
+    // 상품후기(n)가 회원(1)을 참조함
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
+    // 상품후기(n)가 상품(1)을 참조함
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private ProductEntity productEntity;
 
+    // 상품후기(n)가 주문(1)을 참조함
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private OrderEntity orderEntity;
