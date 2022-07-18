@@ -1,21 +1,18 @@
 package com.its.happy.dto;
 
-import com.its.happy.entity.MemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class PointDTO {
-
-    private Long pointId;
-    private Long memberId;
-    private String pointValue;
+@AllArgsConstructor
+public class ReviewDTO {
+    private Long reviewId;
+    private String reviewContents;
+    private double reviewStar;
     private LocalDateTime createdTime;
-
+    private LocalDateTime updatedTime;
 }
