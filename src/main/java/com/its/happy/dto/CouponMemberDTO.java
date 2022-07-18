@@ -1,0 +1,13 @@
+package com.its.happy.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CouponMemberDTO {
+    private Long couponMemberId;
+    private String couponStatus;
+}

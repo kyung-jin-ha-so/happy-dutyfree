@@ -17,7 +17,7 @@ public class OrderEntity extends BaseEntity{
     @Column
     private Long orderId;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 20)
     private String orderStatus;
 
     // OrderEntity(N)가 MemberEntity(1)을 참조함
