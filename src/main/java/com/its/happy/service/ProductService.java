@@ -1,5 +1,6 @@
 package com.its.happy.service;
 
+import com.its.happy.common.PagingConst;
 import com.its.happy.dto.CategoryDTO;
 import com.its.happy.dto.ProductDTO;
 import com.its.happy.dto.ProductFilesDTO;
@@ -10,6 +11,10 @@ import com.its.happy.repository.CategoryRepository;
 import com.its.happy.repository.ProductFilesRepository;
 import com.its.happy.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,5 +71,25 @@ public class ProductService {
                 }
             }
         }
+    }
+
+    public Page<ProductDTO> findAll(Pageable pageable) {
+        int page = pageable.getPageNumber();
+        page = (page==1) ? 0 : (page-1);
+        Page<ProductEntity> productEntities = productRepository.findAll(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")));
+        Page<ProductDTO> productList = productEntities.map(product-> new ProductDTO(
+                product.getProductId(),
+                product.getProductName(),
+                product.getProductOriginalPrice(),
+                product.getProductDiscount(),
+                product.getProductPrice(),
+                product.getProductStar(),
+                product.getProductThumbnail(),
+                product.getProductQuantity(),
+                product.getProductBrand(),
+                product.getProductStatus()
+        ));
+        System.out.println("productList = " + productList);
+        return productList;
     }
 }
