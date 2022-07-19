@@ -1,10 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 </head>
 <body>
-상품 등록
+<form action="/product/save" method="post" enctype="multipart/form-data">
+    상품 등록 <br>
+    상품 이름 <input type="text" name="productName"> <br>
+    상품 카테고리
+    <select id="categoryId" name="categoryId">
+        <option value="1">스킨케어</option>
+        <option value="2">메이크업</option>
+        <option value="3">향수/바디/헤어</option>
+        <option value="4">가방/신발/잡화</option>
+        <option value="5">시계/쥬얼리</option>
+        <option value="6">의류/아이웨어</option>
+        <option value="7">스포츠/레저 </option>
+        <option value="8">디지털/리빙</option>
+        <option value="9">식품</option>
+        <option value="10">유아동</option>
+        <option value="11">남성관</option>
+    </select><br>
+    상품 설명
+    <textarea name="productDesc"> </textarea> <br>
+    <input multiple type="file" name="productFile"><br>
+<!--    <input type="button" value="파일 추가" onClick="addFile()"><br>-->
+<!--    <div id="add_file"> </div>-->
+    상품 브랜드
+    <input type="text" name="productBrand"><br>
+    상품 정가
+    <input type="text" name="productOriginalPrice" id="productOriginalPrice"><br>
+    할인율
+    <input type="text" name="productDiscount" id="productDiscount" th:onblur="calPrice()"><br>
+    상품 회원가
+    <input type="text" id="productPrice" name="productPrice"><br>
+    상품 수량
+    <input type="text" name="productQuantity"><br>
+    상품 썸네일
+    <input type="file" name="productThumbnailFile"><br>
+    <input type="submit" value="제출">
+</form>
+
 </body>
+<script th:inline="javascript">
+    const calPrice = () => {
+      const productOriginalPrice = document.getElementById("productOriginalPrice").value;
+      const productDiscount = document.getElementById("productDiscount").value;
+      const price = (productOriginalPrice * ((100-productDiscount)/100)).toFixed(2);
+
+      $('input[name=productPrice]').attr('value',price);
+
+    }
+
+    // let cnt = 1;
+    // function addFile(){
+    //     $("#add_file").append("<br>" + "<input type='file' name='productFile' id='file" + cnt + "' />");
+    //     cnt++;
+    // }
+
+</script>
 </html>
