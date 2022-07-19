@@ -95,7 +95,7 @@ public class MemberEntity extends BaseEntity{
         memberEntity.setMemberName(memberDTO.getMemberName());
         memberEntity.setMemberBirth(memberDTO.getMemberBirth());
         memberEntity.setMemberMobile(memberDTO.getMemberMobile());
-        memberEntity.setMemberTier(memberDTO.getMemberTier());
+        memberEntity.setMemberTier("브론즈");
         return memberEntity;
     }
 

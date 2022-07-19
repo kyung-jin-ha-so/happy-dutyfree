@@ -9,7 +9,7 @@
 <h2>save.html</h2>
 <form action="/departure/save" method="post">
     출국장소
-    <select name="departureAirport" th:value="${departure.departureAirport}">
+    <select name="departureAirport">
         <option value="">선택하세요</option>
         <option value="인천공항">인천공항</option>
         <option value="김포공항">김포공항</option>
@@ -21,20 +21,14 @@
         <option value="인천항 신국제여객터미널">인천항 신국제여객터미널</option>
     </select><br>
     출국일시
-    <input type="text" name="departureDatetime" th:value="${departure.departureDatetime}"><br>
+    <input type="text" name="departureDatetime"><br>
     편명
-    <input type="text" name="departureNumber" th:value="${departure.departureNumber}"><br>
+    <input type="text" name="departureNumber"><br>
     직항/경유 여부
-    <div th:if="${departure.departureFeature.toString().equals('직항')}">
-        <input type="radio" name="departureFeature" value="직항" checked="checked">직항
-        <input type="radio" name="departureFeature" value="경유">경유<br>
-    </div>
-    <div th:if="${departure.departureFeature.toString().equals('경유')}">
-        <input type="radio" name="departureFeature" value="직항">직항
-        <input type="radio" name="departureFeature" value="경유" checked="checked">경유<br>
-    </div>
+    <input type="radio" name="departureFeature" value="직항" checked="checked">직항
+    <input type="radio" name="departureFeature" value="경유">경유<br>
     도착지
-    <select name="arrivalAirport" th:value="${departure.arrivalRegion}">
+    <select name="arrivalAirport">
         <option value="">선택</option>
         <option value="캐나다">캐나다</option>
         <option value="중국">중국</option>

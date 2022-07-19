@@ -10,6 +10,7 @@
 </head>
 <body>
 <h2>출국 정보 관리</h2>
+<button th:onclick="save()">출국정보등록</button>
 <table>
     <tr>
         <th>출국일시</th>
@@ -33,10 +34,13 @@
 </table>
 </body>
 <script th:inline="javascript">
+    const save = () => {
+      location.href = "/departure/save-form"
+    }
     const updateForm = (id) => {
         $.ajax({
             type: "get",
-            url: "/departure/save-form/" + id,
+            url: "/departure/update-form/" + id,
             success: function () {
                 location.href = "/departure/";
             },

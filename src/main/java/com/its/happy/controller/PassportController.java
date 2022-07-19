@@ -23,8 +23,12 @@ public class PassportController {
     public String saveForm(Model model, HttpSession session) {
         Long loginId = (Long) session.getAttribute("loginId");
         PassportDTO passportDTO = passportService.findByLoginId(loginId);
-        model.addAttribute("passport", passportDTO);
-        return "/passportPages/save";
+        if(passportDTO == null) {
+            return "/passportPages/save";
+        } else {
+            model.addAttribute("passport", passportDTO);
+            return "passportPages/update";
+        }
     }
 
     @PostMapping("/save")
