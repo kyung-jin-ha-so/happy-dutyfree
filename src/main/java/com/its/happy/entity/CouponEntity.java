@@ -30,10 +30,16 @@ public class CouponEntity {
     private String couponThumbnail;
 
     // CouponEntity(1)가 BoardEntity(N)한테 참조당함
-    @OneToMany(mappedBy = "couponEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "couponEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<BoardEntity> boardEntityList = new ArrayList<>();
 
     // CouponEntity(1)가 CouponMemberEntity(N)한테 참조당함
-    @OneToMany(mappedBy = "couponEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "couponEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<CouponMemberEntity> couponMemberEntityList = new ArrayList<>();
+
+    @PreRemove
+    private void preRemove() {
+        boardEntityList.forEach(board -> board.setCouponEntity(null));
+        couponMemberEntityList.forEach(couponMember -> couponMember.setCouponEntity(null));
+    }
 }
