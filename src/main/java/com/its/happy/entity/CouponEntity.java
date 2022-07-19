@@ -31,7 +31,7 @@ public class CouponEntity {
 
     // CouponEntity(1)가 BoardEntity(N)한테 참조당함
     @OneToMany(mappedBy = "couponEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
-    private List<BoardEntity> boardEntityList = new ArrayList<>();
+    private List<EventEntity> eventEntityList = new ArrayList<>();
 
     // CouponEntity(1)가 CouponMemberEntity(N)한테 참조당함
     @OneToMany(mappedBy = "couponEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
@@ -39,7 +39,7 @@ public class CouponEntity {
 
     @PreRemove
     private void preRemove() {
-        boardEntityList.forEach(board -> board.setCouponEntity(null));
+        eventEntityList.forEach(event -> event.setCouponEntity(null));
         couponMemberEntityList.forEach(couponMember -> couponMember.setCouponEntity(null));
     }
 }

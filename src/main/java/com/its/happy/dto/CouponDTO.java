@@ -12,8 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class CouponDTO {
     private Long couponId;
     private String couponName;
-    private long couponValue;
-    private long couponMinimumValue;
+    private Long couponValue;
+    private Long couponMinimumValue;
     private String couponThumbnail;
     private MultipartFile couponThumbnailFile;
 }

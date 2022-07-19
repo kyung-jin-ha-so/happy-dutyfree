@@ -13,6 +13,6 @@ public class ReviewDTO {
     private Long reviewId;
     private String reviewContents;
     private double reviewStar;
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
+    private LocalDateTime reviewCreatedTime;
+    private LocalDateTime reviewUpdatedTime;
 }
