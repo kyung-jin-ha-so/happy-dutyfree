@@ -16,13 +16,13 @@ public class PaymentEntity {
     private Long paymentId;
 
     @Column(nullable = false)
-    private double orderWon;
+    private double paymentWon;
 
     @Column(nullable = false)
-    private double orderDollar;
+    private double paymentDollar;
 
     @Column
-    private long pointUseValue;
+    private Long pointUseValue;
 
     // PaymentEntity(1)가 OrderEntity(1)을 참조함
     @OneToOne(fetch = FetchType.LAZY)

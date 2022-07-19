@@ -8,18 +8,18 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "boardFiles_table")
-public class BoardFilesEntity {
+@Table(name = "eventFiles_table")
+public class EventFilesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "event_file_id", unique = true)
+    @Column(name = "event_file_id")
     private Long eventFileId;
 
-    @Column
+    @Column(length = 50, nullable = false)
     private String eventFileName;
 
-    // BoardFile(n)이 Board(1)를 참조함
+    // EventFile(n)이 Event(1)를 참조함
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
-    private BoardEntity boardEntity;
+    private EventEntity eventEntity;
 }
