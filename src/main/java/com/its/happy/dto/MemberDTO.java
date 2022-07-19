@@ -1,5 +1,6 @@
 package com.its.happy.dto;
 
+import com.its.happy.entity.MemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,20 @@ public class MemberDTO {
     private String memberBirth;
     private String memberKakaoId;
     private String memberTier;
-    private LocalDateTime createdTime;
+    private LocalDateTime memberCreatedTime;
+
+    public static MemberDTO toMemberDTO(MemberEntity memberEntity) {
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setMemberId(memberEntity.getMemberId());
+        memberDTO.setMemberEmail(memberEntity.getMemberEmail());
+        memberDTO.setMemberPassword(memberEntity.getMemberPassword());
+        memberDTO.setMemberName(memberEntity.getMemberName());
+        memberDTO.setMemberMobile(memberEntity.getMemberMobile());
+        memberDTO.setMemberBirth(memberEntity.getMemberBirth());
+        memberDTO.setMemberKakaoId(memberEntity.getMemberKakaoId());
+        memberDTO.setMemberTier(memberEntity.getMemberTier());
+        memberDTO.setMemberCreatedTime(memberEntity.getCreatedTime());
+        return memberDTO;
+    }
 
 }
