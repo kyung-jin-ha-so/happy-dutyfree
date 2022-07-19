@@ -1,8 +1,10 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.MemberDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ public class MemberEntity extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    private Long id;
+    private Long memberId;
 
     @Column(name = "member_email",length = 30,unique = true,nullable = false)
     private String memberEmail;
@@ -33,11 +35,10 @@ public class MemberEntity extends BaseEntity{
     @Column(name = "member_birth",length = 20)
     private String memberBirth;
 
-    @Column(name = "member_kakao_id",length = 20)
+    @Column(name = "member_kakao_id",length = 30)
     private String memberKakaoId;
 
-    @Column(name = "member_tier",length = 20,nullable = false)
-    @ColumnDefault("브론즈")
+    @Column(name = "member_tier",length = 20)
     private String memberTier;
 
     // 회원(1)이 적립금(n)한테 참조당함
@@ -49,11 +50,11 @@ public class MemberEntity extends BaseEntity{
     private PassportEntity passportEntity;
 
     // 회원(1)이 후기(n)한테 참조당함
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<ReviewEntity> reviewEntityList = new ArrayList<>();
 
     // 회원(1)이 검색(n)한테 참조당함
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<SearchEntity> searchEntityList = new ArrayList<>();
 
     // 회원(1)이 찜(n)한테 참조당함
@@ -65,7 +66,7 @@ public class MemberEntity extends BaseEntity{
     private List<CartEntity> cartEntityList = new ArrayList<>();
 
     // 회원(1)이 주문(n)한테 참조당함
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<OrderEntity> orderEntityList = new ArrayList<>();
 
     // 회원(1)이 주문출국정보(n)한테 참조당함 orderDeparture
@@ -79,4 +80,24 @@ public class MemberEntity extends BaseEntity{
     //회원(1)이 출국정보(n)한테 참조당함 departure
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DepartureEntity> departureEntityList = new ArrayList<>();
+
+    @PreRemove
+    private void preRemove() {
+        reviewEntityList.forEach(review -> review.setMemberEntity(null));
+        searchEntityList.forEach(search -> search.setMemberEntity(null));
+        orderEntityList.forEach(order -> order.setMemberEntity(null));
+    }
+
+    public static MemberEntity toSave(MemberDTO memberDTO){
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setMemberEmail(memberDTO.getMemberEmail());
+        memberEntity.setMemberPassword(memberDTO.getMemberPassword());
+        memberEntity.setMemberName(memberDTO.getMemberName());
+        memberEntity.setMemberBirth(memberDTO.getMemberBirth());
+        memberEntity.setMemberMobile(memberDTO.getMemberMobile());
+        memberEntity.setMemberTier(memberDTO.getMemberTier());
+        return memberEntity;
+    }
+
+
 }

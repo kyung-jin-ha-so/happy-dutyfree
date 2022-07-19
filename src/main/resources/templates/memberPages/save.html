@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>MemberSave</title>
+</head>
+<body>
+<form action="/member/save" method="post">
+    <p>이메일계정</p>
+    <input type="text" name="memberEmail" placeholder="이메일계정"><input type="button" value="중복확인">
+    <p>비밀번호</p>
+    <input type="password" name="memberPassword" placeholder="비밀번호">
+    <p>비밀번호확인</p>
+    <input type="password" placeholder="비밀번호확인">
+    <p>이름</p>
+    <input type="text" name="memberName" placeholder="이름">
+    <p>전화번호</p>
+    <input type="text" name="memberMobile" placeholder="숫자만입력해주세요">
+    <p>생년월일</p>
+    <select id ="year">
+        <option>연</option>
+    </select>
+    <select id ="month">
+        <option>월</option>
+    </select>
+    <select id="day" onchange="birth()">
+        <option>일</option>
+    </select>
+    <input type="text" name="memberBirth" id="memberBirth">
+    <input type="hidden" name="memberTier" value="브론즈">
+    <input type="submit" value="회원가입">
+</form>
+</body>
+<script>
+    $(document).ready(function(){
+        //연 select
+        for(var i = 1930 ; i <= 2003 ; i++) {
+            $('#year').append('<option value="' + i + '">' + i + '</option>');
+        }
+        //월 select
+        for(var i=1; i <= 12; i++) {
+            var mm = i > 9 ? i : "0"+i ;
+            $('#month').append('<option value="' + mm + '">' + mm + '</option>');
+        }
+        //일 select
+        for(var i=1; i <= 31; i++) {
+            var dd = i > 9 ? i : "0"+i ;
+            $('#day').append('<option value="' + dd + '">' + dd+ '</option>');
+        }
+    })
+
+    function birth(){
+        var year = document.getElementById("year").value;
+        var month = document.getElementById("month").value;
+        var day = document.getElementById("day").value;
+        var birth = year + "-" + month + "-" + day
+        document.getElementById("memberBirth").value = birth;
+    }
+</script>
+</html>
