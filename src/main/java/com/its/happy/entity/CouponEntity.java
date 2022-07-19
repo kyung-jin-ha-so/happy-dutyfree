@@ -21,10 +21,10 @@ public class CouponEntity {
     private String couponName;
 
     @Column(nullable = false)
-    private long couponValue;
+    private Long couponValue;
 
     @Column(nullable = false)
-    private long couponMinimumValue;
+    private Long couponMinimumValue;
 
     @Column(length = 50, nullable = false)
     private String couponThumbnail;

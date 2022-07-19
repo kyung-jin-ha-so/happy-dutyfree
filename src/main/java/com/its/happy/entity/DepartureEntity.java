@@ -1,5 +1,6 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.DepartureDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +21,7 @@ public class DepartureEntity {
     private String departureAirport;
 
     @Column(length = 20, nullable = false)
-    private LocalDateTime departureDatetime;
+    private String departureDatetime;
 
     @Column(length = 20, nullable = false)
     private String departureNumber;
@@ -29,4 +30,14 @@ public class DepartureEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
+
+    public static DepartureEntity toEntity(DepartureDTO departureDTO, MemberEntity memberEntity) {
+        DepartureEntity departureEntity = new DepartureEntity();
+        departureEntity.setDepartureId(departureDTO.getDepartureId());
+        departureEntity.setDepartureAirport(departureDTO.getDepartureAirport());
+        departureEntity.setDepartureDatetime(departureDTO.getDepartureDatetime());
+        departureEntity.setDepartureNumber(departureDTO.getDepartureNumber());
+        departureEntity.setMemberEntity(memberEntity);
+        return departureEntity;
+    }
 }

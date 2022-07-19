@@ -37,7 +37,6 @@ public class MemberEntity extends BaseEntity{
     private String memberKakaoId;
 
     @Column(name = "member_tier",length = 20,nullable = false)
-    @ColumnDefault("브론즈")
     private String memberTier;
 
     // 회원(1)이 적립금(n)한테 참조당함

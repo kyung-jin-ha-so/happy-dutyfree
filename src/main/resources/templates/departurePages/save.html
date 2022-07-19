@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>save.html</h2>
+<form action="/departure/save" method="post">
+    출국장소
+    <select name="departureAirport">
+        <option value="">선택하세요</option>
+        <option value="인천공항">인천공항</option>
+        <option value="김포공항">김포공항</option>
+        <option value="김해공항">김해공항</option>
+        <option value="김해공항">대구공항</option>
+        <option value="김해공항">제주공항</option>
+        <option value="김해공항">청주공항</option>
+        <option value="김해공항">부산항</option>
+        <option value="김해공항">인천항 신국제여객터미널</option>
+    </select><br>
+    출국일시
+    <input type="text" name="departureDatetime"><br>
+    편명
+    <input type="text" name="departureNumber"><br>
+    직항/경유 여부
+    <input type="radio" name="departureOne" value="직항" checked="checked">직항
+    <input type="radio" name="departureRound" value="경유">경유<br>
+    도착지
+    <select name="arrivalAirport">
+        <option value="">선택</option>
+        <option value="인천공항">캐나다</option>
+        <option value="김포공항">중국</option>
+        <option value="김해공항">미국, 호주 이외의 모든 국가</option>
+        <option value="김해공항">미국/괌/사이판</option>
+        <option value="김해공항">호놀룰루/버진아일랜드</option>
+        <option value="김해공항">호주</option>
+        <option value="김해공항">대한민국(무착륙관광비행)</option>
+    </select><br>
+    <input type="submit" value="확인">
+    <input type="button" value="취소" onclick="cancel()">
+</form>
+</body>
+<script>
+    const cancel = () => {
+        location.href = "/member/mypage"
+    }
+</script>
+</html>
