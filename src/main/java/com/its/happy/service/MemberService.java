@@ -14,11 +14,13 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    // 회원가입 구현
     public void save(MemberDTO memberDTO) {
         MemberEntity memberEntity = MemberEntity.toSave(memberDTO);
         memberRepository.save(memberEntity);
     }
 
+    // 이메일 중복체크
     public String duplicateCheck(String memberEmail) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberEmail);
         if(optionalMemberEntity.isEmpty()){
@@ -28,6 +30,7 @@ public class MemberService {
         }
     }
 
+    // 로그인 구현
     public MemberDTO login(MemberDTO memberDTO) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberDTO.getMemberEmail());
         if(optionalMemberEntity.isPresent()){
@@ -35,10 +38,10 @@ public class MemberService {
             if(loginEntity.getMemberPassword().equals(memberDTO.getMemberPassword())) {
                 return MemberDTO.toMemberDTO(loginEntity);
             }else {
-                return null; //비밀번호 불일치
+                return null; //비밀번호 불일치시 null로 리턴
             }
         } else {
-            return null; //해당 계정이 없음
+            return null; //해당 계정이 없음시 null로 리턴
         }
     }
 
