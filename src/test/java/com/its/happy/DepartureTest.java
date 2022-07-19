@@ -26,7 +26,7 @@ public class DepartureTest {
     @Transactional
     @Rollback(value = false)
     public void departureSaveTest() {
-        DepartureDTO departureDTO = new DepartureDTO("인천공항", "2022-07-19 22:00:00", "KE123");
+        DepartureDTO departureDTO = new DepartureDTO("인천공항", "2022-07-19 22:00:00", "KE123", "캐나다", "직항");
         MemberEntity memberEntity = new MemberEntity();
         memberEntity.setMemberEmail("abc123@gmail.com");
         memberEntity.setMemberPassword("1234");

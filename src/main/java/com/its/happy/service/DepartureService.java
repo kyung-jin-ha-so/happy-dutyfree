@@ -8,6 +8,8 @@ import com.its.happy.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,10 +29,29 @@ public class DepartureService {
 
     public DepartureDTO findById(Long departureId) {
         Optional<DepartureEntity> optionalDepartureEntity = departureRepository.findById(departureId);
-        if(optionalDepartureEntity.isPresent()) {
+        if (optionalDepartureEntity.isPresent()) {
             DepartureEntity departureEntity = optionalDepartureEntity.get();
             return DepartureDTO.toDTO(departureEntity);
         }
         return null;
+    }
+
+    public List<DepartureDTO> findAllByLoginId(Long loginId) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(loginId);
+        if (optionalMemberEntity.isPresent()) {
+            MemberEntity memberEntity = optionalMemberEntity.get();
+            List<DepartureEntity> departureEntityList = departureRepository.findAllByMemberEntity(memberEntity);
+            List<DepartureDTO> departureDTOList = new ArrayList<>();
+        for (DepartureEntity d :
+                departureEntityList) {
+            departureDTOList.add(DepartureDTO.toDTO(d));
+        }
+        return departureDTOList;
+        }
+        return null;
+    }
+
+    public void deleteById(Long id) {
+        departureRepository.deleteById(id);
     }
 }

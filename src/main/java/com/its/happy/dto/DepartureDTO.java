@@ -14,11 +14,15 @@ public class DepartureDTO {
     private String departureAirport;
     private String departureDatetime;
     private String departureNumber;
+    private String arrivalRegion;
+    private String departureFeature;
 
-    public DepartureDTO(String departureAirport, String departureDatetime, String departureNumber) {
+    public DepartureDTO(String departureAirport, String departureDatetime, String departureNumber, String arrivalRegion, String departureFeature) {
         this.departureAirport = departureAirport;
         this.departureDatetime = departureDatetime;
         this.departureNumber = departureNumber;
+        this.arrivalRegion = arrivalRegion;
+        this.departureFeature = departureFeature;
     }
 
     public static DepartureDTO toDTO(DepartureEntity departureEntity) {

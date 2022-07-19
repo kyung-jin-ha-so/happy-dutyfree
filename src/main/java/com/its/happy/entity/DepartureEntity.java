@@ -26,6 +26,12 @@ public class DepartureEntity {
     @Column(length = 20, nullable = false)
     private String departureNumber;
 
+    @Column(length = 30, nullable = false)
+    private String arrivalRegion;
+
+    @Column(length = 10, nullable = false)
+    private String departureFeature;
+
     // DepartureEntity(N)가 MemberEntity(1)을 참조함
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
