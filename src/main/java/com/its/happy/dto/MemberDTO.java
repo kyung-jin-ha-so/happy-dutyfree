@@ -24,6 +24,6 @@ public class MemberDTO {
     private String memberBirth;
     private String memberKakaoId;
     private String memberTier;
-    private LocalDateTime createdTime;
+    private LocalDateTime memberCreatedTime;
 
 }
