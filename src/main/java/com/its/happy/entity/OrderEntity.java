@@ -26,14 +26,20 @@ public class OrderEntity extends BaseEntity{
     private MemberEntity memberEntity;
 
     // OrderEntity(1)가 ReviewEntity(N)한테 참조당함
-    @OneToMany(mappedBy = "orderEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<ReviewEntity> reviewEntityList = new ArrayList<>();
 
     // OrderEntity(1)가 OrderProductEntity(N)한테 참조당함
-    @OneToMany(mappedBy = "orderEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<OrderProductEntity> orderProductEntityList = new ArrayList<>();
 
     // OrderEntity(1)가 OrderDepartureEntity(1)한테 참조당함
-    @OneToOne(mappedBy = "orderEntity", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "orderEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private OrderDepartureEntity orderDepartureEntity;
+
+    @PreRemove
+    private void preRemove() {
+        reviewEntityList.forEach(review -> review.setOrderEntity(null));
+        orderProductEntityList.forEach(orderProduct -> orderProduct.setOrderEntity(null));
+    }
 }

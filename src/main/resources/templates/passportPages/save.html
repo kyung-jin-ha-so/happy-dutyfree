@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        input {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<h2>save.html</h2>
+<form action="/passport/save" method="post">
+여권번호<input type="text" name="passportNumber">
+여권만료일<input type="text" name="passportDate">
+영문이름 <input type="text" name="passportName">
+<input type="submit" value="확인">
+</form>
+<input type="button" value="취소" onclick="cancel()">
+</body>
+<script>
+    const cancel = () => {
+      location.href = "/member/mypage"
+    }
+</script>
+</html>
