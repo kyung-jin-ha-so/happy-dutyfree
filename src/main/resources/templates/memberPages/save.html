@@ -8,7 +8,9 @@
 <body>
 <form action="/member/save" method="post">
     <p>이메일계정</p>
-    <input type="text" name="memberEmail" placeholder="이메일계정"><input type="button" value="중복확인">
+    <input type="text" name="memberEmail" placeholder="이메일계정" id="email">
+    <input type="button" value="중복확인" onclick="emailCheck()">
+    <div id="emailResult"></div>
     <p>비밀번호</p>
     <input type="password" name="memberPassword" placeholder="비밀번호">
     <p>비밀번호확인</p>
@@ -17,6 +19,7 @@
     <input type="text" name="memberName" placeholder="이름">
     <p>전화번호</p>
     <input type="text" name="memberMobile" placeholder="숫자만입력해주세요">
+    <input type="button" value="인증하기">
     <p>생년월일</p>
     <select id ="year">
         <option>연</option>
@@ -27,12 +30,12 @@
     <select id="day" onchange="birth()">
         <option>일</option>
     </select>
-    <input type="text" name="memberBirth" id="memberBirth">
-    <input type="hidden" name="memberTier" value="브론즈">
+    <input type="hidden" name="memberBirth" id="memberBirth">
     <input type="submit" value="회원가입">
 </form>
 </body>
 <script>
+    // 연월일 select 옵션 만들기
     $(document).ready(function(){
         //연 select
         for(var i = 1930 ; i <= 2003 ; i++) {
@@ -50,6 +53,7 @@
         }
     })
 
+    // 생년월일 select 합쳐서 memberBirth로 넘겨주기
     function birth(){
         var year = document.getElementById("year").value;
         var month = document.getElementById("month").value;
@@ -57,5 +61,38 @@
         var birth = year + "-" + month + "-" + day
         document.getElementById("memberBirth").value = birth;
     }
+
+    //이메일 중복체크 및 정규식표현
+    function emailCheck(){
+        var memberEmail = document.getElementById("email").value;
+        var emailResult = document.getElementById("emailResult");
+        let exp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+        if(memberEmail.match(exp)){
+            $.ajax({
+                type: 'post',
+                url: '/member/duplicate-check',
+                data: {"memberEmail": memberEmail},
+                dataType: 'text',
+                success: function (result) {
+                    console.log(result)
+                    if (result == "OK") {
+                        emailResult.innerHTML = "사용가능한 이메일입니다.";
+                        emailResult.style.color = "green";
+                    } else {
+                        emailResult.innerHTML = "이미 사용중인 이메일입니다.";
+                        emailResult.style.color = "red";
+                    }
+                }, error : function (){
+                    alert("오류");
+
+                }
+            });
+        }else{
+            emailResult.innerHTML = "이메일 주소를 확인해주세요";
+            emailResult.style.color = "red";
+        }
+    }
+
+
 </script>
 </html>
