@@ -62,29 +62,37 @@
         document.getElementById("memberBirth").value = birth;
     }
 
-    //이메일 중복체크
+    //이메일 중복체크 및 정규식표현
     function emailCheck(){
         var memberEmail = document.getElementById("email").value;
         var emailResult = document.getElementById("emailResult");
-        $.ajax({
-            type: 'post',
-            url: '/member/duplicate-check',
-            data: {"memberEmail": memberEmail},
-            dataType: 'text',
-            success: function (result) {
-                console.log(result)
-                if (result == "OK") {
-                    emailResult.innerHTML = "사용가능한 이메일입니다.";
-                    emailResult.style.color = "green";
-                } else {
-                    emailResult.innerHTML = "이미 사용중인 이메일입니다.";
-                    emailResult.style.color = "red";
-                }
-            }, error : function (){
-                alert("오류");
+        let exp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+        if(memberEmail.match(exp)){
+            $.ajax({
+                type: 'post',
+                url: '/member/duplicate-check',
+                data: {"memberEmail": memberEmail},
+                dataType: 'text',
+                success: function (result) {
+                    console.log(result)
+                    if (result == "OK") {
+                        emailResult.innerHTML = "사용가능한 이메일입니다.";
+                        emailResult.style.color = "green";
+                    } else {
+                        emailResult.innerHTML = "이미 사용중인 이메일입니다.";
+                        emailResult.style.color = "red";
+                    }
+                }, error : function (){
+                    alert("오류");
 
-            }
-        });
+                }
+            });
+        }else{
+            emailResult.innerHTML = "이메일 주소를 확인해주세요";
+            emailResult.style.color = "red";
+        }
     }
+
+
 </script>
 </html>
