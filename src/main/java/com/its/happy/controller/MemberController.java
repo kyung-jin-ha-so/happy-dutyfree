@@ -5,10 +5,7 @@ import com.its.happy.service.MemberService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,12 +20,20 @@ public class MemberController {
         return "/memberPages/save";
     }
 
-    // 회원가입
+    // 회원가입 구현
     @PostMapping("/save")
     public String save(@ModelAttribute MemberDTO memberDTO){
         System.out.println("memberDTO = " + memberDTO);
         memberService.save(memberDTO);
         return "index";
     }
+
+    // 이메일 중복체크
+    @PostMapping("/duplicate-check")
+    public @ResponseBody String duplicateCheck(@RequestParam String memberEmail){
+        String emailResult = memberService.duplicateCheck(memberEmail);
+        return emailResult;
+    }
+
 
 }
