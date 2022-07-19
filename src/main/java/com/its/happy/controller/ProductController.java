@@ -4,7 +4,10 @@ import com.its.happy.common.PagingConst;
 import com.its.happy.dto.CategoryDTO;
 import com.its.happy.dto.ProductDTO;
 import com.its.happy.dto.ProductFilesDTO;
+import com.its.happy.dto.ReviewDTO;
+import com.its.happy.service.ProductFilesService;
 import com.its.happy.service.ProductService;
+import com.its.happy.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +26,8 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ReviewService reviewService;
+    private final ProductFilesService productFilesService;
 
     @GetMapping("/save")
     public String saveForm(){
@@ -47,6 +52,17 @@ public class ProductController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         return "/productPages/list";
+    }
+
+    @GetMapping("/{productId}")
+    public String findById(@PathVariable Long productId, Model model){
+        ProductDTO productDTO= productService.findById(productId);
+        List<ProductFilesDTO> productFilesDTOList = productFilesService.findByProductId(productId);
+//        List<ReviewDTO> reviewDTOList = reviewService.findByBoardId(productId);
+        model.addAttribute("product", productDTO);
+        model.addAttribute("productFileList", productFilesDTOList );
+//        model.addAttribute("reviewList", reviewDTOList);
+        return "/productPages/detail";
     }
 
 }

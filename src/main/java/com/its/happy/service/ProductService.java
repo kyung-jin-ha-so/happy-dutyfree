@@ -92,4 +92,13 @@ public class ProductService {
         System.out.println("productList = " + productList);
         return productList;
     }
+
+    public ProductDTO findById(Long productId) {
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
+        if(optionalProductEntity.isPresent()){
+            ProductEntity productEntity = optionalProductEntity.get();
+            return ProductDTO.toDTO(productEntity);
+        }
+        return null;
+    }
 }

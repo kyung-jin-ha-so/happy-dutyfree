@@ -60,7 +60,7 @@
         </li>
 
         <li th:class="${productList.last} ? 'disabled'">
-            <a class="page-link" th:href="${productList.last} ? '#' : @{/board/(page=${productList.number + 2})}">
+            <a class="page-link" th:href="${productList.last} ? '#' : @{/product/(page=${productList.number + 2})}">
                 <span>&gt;</span>
             </a>
         </li>
