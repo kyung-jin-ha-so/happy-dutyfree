@@ -1,8 +1,10 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.MemberDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -36,8 +38,7 @@ public class MemberEntity extends BaseEntity{
     @Column(name = "member_kakao_id",length = 30)
     private String memberKakaoId;
 
-    @Column(name = "member_tier",length = 20,nullable = false)
-    @ColumnDefault("브론즈")
+    @Column(name = "member_tier",length = 20)
     private String memberTier;
 
     // 회원(1)이 적립금(n)한테 참조당함
@@ -85,6 +86,17 @@ public class MemberEntity extends BaseEntity{
         reviewEntityList.forEach(review -> review.setMemberEntity(null));
         searchEntityList.forEach(search -> search.setMemberEntity(null));
         orderEntityList.forEach(order -> order.setMemberEntity(null));
+    }
+
+    public static MemberEntity toSave(MemberDTO memberDTO){
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setMemberEmail(memberDTO.getMemberEmail());
+        memberEntity.setMemberPassword(memberDTO.getMemberPassword());
+        memberEntity.setMemberName(memberDTO.getMemberName());
+        memberEntity.setMemberBirth(memberDTO.getMemberBirth());
+        memberEntity.setMemberMobile(memberDTO.getMemberMobile());
+        memberEntity.setMemberTier(memberDTO.getMemberTier());
+        return memberEntity;
     }
 
 
