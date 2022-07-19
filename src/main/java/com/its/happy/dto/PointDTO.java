@@ -16,6 +16,6 @@ public class PointDTO {
     private Long pointId;
     private Long memberId;
     private String pointValue;
-    private LocalDateTime createdTime;
+    private LocalDateTime PointCreatedTime;
 
 }
