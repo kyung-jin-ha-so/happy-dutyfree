@@ -17,6 +17,8 @@ public class MemberService {
     // 회원가입 구현
     public void save(MemberDTO memberDTO) {
         MemberEntity memberEntity = MemberEntity.toSave(memberDTO);
+        System.out.println("MemberService.save");
+        System.out.println("memberDTO = " + memberDTO);
         memberRepository.save(memberEntity);
     }
 

@@ -1,5 +1,6 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.CategoryDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,5 +26,11 @@ public class CategoryEntity {
     @PreRemove
     private void preRemove() {
         productEntityList.forEach(product -> product.setCategoryEntity(null));
+    }
+
+    public static CategoryEntity toSaveEntity(CategoryDTO categoryDTO){
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setCategoryName(categoryDTO.getCategoryName());
+        return categoryEntity;
     }
 }
