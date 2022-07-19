@@ -1,9 +1,13 @@
 package com.its.happy.controller;
 
 import com.its.happy.dto.MemberDTO;
-import com.its.happy.service.MemberService;;
+import com.its.happy.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -40,7 +44,7 @@ public class MemberController {
     public String loginForm(){
         return "/memberPages/login";
     }
-    
+
     // 로그인 구현
     @PostMapping("/login")
     public String login(@ModelAttribute MemberDTO memberDTO, HttpSession session){
