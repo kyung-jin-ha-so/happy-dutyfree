@@ -1,5 +1,6 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.ProductDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -64,6 +65,22 @@ public class ProductEntity {
 
     @OneToMany(mappedBy = "productEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<OrderProductEntity> orderProductEntityList = new ArrayList<>();
+
+    public static ProductEntity toSaveEntity(ProductDTO productDTO, CategoryEntity categoryEntity) {
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setProductName(productDTO.getProductName());
+        productEntity.setProductDesc(productDTO.getProductDesc());
+        productEntity.setProductOriginalPrice(productDTO.getProductOriginalPrice());
+        productEntity.setProductDiscount(productDTO.getProductDiscount());
+        productEntity.setProductPrice(productDTO.getProductPrice());
+        productEntity.setProductStar(productDTO.getProductStar());
+        productEntity.setProductThumbnail(productDTO.getProductThumbnail());
+        productEntity.setProductQuantity(productDTO.getProductQuantity());
+        productEntity.setCategoryEntity(categoryEntity);
+        productEntity.setProductBrand(productDTO.getProductBrand());
+        productEntity.setProductStatus("판매중");
+        return productEntity;
+    }
 
     @PreRemove
     private void preRemove() {
