@@ -1,5 +1,6 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.CouponDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,4 +37,13 @@ public class CouponEntity {
     // CouponEntity(1)가 CouponMemberEntity(N)한테 참조당함
     @OneToMany(mappedBy = "couponEntity", fetch = FetchType.LAZY)
     private List<CouponMemberEntity> couponMemberEntityList = new ArrayList<>();
+
+    public static CouponEntity toCoupon(CouponDTO couponDTO) {
+        CouponEntity couponEntity = new CouponEntity();
+        couponEntity.setCouponName(couponDTO.getCouponName());
+        couponEntity.setCouponValue(couponDTO.getCouponValue());
+        couponEntity.setCouponMinimumValue(couponDTO.getCouponMinimumValue());
+        couponEntity.setCouponThumbnail(couponDTO.getCouponThumbnail());
+        return couponEntity;
+    }
 }

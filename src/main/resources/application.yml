@@ -6,6 +6,10 @@ server:
 
 #DB 접속 정보
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/db_happy?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
@@ -15,7 +19,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
   #타임리프 캐시 무효화
   thymeleaf:
