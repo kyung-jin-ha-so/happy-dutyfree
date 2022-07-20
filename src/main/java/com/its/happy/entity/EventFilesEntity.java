@@ -1,14 +1,15 @@
 package com.its.happy.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.its.happy.dto.EventFilesDTO;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "eventFiles_table")
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Table(name = "event_files_table")
 public class EventFilesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +23,12 @@ public class EventFilesEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private EventEntity eventEntity;
+
+    public static EventFilesEntity toEventFile(EventFilesDTO eventFilesDTO, EventEntity eventEntity) {
+        EventFilesEntity eventFilesEntity = new EventFilesEntity();
+        eventFilesEntity.setEventFileName(eventFilesDTO.getEventFileName());
+        eventFilesEntity.setEventEntity(eventEntity);
+        return eventFilesEntity;
+    }
+
 }

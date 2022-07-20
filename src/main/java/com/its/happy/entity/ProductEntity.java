@@ -82,6 +82,7 @@ public class ProductEntity {
         return productEntity;
     }
 
+
     @PreRemove
     private void preRemove() {
         cartEntityList.forEach(cart -> cart.setProductEntity(null));

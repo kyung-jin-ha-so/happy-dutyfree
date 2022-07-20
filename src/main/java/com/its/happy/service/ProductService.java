@@ -57,7 +57,7 @@ public class ProductService {
     public void fileSave(Long savedId, List<MultipartFile> multipartFileList) throws IOException {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(savedId);
         System.out.println("optionalProductEntity = " + optionalProductEntity);
-        if(optionalProductEntity.isPresent()){
+        if (optionalProductEntity.isPresent()) {
             ProductEntity productEntity = optionalProductEntity.get();
             ProductFilesDTO productFilesDTO = new ProductFilesDTO();
             for (MultipartFile file : multipartFileList) {
@@ -73,11 +73,47 @@ public class ProductService {
         }
     }
 
+    public ProductDTO findById(Long productId) {
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
+        if (optionalProductEntity.isPresent()) {
+            ProductEntity productEntity = optionalProductEntity.get();
+            return ProductDTO.toDTO(productEntity);
+        }
+        return null;
+    }
+
     public Page<ProductDTO> findAll(Pageable pageable) {
-        int page = pageable.getPageNumber();
-        page = (page==1) ? 0 : (page-1);
+        int page = pageReturn(pageable);
         Page<ProductEntity> productEntities = productRepository.findAll(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")));
-        Page<ProductDTO> productList = productEntities.map(product-> new ProductDTO(
+        return pageEntityToDTO(productEntities);
+    }
+
+    public Page<ProductDTO> findByCategory(Pageable pageable, Long categoryId) {
+        int page = pageReturn(pageable);
+        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), categoryId);
+        return pageEntityToDTO(productEntities);
+    }
+
+    public Page<ProductDTO> findByHighPrice(Pageable pageable, Long categoryId) {
+        int page = pageReturn(pageable);
+        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productPrice")), categoryId);
+        return pageEntityToDTO(productEntities);
+    }
+
+    public Page<ProductDTO> findByLowPrice(Pageable pageable, Long categoryId) {
+        int page = pageReturn(pageable);
+        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.ASC, "productPrice")), categoryId);
+        return pageEntityToDTO(productEntities);
+    }
+
+    public Page<ProductDTO> findByStar(Pageable pageable, Long categoryId) {
+        int page = pageReturn(pageable);
+        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productStar")), categoryId);
+        return pageEntityToDTO(productEntities);
+    }
+
+    private Page<ProductDTO> pageEntityToDTO(Page<ProductEntity> productEntities) {
+        Page<ProductDTO> productList = productEntities.map(product -> new ProductDTO(
                 product.getProductId(),
                 product.getProductName(),
                 product.getProductOriginalPrice(),
@@ -89,16 +125,45 @@ public class ProductService {
                 product.getProductBrand(),
                 product.getProductStatus()
         ));
-        System.out.println("productList = " + productList);
         return productList;
     }
 
-    public ProductDTO findById(Long productId) {
+    private int pageReturn(Pageable pageable) {
+        int page = pageable.getPageNumber();
+        page = (page == 1) ? 0 : (page - 1);
+        return page;
+    }
+
+    public void statusClose(Long productId) {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
-        if(optionalProductEntity.isPresent()){
+        if (optionalProductEntity.isPresent()) {
             ProductEntity productEntity = optionalProductEntity.get();
-            return ProductDTO.toDTO(productEntity);
+            productEntity.setProductStatus("판매중지");
+            productRepository.save(productEntity);
         }
-        return null;
+    }
+
+    public void statusOpen(Long productId) {
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
+        if (optionalProductEntity.isPresent()) {
+            ProductEntity productEntity = optionalProductEntity.get();
+            productEntity.setProductStatus("판매중");
+            productRepository.save(productEntity);
+        }
+    }
+
+    public void changeQuantity(ProductDTO productDTO) {
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productDTO.getProductId());
+        if (optionalProductEntity.isPresent()) {
+            ProductEntity productEntity = optionalProductEntity.get();
+             if(productEntity.getProductQuantity() == 0 && productEntity.getProductQuantity()<productDTO.getProductQuantity()){
+                 productEntity.setProductStatus("판매중");
+             }
+            productEntity.setProductQuantity(productDTO.getProductQuantity());
+            if(productDTO.getProductQuantity() == 0){
+                productEntity.setProductStatus("품절");
+            }
+            productRepository.save(productEntity);
+        }
     }
 }

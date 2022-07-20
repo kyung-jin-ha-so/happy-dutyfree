@@ -1,5 +1,6 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.CouponDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,5 +42,14 @@ public class CouponEntity {
     private void preRemove() {
         eventEntityList.forEach(event -> event.setCouponEntity(null));
         couponMemberEntityList.forEach(couponMember -> couponMember.setCouponEntity(null));
+    }
+
+    public static CouponEntity toCoupon(CouponDTO couponDTO) {
+        CouponEntity couponEntity = new CouponEntity();
+        couponEntity.setCouponName(couponDTO.getCouponName());
+        couponEntity.setCouponValue(couponDTO.getCouponValue());
+        couponEntity.setCouponMinimumValue(couponDTO.getCouponMinimumValue());
+        couponEntity.setCouponThumbnail(couponDTO.getCouponThumbnail());
+        return couponEntity;
     }
 }
