@@ -10,7 +10,7 @@
 </head>
 <body>
 <h2>출국 정보 관리</h2>
-<button th:onclick="save()">출국정보등록</button>
+<button onclick="save()">출국정보등록</button>
 <table>
     <tr>
         <th>출국일시</th>
@@ -21,11 +21,11 @@
         <th>수정/삭제</th>
     </tr>
     <tr th:each="departure: ${departureList}">
-        <td th:text="${departure.departureDatetime()}"></td>
-        <td th:text="${departure.departureAirport()}"></td>
-        <td th:text="${departure.arrivalRegion()}"></td>
-        <td th:text="${departure.departureFeature()}"></td>
-        <td th:text="${departure.departureNumber()}"></td>
+        <td th:text="${departure.departureDatetime}"></td>
+        <td th:text="${departure.departureAirport}"></td>
+        <td th:text="${departure.arrivalRegion}"></td>
+        <td th:text="${departure.departureFeature}"></td>
+        <td th:text="${departure.departureNumber}"></td>
         <td>
             <button th:onclick="updateForm([[${departure.departureId}]])">수정</button>
             <button th:onclick="deleteById([[${departure.departureId}]])">삭제</button>
@@ -37,17 +37,9 @@
     const save = () => {
       location.href = "/departure/save-form"
     }
+
     const updateForm = (id) => {
-        $.ajax({
-            type: "get",
-            url: "/departure/update-form/" + id,
-            success: function () {
-                location.href = "/departure/";
-            },
-            error: function () {
-                alert("실패");
-            }
-        })
+    location.href = "/departure/update-form/" + id;
     }
 
     const deleteById = (id) => {

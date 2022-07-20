@@ -8,18 +8,18 @@
 <body>
 <h2>save.html</h2>
 <form action="/departure/save" method="post">
-    <input type="hidden" th:value="${departure.departureId()}" name="departureId">
+    <input type="hidden" th:value="${departure.departureId}" name="departureId">
     출국장소
     <select name="departureAirport" th:value="${departure.departureAirport}">
         <option value="">선택하세요</option>
-        <option value="인천공항">인천공항</option>
-        <option value="김포공항">김포공항</option>
-        <option value="김해공항">김해공항</option>
-        <option value="대구공항">대구공항</option>
-        <option value="제주공항">제주공항</option>
-        <option value="청주공항">청주공항</option>
-        <option value="부산항">부산항</option>
-        <option value="인천항 신국제여객터미널">인천항 신국제여객터미널</option>
+        <option th:selected="${departure.departureAirport}=='인천공항'" value="인천공항">인천공항</option>
+        <option th:selected="${departure.departureAirport}=='김포공항'" value="김포공항">김포공항</option>
+        <option th:selected="${departure.departureAirport}=='김해공항'" value="김해공항">김해공항</option>
+        <option th:selected="${departure.departureAirport}=='대구공항'" value="대구공항">대구공항</option>
+        <option th:selected="${departure.departureAirport}=='제주공항'" value="제주공항">제주공항</option>
+        <option th:selected="${departure.departureAirport}=='청주공항'" value="청주공항">청주공항</option>
+        <option th:selected="${departure.departureAirport}=='부산항'" value="부산항">부산항</option>
+        <option th:selected="${departure.departureAirport}=='인천항 신국제여객터미널'" value="인천항 신국제여객터미널">인천항 신국제여객터미널</option>
     </select><br>
     출국일시
     <input type="text" name="departureDatetime" th:value="${departure.departureDatetime}"><br>
@@ -37,13 +37,13 @@
     도착지
     <select name="arrivalAirport" th:value="${departure.arrivalRegion}">
         <option value="">선택</option>
-        <option value="캐나다">캐나다</option>
-        <option value="중국">중국</option>
-        <option value="미국, 호주 이외의 모든 국가">미국, 호주 이외의 모든 국가</option>
-        <option value="미국/괌/사이판">미국/괌/사이판</option>
-        <option value="호놀룰루/버진아일랜드">호놀룰루/버진아일랜드</option>
-        <option value="호주">호주</option>
-        <option value="대한민국(무착륙관광비행)">대한민국(무착륙관광비행)</option>
+        <option th:selected="${departure.arrivalRegion}=='캐나다'" value="캐나다">캐나다</option>
+        <option th:selected="${departure.arrivalRegion}=='중국'" value="중국">중국</option>
+        <option th:selected="${departure.arrivalRegion}=='미국, 호주 이외의 모든 국가'" value="미국, 호주 이외의 모든 국가">미국, 호주 이외의 모든 국가</option>
+        <option th:selected="${departure.arrivalRegion}=='미국/괌/사이판'" value="미국/괌/사이판">미국/괌/사이판</option>
+        <option th:selected="${departure.arrivalRegion}=='호놀룰루/버진아일랜드'" value="호놀룰루/버진아일랜드">호놀룰루/버진아일랜드</option>
+        <option th:selected="${departure.arrivalRegion}=='호주'" value="호주">호주</option>
+        <option th:selected="${departure.arrivalRegion}=='대한민국(무착륙관광비행)'" value="대한민국(무착륙관광비행)">대한민국(무착륙관광비행)</option>
     </select><br>
     <input type="submit" value="확인">
     <input type="button" value="취소" onclick="cancel()">

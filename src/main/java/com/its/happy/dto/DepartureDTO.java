@@ -31,6 +31,8 @@ public class DepartureDTO {
         departureDTO.setDepartureAirport(departureEntity.getDepartureAirport());
         departureDTO.setDepartureDatetime(departureEntity.getDepartureDatetime());
         departureDTO.setDepartureNumber(departureEntity.getDepartureNumber());
+        departureDTO.setArrivalRegion(departureEntity.getArrivalRegion());
+        departureDTO.setDepartureFeature(departureEntity.getDepartureFeature());
         return departureDTO;
     }
 }
