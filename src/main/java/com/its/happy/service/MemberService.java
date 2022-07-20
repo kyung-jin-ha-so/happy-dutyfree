@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.plaf.PanelUI;
 import java.util.Optional;
 
 @Service
@@ -32,9 +33,9 @@ public class MemberService {
     // 이메일 중복체크
     public String duplicateCheck(String memberEmail) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberEmail);
-        if(optionalMemberEntity.isEmpty()){
+        if (optionalMemberEntity.isEmpty()) {
             return "OK";
-        }else {
+        } else {
             return "NO";
         }
     }
@@ -48,12 +49,16 @@ public class MemberService {
             if (passwordEncoder.matches(memberDTO.getMemberPassword(), loginEntity.getMemberPassword())) {
                 return MemberDTO.toMemberDTO(loginEntity);
             } else {
-                return null; //비밀번호 불일치시 null로 리턴
+                return null; //비밀번호 불일치시 null 리턴
             }
-        }else{
-                return null; //해당 계정이 없음시 null로 리턴
-            }
+        } else {
+            return null; //해당 계정이 없음시 null 리턴
         }
     }
+
+
+
+
+}
 
 
