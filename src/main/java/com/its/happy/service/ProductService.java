@@ -89,7 +89,6 @@ public class ProductService {
                 product.getProductBrand(),
                 product.getProductStatus()
         ));
-        System.out.println("productList = " + productList);
         return productList;
     }
 
@@ -100,5 +99,45 @@ public class ProductService {
             return ProductDTO.toDTO(productEntity);
         }
         return null;
+    }
+
+    public Page<ProductDTO> findByCategory(Pageable pageable, Long categoryId) {
+        int page = pageable.getPageNumber();
+        page = (page==1) ? 0 : (page-1);
+        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), categoryId);
+        Page<ProductDTO> productList = productEntities.map(product-> new ProductDTO(
+                product.getProductId(),
+                product.getProductName(),
+                product.getProductOriginalPrice(),
+                product.getProductDiscount(),
+                product.getProductPrice(),
+                product.getProductStar(),
+                product.getProductThumbnail(),
+                product.getProductQuantity(),
+                product.getProductBrand(),
+                product.getProductStatus()
+        ));
+        return productList;
+
+    }
+
+    public Page<ProductDTO> findByHighPrice(Pageable pageable, Long categoryId) {
+        int page = pageable.getPageNumber();
+        page = (page==1) ? 0 : (page-1);
+        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productPrice")), categoryId);
+        Page<ProductDTO> productList = productEntities.map(product-> new ProductDTO(
+                product.getProductId(),
+                product.getProductName(),
+                product.getProductOriginalPrice(),
+                product.getProductDiscount(),
+                product.getProductPrice(),
+                product.getProductStar(),
+                product.getProductThumbnail(),
+                product.getProductQuantity(),
+                product.getProductBrand(),
+                product.getProductStatus()
+        ));
+        return productList;
+
     }
 }
