@@ -18,13 +18,12 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
 
-    // 회원가입 구현
+    // 회원가입 구현 - 비밀번호 암호화
     @Transactional
     public void save(MemberDTO memberDTO) {
         String password = memberDTO.getMemberPassword();
         String encodedPassword = passwordEncoder.encode(password);
         memberDTO.setMemberPassword(encodedPassword);
-        System.out.println("memberDTO = " + memberDTO);
         MemberEntity memberEntity = MemberEntity.toSave(memberDTO);
         memberRepository.save(memberEntity);
     }
@@ -43,17 +42,18 @@ public class MemberService {
     // 로그인 구현
     public MemberDTO login(MemberDTO memberDTO) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberDTO.getMemberEmail());
-        if(optionalMemberEntity.isPresent()){
+        if (optionalMemberEntity.isPresent()) {
             MemberEntity loginEntity = optionalMemberEntity.get();
-            if(loginEntity.getMemberPassword().equals(memberDTO.getMemberPassword())) {
+//            if(loginEntity.getMemberPassword().equals(memberDTO.getMemberPassword())) {
+            if (passwordEncoder.matches(memberDTO.getMemberPassword(), loginEntity.getMemberPassword())) {
                 return MemberDTO.toMemberDTO(loginEntity);
-            }else {
+            } else {
                 return null; //비밀번호 불일치시 null로 리턴
             }
-        } else {
-            return null; //해당 계정이 없음시 null로 리턴
+        }else{
+                return null; //해당 계정이 없음시 null로 리턴
+            }
         }
     }
 
 
-}
