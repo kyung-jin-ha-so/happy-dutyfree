@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-이벤트 수정
+<h2>이벤트 수정</h2>
+<form action="/event/update" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="eventId" th:value="${event.eventId}">
+    <input type="hidden" name="eventThumbnailName" th:value="${event.eventThumbnailName}">
+    제목 <input type="text" name="eventTitle" th:value="${event.eventTitle}"><br>
+    내용 <input type="text" name="eventContents" th:value="${event.eventContents}"><br>
+    <input type="submit" value="수정">
+</form>
 </body>
 </html>

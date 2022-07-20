@@ -1,5 +1,6 @@
 package com.its.happy.service;
 
+import com.its.happy.common.PagingConst;
 import com.its.happy.dto.CouponDTO;
 import com.its.happy.dto.EventDTO;
 import com.its.happy.dto.EventFilesDTO;
@@ -10,6 +11,10 @@ import com.its.happy.repository.CouponRepository;
 import com.its.happy.repository.EventFilesRepository;
 import com.its.happy.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,5 +65,38 @@ public class EventService {
 
             }
         }
+    }
+
+    public Page<EventDTO> paging(Pageable pageable) {
+        int page = pageable.getPageNumber();
+        page = (page == 1)? 0: (page-1);
+        Page<EventEntity> boardEntities = eventRepository.findAll(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "eventId")));
+        Page<EventDTO> eventList = boardEntities.map(
+                event -> new EventDTO(event.getEventId(),
+                        event.getEventTitle(),
+                        event.getEventContents(),
+                        event.getCreatedTime(),
+                        event.getUpdatedTime(),
+                        event.getEventThumbnail(),
+                        event.getCouponEntity()
+                ));
+        return eventList;
+    }
+
+    public EventDTO findById(Long eventId) {
+        Optional<EventEntity>optionalEventEntity = eventRepository.findById(eventId);
+        if(optionalEventEntity.isPresent()){
+            return EventDTO.toEventDTO(optionalEventEntity.get());
+        } else {
+            return null;
+        }
+    }
+
+    public void update(EventDTO eventDTO) {
+        eventRepository.save(EventEntity.toUpdateEntity(eventDTO));
+    }
+
+    public void deleteById(Long eventId) {
+        eventRepository.deleteById(eventId);
     }
 }

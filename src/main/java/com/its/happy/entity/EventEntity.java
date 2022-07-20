@@ -45,6 +45,17 @@ public class EventEntity extends BaseEntity{
         eventEntity.setEventContents(eventDTO.getEventContents());
         eventEntity.setEventThumbnail(eventDTO.getEventThumbnailName());
         eventEntity.setCouponEntity(couponEntity);
+        eventEntity.setEventFilesEntityList(eventDTO.getEventFilesEntityList());
+        return eventEntity;
+    }
+
+    public static EventEntity toUpdateEntity(EventDTO eventDTO) {
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.setEventId(eventDTO.getEventId());
+        eventEntity.setEventTitle(eventDTO.getEventTitle());
+        eventEntity.setEventContents(eventDTO.getEventContents());
+        eventEntity.setEventContents(eventDTO.getEventContents());
+        eventEntity.setEventThumbnail(eventDTO.getEventThumbnailName());
         return eventEntity;
     }
 }

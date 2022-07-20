@@ -1,5 +1,6 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.CouponDTO;
 import lombok.Getter;
 import lombok.Setter;
 
