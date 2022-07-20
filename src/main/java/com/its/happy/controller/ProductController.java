@@ -51,6 +51,7 @@ public class ProductController {
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("sort", "all");
         return "/productPages/list";
     }
 
@@ -63,6 +64,7 @@ public class ProductController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("categoryId", categoryId);
+        model.addAttribute("sort", "basic");
         return "/productPages/list";
     }
 
@@ -75,6 +77,7 @@ public class ProductController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("categoryId", categoryId);
+        model.addAttribute("sort", "highPrice");
         return "/productPages/list";
     }
 
@@ -87,6 +90,20 @@ public class ProductController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("categoryId", categoryId);
+        model.addAttribute("sort", "lowPrice");
+        return "/productPages/list";
+    }
+
+    @GetMapping("/star/{categoryId}/")
+    public String findByStar(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model){
+        Page<ProductDTO> productList = productService.findByStar(pageable, categoryId);
+        model.addAttribute("productList", productList);
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
+        int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("sort", "star");
         return "/productPages/list";
     }
 

@@ -73,25 +73,6 @@ public class ProductService {
         }
     }
 
-    public Page<ProductDTO> findAll(Pageable pageable) {
-        int page = pageable.getPageNumber();
-        page = (page==1) ? 0 : (page-1);
-        Page<ProductEntity> productEntities = productRepository.findAll(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")));
-        Page<ProductDTO> productList = productEntities.map(product-> new ProductDTO(
-                product.getProductId(),
-                product.getProductName(),
-                product.getProductOriginalPrice(),
-                product.getProductDiscount(),
-                product.getProductPrice(),
-                product.getProductStar(),
-                product.getProductThumbnail(),
-                product.getProductQuantity(),
-                product.getProductBrand(),
-                product.getProductStatus()
-        ));
-        return productList;
-    }
-
     public ProductDTO findById(Long productId) {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
         if(optionalProductEntity.isPresent()){
@@ -100,51 +81,36 @@ public class ProductService {
         }
         return null;
     }
+    public Page<ProductDTO> findAll(Pageable pageable) {
+        int page = pageReturn(pageable);
+        Page<ProductEntity> productEntities = productRepository.findAll(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")));
+        return pageEntityToDTO(productEntities);
+    }
 
     public Page<ProductDTO> findByCategory(Pageable pageable, Long categoryId) {
-        int page = pageable.getPageNumber();
-        page = (page==1) ? 0 : (page-1);
+        int page = pageReturn(pageable);
         Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), categoryId);
-        Page<ProductDTO> productList = productEntities.map(product-> new ProductDTO(
-                product.getProductId(),
-                product.getProductName(),
-                product.getProductOriginalPrice(),
-                product.getProductDiscount(),
-                product.getProductPrice(),
-                product.getProductStar(),
-                product.getProductThumbnail(),
-                product.getProductQuantity(),
-                product.getProductBrand(),
-                product.getProductStatus()
-        ));
-        return productList;
-
+        return pageEntityToDTO(productEntities);
     }
 
     public Page<ProductDTO> findByHighPrice(Pageable pageable, Long categoryId) {
-        int page = pageable.getPageNumber();
-        page = (page==1) ? 0 : (page-1);
+        int page = pageReturn(pageable);
         Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productPrice")), categoryId);
-        Page<ProductDTO> productList = productEntities.map(product-> new ProductDTO(
-                product.getProductId(),
-                product.getProductName(),
-                product.getProductOriginalPrice(),
-                product.getProductDiscount(),
-                product.getProductPrice(),
-                product.getProductStar(),
-                product.getProductThumbnail(),
-                product.getProductQuantity(),
-                product.getProductBrand(),
-                product.getProductStatus()
-        ));
-        return productList;
-
+        return pageEntityToDTO(productEntities);
     }
 
     public Page<ProductDTO> findByLowPrice(Pageable pageable, Long categoryId) {
-        int page = pageable.getPageNumber();
-        page = (page==1) ? 0 : (page-1);
+        int page = pageReturn(pageable);
         Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.ASC, "productPrice")), categoryId);
+        return pageEntityToDTO(productEntities);
+    }
+
+    public Page<ProductDTO> findByStar(Pageable pageable, Long categoryId) {
+        int page = pageReturn(pageable);
+        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productStar")), categoryId);
+        return pageEntityToDTO(productEntities);
+    }
+    private Page<ProductDTO> pageEntityToDTO(Page<ProductEntity> productEntities){
         Page<ProductDTO> productList = productEntities.map(product-> new ProductDTO(
                 product.getProductId(),
                 product.getProductName(),
@@ -159,4 +125,10 @@ public class ProductService {
         ));
         return productList;
     }
+    private int pageReturn(Pageable pageable){
+        int page = pageable.getPageNumber();
+        page = (page==1) ? 0 : (page-1);
+        return page;
+    }
+
 }
