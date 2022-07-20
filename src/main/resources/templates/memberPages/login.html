@@ -5,12 +5,24 @@
     <title>memberLogin</title>
 </head>
 <body>
-<form action="/member/login" method="post">
-    <p>이메일계정</p>
-    <input type="text" name="memberEmail">
-    <p>비밀번호</p>
-    <input type="password" name="memberPassword">
-    <input type="submit" value="로그인">
-</form>
+<div>
+    <form action="/member/login" method="post">
+        <input type="text" name="memberEmail"><br>
+        <input type="password" name="memberPassword"><br>
+        <input type="submit" value="로그인"><br><br>
+    </form>
+</div>
+<div>
+    <a href="#">아이디찾기</a>
+    <a href="#">비밀번호찾기</a><br>
+</div>
+<div>
+    <span>sns 로그인</span>
+    <a href="#">카카오톡로그인</a><br>
+</div>
+<div>
+    <p>계정이 없으신가요?</p>
+    <a href="/member/save">회원가입</a>
+</div>
 </body>
 </html>
