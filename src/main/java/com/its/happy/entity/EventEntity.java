@@ -1,7 +1,7 @@
 package com.its.happy.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.its.happy.dto.EventDTO;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,6 +11,8 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "event_table")
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+
 public class EventEntity extends BaseEntity{
 
     @Id
@@ -36,4 +38,13 @@ public class EventEntity extends BaseEntity{
     @OneToMany(mappedBy = "eventEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<EventFilesEntity> eventFilesEntityList = new ArrayList<>();
 
+
+    public static EventEntity toEvent(EventDTO eventDTO, CouponEntity couponEntity) {
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.setEventTitle(eventDTO.getEventTitle());
+        eventEntity.setEventContents(eventDTO.getEventContents());
+        eventEntity.setEventThumbnail(eventDTO.getEventThumbnailName());
+        eventEntity.setCouponEntity(couponEntity);
+        return eventEntity;
+    }
 }
