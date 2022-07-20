@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</head>
+<body>
+ProductList
+
+<div class="container">
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">상품번호</th>
+            <th scope="col">상품이름</th>
+            <th scope="col">상품할인가</th>
+            <th scope="col">상품수량</th>
+            <th scope="col">상품상태</th>
+            <th scope="col">수정</th>
+            <th scope="col">상품상태변경</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product: ${productList}">
+            <td th:text="${product.productId}"></td>
+            <td><a th:href="@{|/product/detail/${product.productId}|}" th:text="${product.productName}">이름</a></td>
+            <td th:text="${product.productPrice}"></td>
+            <td th:text="${product.productQuantity}"></td>
+            <td th:text="${product.productStatus}"></td>
+            <td th:text="수정"></td>
+            <td th:if="${product.productStatus.toString().equals('판매중')}">
+                <a th:href="@{|/product/statusClose/${product.productId}|}" th:text="판매중지"></a>
+            </td>
+            <td th:if="${product.productStatus.toString().equals('판매중지')}">
+                <a th:href="@{|/product/statusOpen/${product.productId}|}" th:text="판매"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:if="${startPage}" class="container">
+    <ul class="pagination justify-content-center" th:if="${sort.toString().equals('all')}">
+        <li class="page-item">
+            <a class="page-link" th:href="@{/product/(page=1)}">
+                <span>First</span>
+            </a>
+        </li>
+
+        <li th:class="${productList.first} ? 'disabled'" class="page-item">
+            <a class="page-link" th:href="${productList.first} ? '#' : @{/admin/productList/(page=${productList.number})}">
+                <span><</span> <!-- < -->
+            </a>
+        </li>
+
+        <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+            th:class="${page == productList.number + 1} ? 'page-item active'" class="page-item">
+            <a class="page-link" th:text="${page}" th:href="@{/admin/productList/(page=${page})}"></a>
+        </li>
+
+        <li th:class="${productList.last} ? 'disabled'">
+            <a class="page-link" th:href="${productList.last} ? '#' : @{/admin/productList/(page=${productList.number + 2})}">
+                <span>&gt;</span>
+            </a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link" th:href="@{/admin/productList/(page=${productList.totalPages})}">
+                <span>Last</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

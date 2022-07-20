@@ -37,7 +37,6 @@ public class ProductController {
     @PostMapping("/save")
     public String save(@ModelAttribute ProductDTO productDTO, @RequestParam("productFile") List<MultipartFile> multipartFileList,
                        @ModelAttribute CategoryDTO categoryDTO) throws IOException {
-        System.out.println("productDTO = " + productDTO + ", multipartFileList = " + multipartFileList + ", categoryDTO = " + categoryDTO);
         Long savedId = productService.save(productDTO, categoryDTO);
         productService.fileSave(savedId, multipartFileList);
         return "index";
@@ -118,4 +117,15 @@ public class ProductController {
         return "/productPages/detail";
     }
 
+    @GetMapping("/statusClose/{productId}")
+    public String statusClose(@PathVariable Long productId){
+        productService.statusClose(productId);
+        return "redirect:/admin/productList/";
+    }
+
+    @GetMapping("/statusOpen/{productId}")
+    public String statusOpen(@PathVariable Long productId){
+        productService.statusOpen(productId);
+        return "redirect:/admin/productList/";
+    }
 }

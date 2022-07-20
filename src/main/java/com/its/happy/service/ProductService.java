@@ -57,7 +57,7 @@ public class ProductService {
     public void fileSave(Long savedId, List<MultipartFile> multipartFileList) throws IOException {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(savedId);
         System.out.println("optionalProductEntity = " + optionalProductEntity);
-        if(optionalProductEntity.isPresent()){
+        if (optionalProductEntity.isPresent()) {
             ProductEntity productEntity = optionalProductEntity.get();
             ProductFilesDTO productFilesDTO = new ProductFilesDTO();
             for (MultipartFile file : multipartFileList) {
@@ -75,12 +75,13 @@ public class ProductService {
 
     public ProductDTO findById(Long productId) {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
-        if(optionalProductEntity.isPresent()){
+        if (optionalProductEntity.isPresent()) {
             ProductEntity productEntity = optionalProductEntity.get();
             return ProductDTO.toDTO(productEntity);
         }
         return null;
     }
+
     public Page<ProductDTO> findAll(Pageable pageable) {
         int page = pageReturn(pageable);
         Page<ProductEntity> productEntities = productRepository.findAll(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")));
@@ -110,8 +111,9 @@ public class ProductService {
         Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productStar")), categoryId);
         return pageEntityToDTO(productEntities);
     }
-    private Page<ProductDTO> pageEntityToDTO(Page<ProductEntity> productEntities){
-        Page<ProductDTO> productList = productEntities.map(product-> new ProductDTO(
+
+    private Page<ProductDTO> pageEntityToDTO(Page<ProductEntity> productEntities) {
+        Page<ProductDTO> productList = productEntities.map(product -> new ProductDTO(
                 product.getProductId(),
                 product.getProductName(),
                 product.getProductOriginalPrice(),
@@ -125,10 +127,28 @@ public class ProductService {
         ));
         return productList;
     }
-    private int pageReturn(Pageable pageable){
+
+    private int pageReturn(Pageable pageable) {
         int page = pageable.getPageNumber();
-        page = (page==1) ? 0 : (page-1);
+        page = (page == 1) ? 0 : (page - 1);
         return page;
     }
 
+    public void statusClose(Long productId) {
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
+        if (optionalProductEntity.isPresent()) {
+            ProductEntity productEntity = optionalProductEntity.get();
+            productEntity.setProductStatus("판매중지");
+            productRepository.save(productEntity);
+        }
+    }
+
+    public void statusOpen(Long productId) {
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
+        if (optionalProductEntity.isPresent()) {
+            ProductEntity productEntity = optionalProductEntity.get();
+            productEntity.setProductStatus("판매중");
+            productRepository.save(productEntity);
+        }
+    }
 }
