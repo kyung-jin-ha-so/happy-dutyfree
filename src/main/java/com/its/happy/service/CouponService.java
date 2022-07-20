@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,5 +28,14 @@ public class CouponService {
         }
         couponDTO.setCouponThumbnail(couponThumbnail);
         return couponRepository.save(CouponEntity.toCoupon(couponDTO)).getCouponId();
+    }
+
+    public List<CouponDTO> findAll() {
+        List<CouponEntity>entityList = couponRepository.findAll();
+        List<CouponDTO>dtoList = new ArrayList<>();
+        for(CouponEntity couponEntity : entityList){
+            dtoList.add(CouponDTO.toCouponDTO(couponEntity));
+        }
+        return dtoList;
     }
 }
