@@ -80,7 +80,7 @@ public class ProductController {
 
     @GetMapping("/lowPrice/{categoryId}/")
     public String findByLowPrice(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model){
-        Page<ProductDTO> productList = productService.findByHighPrice(pageable, categoryId);
+        Page<ProductDTO> productList = productService.findByLowPrice(pageable, categoryId);
         model.addAttribute("productList", productList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();

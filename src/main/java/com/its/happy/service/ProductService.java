@@ -140,4 +140,23 @@ public class ProductService {
         return productList;
 
     }
+
+    public Page<ProductDTO> findByLowPrice(Pageable pageable, Long categoryId) {
+        int page = pageable.getPageNumber();
+        page = (page==1) ? 0 : (page-1);
+        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.ASC, "productPrice")), categoryId);
+        Page<ProductDTO> productList = productEntities.map(product-> new ProductDTO(
+                product.getProductId(),
+                product.getProductName(),
+                product.getProductOriginalPrice(),
+                product.getProductDiscount(),
+                product.getProductPrice(),
+                product.getProductStar(),
+                product.getProductThumbnail(),
+                product.getProductQuantity(),
+                product.getProductBrand(),
+                product.getProductStatus()
+        ));
+        return productList;
+    }
 }
