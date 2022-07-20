@@ -56,6 +56,15 @@ public class MemberController {
         } else {
             return "/memberPages/login";
         }
-
     }
+
+    // 로그아웃 구현
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "redirect:/";
+    }
+
+
+
 }

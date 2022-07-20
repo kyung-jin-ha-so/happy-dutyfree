@@ -4,7 +4,9 @@ import com.its.happy.dto.MemberDTO;
 import com.its.happy.entity.MemberEntity;
 import com.its.happy.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -13,14 +15,20 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     // 회원가입 구현
+    @Transactional
     public void save(MemberDTO memberDTO) {
-        MemberEntity memberEntity = MemberEntity.toSave(memberDTO);
-        System.out.println("MemberService.save");
+        String password = memberDTO.getMemberPassword();
+        String encodedPassword = passwordEncoder.encode(password);
+        memberDTO.setMemberPassword(encodedPassword);
         System.out.println("memberDTO = " + memberDTO);
+        MemberEntity memberEntity = MemberEntity.toSave(memberDTO);
         memberRepository.save(memberEntity);
     }
+
 
     // 이메일 중복체크
     public String duplicateCheck(String memberEmail) {
