@@ -37,7 +37,6 @@ public class ProductController {
     @PostMapping("/save")
     public String save(@ModelAttribute ProductDTO productDTO, @RequestParam("productFile") List<MultipartFile> multipartFileList,
                        @ModelAttribute CategoryDTO categoryDTO) throws IOException {
-        System.out.println("productDTO = " + productDTO + ", multipartFileList = " + multipartFileList + ", categoryDTO = " + categoryDTO);
         Long savedId = productService.save(productDTO, categoryDTO);
         productService.fileSave(savedId, multipartFileList);
         return "index";
@@ -51,10 +50,63 @@ public class ProductController {
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("sort", "all");
         return "/productPages/list";
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping("/{categoryId}/")
+    public String findByCategory(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model){
+        Page<ProductDTO> productList = productService.findByCategory(pageable, categoryId);
+        model.addAttribute("productList", productList);
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
+        int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("sort", "basic");
+        return "/productPages/list";
+    }
+
+    @GetMapping("/highPrice/{categoryId}/")
+    public String findByHighPrice(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model){
+        Page<ProductDTO> productList = productService.findByHighPrice(pageable, categoryId);
+        model.addAttribute("productList", productList);
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
+        int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("sort", "highPrice");
+        return "/productPages/list";
+    }
+
+    @GetMapping("/lowPrice/{categoryId}/")
+    public String findByLowPrice(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model){
+        Page<ProductDTO> productList = productService.findByLowPrice(pageable, categoryId);
+        model.addAttribute("productList", productList);
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
+        int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("sort", "lowPrice");
+        return "/productPages/list";
+    }
+
+    @GetMapping("/star/{categoryId}/")
+    public String findByStar(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model){
+        Page<ProductDTO> productList = productService.findByStar(pageable, categoryId);
+        model.addAttribute("productList", productList);
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
+        int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("sort", "star");
+        return "/productPages/list";
+    }
+
+    @GetMapping("/detail/{productId}")
     public String findById(@PathVariable Long productId, Model model){
         ProductDTO productDTO= productService.findById(productId);
         List<ProductFilesDTO> productFilesDTOList = productFilesService.findByProductId(productId);
@@ -65,4 +117,21 @@ public class ProductController {
         return "/productPages/detail";
     }
 
+    @GetMapping("/statusClose/{productId}")
+    public String statusClose(@PathVariable Long productId){
+        productService.statusClose(productId);
+        return "redirect:/admin/productList/";
+    }
+
+    @GetMapping("/statusOpen/{productId}")
+    public String statusOpen(@PathVariable Long productId){
+        productService.statusOpen(productId);
+        return "redirect:/admin/productList/";
+    }
+
+    @PostMapping("/changeQuantity")
+    public String changeQuantity(@ModelAttribute ProductDTO productDTO){
+        productService.changeQuantity(productDTO);
+        return "redirect:/admin/productList/";
+    }
 }
