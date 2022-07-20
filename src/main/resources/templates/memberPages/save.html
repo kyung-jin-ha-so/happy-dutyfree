@@ -6,7 +6,7 @@
     <title>MemberSave</title>
 </head>
 <body>
-<form action="/member/save" method="post">
+<form method="post" action="/member/save">
     <p>이메일계정</p>
     <input type="text" name="memberEmail" placeholder="이메일계정" id="email">
     <input type="button" value="중복확인" onclick="emailCheck()">
@@ -19,12 +19,14 @@
     <input type="text" name="memberName" placeholder="이름">
     <p>전화번호</p>
     <input type="text" name="memberMobile" placeholder="숫자만입력해주세요">
-    <input type="button" value="인증하기">
+    <input type="button" id=mobileCheck" value="인증하기">
+    <input type="text" id="checkNum" placeholder="인증번호입력">
+    <input type="button" id="numResult" value="인증번호확인">
     <p>생년월일</p>
-    <select id ="year">
+    <select id="year">
         <option>연</option>
     </select>
-    <select id ="month">
+    <select id="month">
         <option>월</option>
     </select>
     <select id="day" onchange="birth()">
@@ -36,25 +38,25 @@
 </body>
 <script>
     // 연월일 select 옵션 만들기
-    $(document).ready(function(){
+    $(document).ready(function () {
         //연 select
-        for(var i = 1930 ; i <= 2003 ; i++) {
+        for (var i = 1930; i <= 2003; i++) {
             $('#year').append('<option value="' + i + '">' + i + '</option>');
         }
         //월 select
-        for(var i=1; i <= 12; i++) {
-            var mm = i > 9 ? i : "0"+i ;
+        for (var i = 1; i <= 12; i++) {
+            var mm = i > 9 ? i : "0" + i;
             $('#month').append('<option value="' + mm + '">' + mm + '</option>');
         }
         //일 select
-        for(var i=1; i <= 31; i++) {
-            var dd = i > 9 ? i : "0"+i ;
-            $('#day').append('<option value="' + dd + '">' + dd+ '</option>');
+        for (var i = 1; i <= 31; i++) {
+            var dd = i > 9 ? i : "0" + i;
+            $('#day').append('<option value="' + dd + '">' + dd + '</option>');
         }
     })
 
     // 생년월일 select 합쳐서 memberBirth로 넘겨주기
-    function birth(){
+    function birth() {
         var year = document.getElementById("year").value;
         var month = document.getElementById("month").value;
         var day = document.getElementById("day").value;
@@ -63,11 +65,11 @@
     }
 
     //이메일 중복체크 및 정규식표현
-    function emailCheck(){
+    function emailCheck() {
         var memberEmail = document.getElementById("email").value;
         var emailResult = document.getElementById("emailResult");
         let exp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-        if(memberEmail.match(exp)){
+        if (memberEmail.match(exp)) {
             $.ajax({
                 type: 'post',
                 url: '/member/duplicate-check',
@@ -82,16 +84,42 @@
                         emailResult.innerHTML = "이미 사용중인 이메일입니다.";
                         emailResult.style.color = "red";
                     }
-                }, error : function (){
+                }, error: function () {
                     alert("오류");
 
                 }
             });
-        }else{
+        } else {
             emailResult.innerHTML = "이메일 주소를 확인해주세요";
             emailResult.style.color = "red";
         }
     }
+
+    //문자인증
+    $('#mobileCheck').click(function() {
+        const memberMobile = document.getElementById("memberMobile").value;
+        console.log(memberMobile);
+        $.ajax ({
+            url: '/member/mobileCheck',
+            type: 'POST',
+            data: {"memberMobile" : memberMobile},
+            success: function(data) {
+                const checkNum = data;
+                alert('checkNum:'+ checkNum);
+
+                $('#numResult').click(function() {
+                    const userNum = $('#checkNum').val();
+
+                    if(checkNum === userNum) {
+                        alert('인증 성공하였습니다.');
+                    }
+                    else {
+                        alert('인증 실패하였습니다. 다시 입력해주세요.');
+                    }
+                });
+            }
+        });
+    });
 
 
 </script>

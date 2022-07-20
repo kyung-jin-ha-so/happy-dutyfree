@@ -23,7 +23,7 @@ public class MemberEntity extends BaseEntity{
     @Column(name = "member_email",length = 30,unique = true,nullable = false)
     private String memberEmail;
 
-    @Column(name = "member_password",length = 30,nullable = false)
+    @Column(name = "member_password",length = 100,nullable = false)
     private String memberPassword;
 
     @Column(name = "member_name",length = 20,nullable = false)
