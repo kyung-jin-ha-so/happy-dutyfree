@@ -11,5 +11,5 @@ public class PaymentDTO {
     private Long paymentId;
     private double paymentWon;
     private double paymentDollar;
-    private long pointUseValue;
+    private Long pointUseValue;
 }

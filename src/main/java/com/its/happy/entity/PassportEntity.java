@@ -1,5 +1,6 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.PassportDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,4 +29,14 @@ public class PassportEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
+
+    public static PassportEntity toEntity(PassportDTO passportDTO, MemberEntity memberEntity) {
+        PassportEntity passportEntity = new PassportEntity();
+        passportEntity.setPassportId(passportDTO.getPassportId());
+        passportEntity.setPassportNumber(passportDTO.getPassportNumber());
+        passportEntity.setPassportName(passportDTO.getPassportName());
+        passportEntity.setPassportDate(passportDTO.getPassportDate());
+        passportEntity.setMemberEntity(memberEntity);
+        return passportEntity;
+    }
 }

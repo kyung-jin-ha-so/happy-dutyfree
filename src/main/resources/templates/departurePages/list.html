@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<h2>출국 정보 관리</h2>
+<button th:onclick="save()">출국정보등록</button>
+<table>
+    <tr>
+        <th>출국일시</th>
+        <th>출국장소</th>
+        <th>도착지</th>
+        <th>경유여부</th>
+        <th>편명</th>
+        <th>수정/삭제</th>
+    </tr>
+    <tr th:each="departure: ${departureList}">
+        <td th:text="${departure.departureDatetime()}"></td>
+        <td th:text="${departure.departureAirport()}"></td>
+        <td th:text="${departure.arrivalRegion()}"></td>
+        <td th:text="${departure.departureFeature()}"></td>
+        <td th:text="${departure.departureNumber()}"></td>
+        <td>
+            <button th:onclick="updateForm([[${departure.departureId}]])">수정</button>
+            <button th:onclick="deleteById([[${departure.departureId}]])">삭제</button>
+        </td>
+    </tr>
+</table>
+</body>
+<script th:inline="javascript">
+    const save = () => {
+      location.href = "/departure/save-form"
+    }
+    const updateForm = (id) => {
+        $.ajax({
+            type: "get",
+            url: "/departure/update-form/" + id,
+            success: function () {
+                location.href = "/departure/";
+            },
+            error: function () {
+                alert("실패");
+            }
+        })
+    }
+
+    const deleteById = (id) => {
+        $.ajax({
+            type: "get",
+            url: "/departure/delete/" + id,
+            success: function () {
+                location.href = "/departure/";
+            },
+            error: function () {
+                alert("실패");
+            }
+        })
+    }
+</script>
+</html>
