@@ -128,4 +128,10 @@ public class ProductController {
         productService.statusOpen(productId);
         return "redirect:/admin/productList/";
     }
+
+    @PostMapping("/changeQuantity")
+    public String changeQuantity(@ModelAttribute ProductDTO productDTO){
+        productService.changeQuantity(productDTO);
+        return "redirect:/admin/productList/";
+    }
 }

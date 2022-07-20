@@ -21,6 +21,7 @@ ProductList
             <th scope="col">상품상태</th>
             <th scope="col">수정</th>
             <th scope="col">상품상태변경</th>
+            <th scope="col">수량수정</th>
         </tr>
         </thead>
         <tbody>
@@ -37,6 +38,17 @@ ProductList
             <td th:if="${product.productStatus.toString().equals('판매중지')}">
                 <a th:href="@{|/product/statusOpen/${product.productId}|}" th:text="판매"></a>
             </td>
+            <td th:if="${product.productStatus.toString().equals('품절')}">
+                <span>수량추가 필요</span>
+            </td>
+            <td>
+                <form action="/product/changeQuantity" method="post" >
+                    <input type="hidden" name="productId" th:value="${product.productId}">
+                    <input name="productQuantity" style="width: 70px" th:value="${product.productQuantity}"
+                           type="text">
+                    <input type="submit" value="수량변경">
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -51,7 +63,8 @@ ProductList
         </li>
 
         <li th:class="${productList.first} ? 'disabled'" class="page-item">
-            <a class="page-link" th:href="${productList.first} ? '#' : @{/admin/productList/(page=${productList.number})}">
+            <a class="page-link"
+               th:href="${productList.first} ? '#' : @{/admin/productList/(page=${productList.number})}">
                 <span><</span> <!-- < -->
             </a>
         </li>
@@ -62,7 +75,8 @@ ProductList
         </li>
 
         <li th:class="${productList.last} ? 'disabled'">
-            <a class="page-link" th:href="${productList.last} ? '#' : @{/admin/productList/(page=${productList.number + 2})}">
+            <a class="page-link"
+               th:href="${productList.last} ? '#' : @{/admin/productList/(page=${productList.number + 2})}">
                 <span>&gt;</span>
             </a>
         </li>
@@ -74,6 +88,6 @@ ProductList
         </li>
     </ul>
 </div>
-
 </body>
+
 </html>

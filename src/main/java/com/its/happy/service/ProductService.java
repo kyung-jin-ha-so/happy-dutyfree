@@ -151,4 +151,19 @@ public class ProductService {
             productRepository.save(productEntity);
         }
     }
+
+    public void changeQuantity(ProductDTO productDTO) {
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productDTO.getProductId());
+        if (optionalProductEntity.isPresent()) {
+            ProductEntity productEntity = optionalProductEntity.get();
+             if(productEntity.getProductQuantity() == 0 && productEntity.getProductQuantity()<productDTO.getProductQuantity()){
+                 productEntity.setProductStatus("판매중");
+             }
+            productEntity.setProductQuantity(productDTO.getProductQuantity());
+            if(productDTO.getProductQuantity() == 0){
+                productEntity.setProductStatus("품절");
+            }
+            productRepository.save(productEntity);
+        }
+    }
 }
