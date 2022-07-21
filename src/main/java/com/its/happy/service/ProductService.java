@@ -186,4 +186,9 @@ public class ProductService {
         return null;
     }
 
+    public Page<ProductDTO> findSearch(Pageable pageable, String q) {
+        int page = pageReturn(pageable);
+        Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")),q);
+        return pageEntityToDTO(productEntities);
+    }
 }
