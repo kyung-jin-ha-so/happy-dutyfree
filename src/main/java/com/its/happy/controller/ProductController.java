@@ -4,7 +4,6 @@ import com.its.happy.common.PagingConst;
 import com.its.happy.dto.CategoryDTO;
 import com.its.happy.dto.ProductDTO;
 import com.its.happy.dto.ProductFilesDTO;
-import com.its.happy.dto.ReviewDTO;
 import com.its.happy.service.ProductFilesService;
 import com.its.happy.service.ProductService;
 import com.its.happy.service.ReviewService;
@@ -109,11 +108,7 @@ public class ProductController {
     @GetMapping("/detail/{productId}")
     public String findById(@PathVariable Long productId, Model model){
         ProductDTO productDTO= productService.findById(productId);
-        List<ProductFilesDTO> productFilesDTOList = productFilesService.findByProductId(productId);
-//        List<ReviewDTO> reviewDTOList = reviewService.findByBoardId(productId);
         model.addAttribute("product", productDTO);
-        model.addAttribute("productFileList", productFilesDTOList );
-//        model.addAttribute("reviewList", reviewDTOList);
         return "/productPages/detail";
     }
 
@@ -134,4 +129,20 @@ public class ProductController {
         productService.changeQuantity(productDTO);
         return "redirect:/admin/productList/";
     }
+
+    @GetMapping("/update/{productId}")
+    public String updateForm(@PathVariable Long productId, Model model){
+        ProductDTO productDTO = productService.findById(productId);
+        model.addAttribute("product", productDTO);
+        return "productPages/update";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute ProductDTO productDTO, @RequestParam("productFile") List<MultipartFile> multipartFileList,
+                       @ModelAttribute CategoryDTO categoryDTO) throws IOException {
+        Long updatedId = productService.update(productDTO, categoryDTO);
+//        productService.fileUpdate(updatedId, multipartFileList);
+        return "index";
+    }
+
 }

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+<body>
+
+update
+
+<form action="/product/update" method="post" enctype="multipart/form-data">
+    상품 수정 <br>
+    <input type="hidden" name="productId" th:value="${product.productId}">
+    상품 이름 <input type="text" name="productName" th:value="${product.productName}"> <br>
+    상품 카테고리
+    <select id="categoryId" name="categoryId">
+        <option th:value="${product.categoryEntity.categoryId}">수정사항 없음</option>
+        <option value="1">스킨케어</option>
+        <option value="2">메이크업</option>
+        <option value="3">향수/바디/헤어</option>
+        <option value="4">가방/신발/잡화</option>
+        <option value="5">시계/쥬얼리</option>
+        <option value="6">의류/아이웨어</option>
+        <option value="7">스포츠/레저 </option>
+        <option value="8">디지털/리빙</option>
+        <option value="9">식품</option>
+        <option value="10">유아동</option>
+        <option value="11">남성관</option>
+    </select><br>
+    상품 설명
+    <textarea name="productDesc" th:text="${product.productDesc}"> [[${product.productDesc}]] </textarea> <br>
+    <input multiple type="file" name="productFile"><br>
+    현재 파일
+    <div th:each="productFile: ${product.productFilesEntityList}" >
+        <img th:src="@{|/upload/${productFile.productFileName}|}" width="100" height="100" alt="">
+    </div>
+    상품 브랜드
+    <input type="text" name="productBrand" th:value="${product.productBrand}"><br>
+    상품 정가
+    <input type="text" name="productOriginalPrice" id="productOriginalPrice" th:value="${product.productOriginalPrice}"><br>
+    할인율
+    <input type="text" name="productDiscount" th:value="${product.productDiscount}" id="productDiscount" th:onblur="calPrice()"><br>
+    상품 회원가
+    <input type="text" id="productPrice" name="productPrice" th:value="${product.productPrice}"><br>
+    상품 수량
+    <input type="text" name="productQuantity" th:value="${product.productQuantity}" readonly><br>
+    상품 썸네일
+    <input type="file" name="productThumbnailFile"><br>
+    현재 파일
+    <img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""> <br>
+    상품 상태
+    <input type="text" name="productStatus" th:value="${product.productStatus}" readonly><br>
+    <input type="hidden" th:value="${product.productStar}">
+    <input type="submit" value="수정">
+</form>
+
+</body>
+<script th:inline="javascript">
+    const calPrice = () => {
+        const productOriginalPrice = document.getElementById("productOriginalPrice").value;
+        const productDiscount = document.getElementById("productDiscount").value;
+        const price = (productOriginalPrice * ((100-productDiscount)/100)).toFixed(2);
+
+        $('input[name=productPrice]').attr('value',price);
+    }
+
+</script>
+</html>

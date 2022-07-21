@@ -166,4 +166,25 @@ public class ProductService {
             productRepository.save(productEntity);
         }
     }
+
+    public Long update(ProductDTO productDTO, CategoryDTO categoryDTO) throws IOException {
+        MultipartFile productThumbnailFile = productDTO.getProductThumbnailFile();
+        String productThumbnail = productThumbnailFile.getOriginalFilename();
+        productThumbnail = System.currentTimeMillis() + "-" + productThumbnail;
+        String savePath = "C:\\happy_img\\" + productThumbnail;
+        if (!productThumbnailFile.isEmpty()) {
+            productThumbnailFile.transferTo(new File(savePath));
+        } else {
+            productThumbnail = productRepository.findById(productDTO.getProductId()).get().getProductThumbnail();
+        }
+        productDTO.setProductThumbnail(productThumbnail);
+        Optional<CategoryEntity> optionalCategoryEntity = categoryRepository.findById(categoryDTO.getCategoryId());
+        if (optionalCategoryEntity.isPresent()) {
+            CategoryEntity categoryEntity = optionalCategoryEntity.get();
+            Long savedId = productRepository.save(ProductEntity.toUpdateEntity(productDTO, categoryEntity)).getProductId();
+            return savedId;
+        }
+        return null;
+    }
+
 }
