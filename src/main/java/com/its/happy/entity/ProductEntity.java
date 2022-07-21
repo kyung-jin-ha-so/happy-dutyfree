@@ -45,7 +45,7 @@ public class ProductEntity {
     private CategoryEntity categoryEntity;
 
     // 상품(1)이 상품파일(n)에게 참조당함
-    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<ProductFilesEntity> productFilesEntityList = new ArrayList<>();
 
     // 상품(1)이 상품후기(n)에게 참조당함
@@ -79,6 +79,25 @@ public class ProductEntity {
         productEntity.setCategoryEntity(categoryEntity);
         productEntity.setProductBrand(productDTO.getProductBrand());
         productEntity.setProductStatus("판매중");
+        productEntity.setProductFilesEntityList(productDTO.getProductFilesEntityList());
+        return productEntity;
+    }
+
+    public static ProductEntity toUpdateEntity(ProductDTO productDTO, CategoryEntity categoryEntity) {
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setProductId(productDTO.getProductId());
+        productEntity.setProductName(productDTO.getProductName());
+        productEntity.setProductDesc(productDTO.getProductDesc());
+        productEntity.setProductOriginalPrice(productDTO.getProductOriginalPrice());
+        productEntity.setProductDiscount(productDTO.getProductDiscount());
+        productEntity.setProductPrice(productDTO.getProductPrice());
+        productEntity.setProductStar(productDTO.getProductStar());
+        productEntity.setProductThumbnail(productDTO.getProductThumbnail());
+        productEntity.setProductQuantity(productDTO.getProductQuantity());
+        productEntity.setCategoryEntity(categoryEntity);
+        productEntity.setProductBrand(productDTO.getProductBrand());
+        productEntity.setProductStatus("판매중");
+        productEntity.setProductFilesEntityList(productDTO.getProductFilesEntityList());
         return productEntity;
     }
 
@@ -87,6 +106,7 @@ public class ProductEntity {
     private void preRemove() {
         cartEntityList.forEach(cart -> cart.setProductEntity(null));
         orderProductEntityList.forEach(orderProduct -> orderProduct.setProductEntity(null));
+        productFilesEntityList.forEach(productFiles -> productFiles.setProductEntity(null));
     }
 
 }
