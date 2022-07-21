@@ -24,12 +24,12 @@ public class MemberService {
 
     // 회원가입 구현 - 비밀번호 암호화
     @Transactional
-    public Long save(MemberDTO memberDTO) {
+    public void save(MemberDTO memberDTO) {
         String password = memberDTO.getMemberPassword();
         String encodedPassword = passwordEncoder.encode(password);
         memberDTO.setMemberPassword(encodedPassword);
         MemberEntity memberEntity = MemberEntity.toSave(memberDTO);
-        return memberRepository.save(memberEntity).getMemberId();
+        memberRepository.save(memberEntity);
     }
 
 

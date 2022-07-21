@@ -32,11 +32,35 @@
         </tr>
     </table>
 
+<!--    <div th:each="${session.loginEmail == 'admin'}">-->
+        <a th:href="@{|/product/update/${product.productId}|}">수정</a>
+<!--    </div>-->
+
     상세 설명이미지
-    <div th:each="productFile: ${productFileList}" >
+    <div th:each="productFile: ${product.productFilesEntityList}" >
         <img th:src="@{|/upload/${productFile.productFileName}|}" alt="">
     </div>
 </div>
 
+<div>
+    상품 후기
+    <table class="table">
+        <tr>
+            <th>상품후기 번호</th>
+            <th>상품후기 작성자</th>
+            <th>상품후기 작성내용</th>
+            <th>상품후기 별점</th>
+            <th>상품후기 작성시간</th>
+        </tr>
+        <tr th:each="productReview: ${product.reviewEntityList}">
+            <td th:text="${productReview.reviewId}"></td>
+            <td th:text="${productReview.memberEntity.memberId}"></td>
+            <td th:text="${productReview.reviewContents}"></td>
+            <td th:text="${productReview.reviewStar}"></td>
+            <td th:text="${productReview.getCreatedTime()}"></td>
+        </tr>
+    </table>
+
+</div>
 </body>
 </html>
