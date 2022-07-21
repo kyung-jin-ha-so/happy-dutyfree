@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <title>MemberSave</title>
 </head>
 <body>
-<form method="post" action="/member/save">
+<form action="/member/save" method="post" >
     <p>이메일계정</p>
     <input type="text" name="memberEmail" placeholder="이메일계정" id="email">
     <input type="button" value="중복확인" onclick="emailCheck()">
@@ -18,10 +18,10 @@
     <p>이름</p>
     <input type="text" name="memberName" placeholder="이름">
     <p>전화번호</p>
-    <input type="text" name="memberMobile" placeholder="숫자만입력해주세요">
-    <input type="button" id=mobileCheck" value="인증하기">
-    <input type="text" id="checkNum" placeholder="인증번호입력">
-    <input type="button" id="numResult" value="인증번호확인">
+    <input type="text" name="memberMobile" id="memberMobile" placeholder="숫자만입력해주세요">
+    <input type="button" value="인증하기" id="sendSMS">
+    <input type="text" id="userNum" placeholder="인증번호입력">
+    <input type="button" id="mobileCk" value="인증번호확인">
     <p>생년월일</p>
     <select id="year">
         <option>연</option>
@@ -36,7 +36,7 @@
     <input type="submit" value="회원가입">
 </form>
 </body>
-<script>
+<script th:inline="javascript">
     // 연월일 select 옵션 만들기
     $(document).ready(function () {
         //연 select
@@ -95,20 +95,25 @@
         }
     }
 
-    //문자인증
-    $('#mobileCheck').click(function() {
-        const memberMobile = document.getElementById("memberMobile").value;
-        console.log(memberMobile);
+    // 인증문자 보내기
+    $('#sendSMS').click(function() {
+
+        const memberMobile = $('#memberMobile').val();
+
         $.ajax ({
-            url: '/member/mobileCheck',
-            type: 'POST',
+            url: '/member/sendSMS',
+            type: 'GET',
             data: {"memberMobile" : memberMobile},
             success: function(data) {
                 const checkNum = data;
-                alert('checkNum:'+ checkNum);
 
-                $('#numResult').click(function() {
-                    const userNum = $('#checkNum').val();
+                console.log(checkNum)
+
+                alert('문자를 확인해주세요');
+
+                // 인증문자확인 버튼 클릭시 호출
+                $('#mobileCk').click(function() {
+                    const userNum = $('#userNum').val();
 
                     if(checkNum === userNum) {
                         alert('인증 성공하였습니다.');
@@ -117,9 +122,14 @@
                         alert('인증 실패하였습니다. 다시 입력해주세요.');
                     }
                 });
+
             }
         });
+
     });
+
+
+
 
 
 </script>
