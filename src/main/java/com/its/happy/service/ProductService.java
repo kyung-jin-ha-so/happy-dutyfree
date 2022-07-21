@@ -56,7 +56,6 @@ public class ProductService {
 
     public void fileSave(Long savedId, List<MultipartFile> multipartFileList) throws IOException {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(savedId);
-        System.out.println("optionalProductEntity = " + optionalProductEntity);
         if (optionalProductEntity.isPresent()) {
             ProductEntity productEntity = optionalProductEntity.get();
             ProductFilesDTO productFilesDTO = new ProductFilesDTO();

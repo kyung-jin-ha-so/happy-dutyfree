@@ -9,9 +9,6 @@
 
 </head>
 <body>
-
-update
-
 <form action="/product/update" method="post" enctype="multipart/form-data">
     상품 수정 <br>
     <input type="hidden" name="productId" th:value="${product.productId}">
@@ -33,10 +30,11 @@ update
     </select><br>
     상품 설명
     <textarea name="productDesc" th:text="${product.productDesc}"> [[${product.productDesc}]] </textarea> <br>
-    <input multiple type="file" name="productFile"><br>
-    현재 파일
+    파일 추가 <input multiple type="file" name="productFile"><br>
+    현재 상세 파일
     <div th:each="productFile: ${product.productFilesEntityList}" >
         <img th:src="@{|/upload/${productFile.productFileName}|}" width="100" height="100" alt="">
+        <button th:onclick="deleteFile([[${productFile.productFileId}]])">삭제</button>
     </div>
     상품 브랜드
     <input type="text" name="productBrand" th:value="${product.productBrand}"><br>
@@ -50,7 +48,7 @@ update
     <input type="text" name="productQuantity" th:value="${product.productQuantity}" readonly><br>
     상품 썸네일
     <input type="file" name="productThumbnailFile"><br>
-    현재 파일
+    현재 썸네일 파일
     <img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""> <br>
     상품 상태
     <input type="text" name="productStatus" th:value="${product.productStatus}" readonly><br>
@@ -66,6 +64,24 @@ update
         const price = (productOriginalPrice * ((100-productDiscount)/100)).toFixed(2);
 
         $('input[name=productPrice]').attr('value',price);
+    }
+
+    const deleteFile = (productFileId) => {
+      const productId = [[${product.productId}]];
+
+      $.ajax({
+          type: "post",
+          url: "/product/deleteFile",
+          data: {
+              "productFileId": productFileId,
+          },
+          dataType:"text",
+          success: function (res){
+            location.href= "/product/update/" + productId;
+          }, error:function (){
+              alert("ajax실패");
+          }
+      })
     }
 
 </script>

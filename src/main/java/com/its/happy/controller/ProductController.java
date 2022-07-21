@@ -141,8 +141,15 @@ public class ProductController {
     public String update(@ModelAttribute ProductDTO productDTO, @RequestParam("productFile") List<MultipartFile> multipartFileList,
                        @ModelAttribute CategoryDTO categoryDTO) throws IOException {
         Long updatedId = productService.update(productDTO, categoryDTO);
-//        productService.fileUpdate(updatedId, multipartFileList);
+        productService.fileSave(updatedId, multipartFileList);
         return "index";
+    }
+
+    @PostMapping("/deleteFile")
+    public @ResponseBody String deleteFile(@RequestParam("productFileId") Long productFileId){
+        System.out.println("productFileId = " + productFileId);
+        productFilesService.deleteById(productFileId);
+        return "삭제";
     }
 
 }
