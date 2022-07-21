@@ -1,6 +1,7 @@
 package com.its.happy.entity;
 
 
+import com.its.happy.dto.PointDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,13 @@ public class PointEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
+
+    public static PointEntity toSave(MemberEntity memberEntity){
+        PointEntity pointEntity = new PointEntity();
+        pointEntity.setPointValue("1000000");
+        pointEntity.setMemberEntity(memberEntity);
+        return pointEntity;
+    }
 }
 
 

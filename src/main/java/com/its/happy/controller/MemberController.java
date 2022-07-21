@@ -2,10 +2,9 @@ package com.its.happy.controller;
 
 import com.its.happy.dto.MemberDTO;
 import com.its.happy.service.MemberService;
+import com.its.happy.service.PointService;
 import lombok.RequiredArgsConstructor;
-import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Random;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -23,6 +21,7 @@ import java.util.Random;
 public class MemberController {
 
     private final MemberService memberService;
+    private final PointService pointService;
 
     // 회원가입 페이지 이동
     @GetMapping("/save")
@@ -33,7 +32,9 @@ public class MemberController {
     // 회원가입 구현
     @PostMapping("/save")
     public String save(@ModelAttribute MemberDTO memberDTO){
-        memberService.save(memberDTO);
+        Long savedId = memberService.save(memberDTO);
+        // 회원가입시 적립금 100만원 저장
+        pointService.save(savedId);
         return "/memberPages/login";
     }
 

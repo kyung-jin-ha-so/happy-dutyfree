@@ -10,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.plaf.PanelUI;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Random;
@@ -25,12 +24,12 @@ public class MemberService {
 
     // 회원가입 구현 - 비밀번호 암호화
     @Transactional
-    public void save(MemberDTO memberDTO) {
+    public Long save(MemberDTO memberDTO) {
         String password = memberDTO.getMemberPassword();
         String encodedPassword = passwordEncoder.encode(password);
         memberDTO.setMemberPassword(encodedPassword);
         MemberEntity memberEntity = MemberEntity.toSave(memberDTO);
-        memberRepository.save(memberEntity);
+        return memberRepository.save(memberEntity).getMemberId();
     }
 
 
