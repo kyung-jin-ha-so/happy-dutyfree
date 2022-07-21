@@ -22,4 +22,8 @@ public class ProductFilesService {
             productFilesDTOList.add(ProductFilesDTO.toDTO(productFile));
         }return productFilesDTOList;
     }
+
+    public void deleteById(Long productFileId) {
+        productFilesRepository.deleteById(productFileId);
+    }
 }

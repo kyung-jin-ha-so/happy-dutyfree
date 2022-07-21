@@ -1,10 +1,15 @@
 package com.its.happy.dto;
 
+import com.its.happy.entity.CategoryEntity;
 import com.its.happy.entity.ProductEntity;
+import com.its.happy.entity.ProductFilesEntity;
+import com.its.happy.entity.ReviewEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +27,9 @@ public class ProductDTO {
     private Long productQuantity;
     private String productBrand;
     private String productStatus;
+    private CategoryEntity categoryEntity;
+    private List<ProductFilesEntity> productFilesEntityList;
+    private List<ReviewEntity> reviewEntityList;
 
 
     public static ProductDTO toDTO(ProductEntity productEntity) {
@@ -34,8 +42,12 @@ public class ProductDTO {
         productDTO.setProductPrice(productEntity.getProductPrice());
         productDTO.setProductThumbnail(productEntity.getProductThumbnail());
         productDTO.setProductStar(productEntity.getProductStar());
+        productDTO.setProductBrand(productEntity.getProductBrand());
         productDTO.setProductQuantity(productEntity.getProductQuantity());
         productDTO.setProductStatus(productEntity.getProductStatus());
+        productDTO.setCategoryEntity(productEntity.getCategoryEntity());
+        productDTO.setProductFilesEntityList(productEntity.getProductFilesEntityList());
+        productDTO.setReviewEntityList(productEntity.getReviewEntityList());
         return productDTO;
     }
 
