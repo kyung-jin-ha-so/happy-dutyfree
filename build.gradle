@@ -29,6 +29,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
     implementation group: 'net.nurigo', name: 'javaSDK', version: '2.2'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation group: 'org.json', name: 'json', version: '20090211'
 }
 
 tasks.named('test') {
