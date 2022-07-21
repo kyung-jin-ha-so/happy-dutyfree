@@ -4,12 +4,16 @@ import com.its.happy.dto.MemberDTO;
 import com.its.happy.entity.MemberEntity;
 import com.its.happy.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import net.nurigo.java_sdk.api.Message;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.plaf.PanelUI;
+import java.util.HashMap;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -56,9 +60,29 @@ public class MemberService {
         }
     }
 
+    //핸드폰 문자 인증
+    public String sendSMS(String memberMobile) throws CoolsmsException {
+        String api_key = "NCSYFPXKKTOS0NSJ";
+        String api_secret = "HLNOZ8UXWGTAVI4CT8GONJCDTPEWYAFD";
+        Message coolsms = new Message(api_key, api_secret);
 
+        Random rand  = new Random();
+        String numStr = "";
+        for(int i=0; i<4; i++) {
+            String ran = Integer.toString(rand.nextInt(10));
+            numStr+=ran;
+        }
 
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("to", memberMobile);
+        params.put("from", "01072248086");
+        params.put("type", "SMS");
+        params.put("text", "해피면세점 인증번호는 ["+numStr+"] 입니다");
 
+        coolsms.send(params); // 메시지 전송
+
+        return numStr;
+    }
 }
 
 
