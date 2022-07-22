@@ -2,7 +2,9 @@ package com.its.happy.controller;
 
 import com.its.happy.common.PagingConst;
 import com.its.happy.dto.CouponDTO;
+import com.its.happy.dto.CouponMemberDTO;
 import com.its.happy.dto.EventDTO;
+import com.its.happy.service.CouponService;
 import com.its.happy.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +23,7 @@ import java.util.List;
 @RequestMapping("/event")
 public class EventController {
     private final EventService eventService;
-
+    private final CouponService couponService;
     //이벤트 저장페이지 이동
     @GetMapping("/saveForm")
     public String saveForm(){
@@ -37,6 +39,7 @@ public class EventController {
         eventService.fileSave(savedId, multipartFileList);
         return "index";
     }
+
     //이벤트 페이징목록
     @GetMapping
     public String paging(@PageableDefault(page = 1) Pageable pageable, Model model){
@@ -51,8 +54,9 @@ public class EventController {
             System.out.println("for문 동작");
             System.out.println(e);
         }
-        return "boardPages/list";
+        return "/boardPages/eventList";
     }
+
     //이벤트 상세조회
     @GetMapping("/{eventId}")
     public String findById(@PathVariable Long eventId, Model model){
@@ -69,8 +73,8 @@ public class EventController {
     }
     //이벤트 수정
     @PostMapping("/update")
-    public String update(@ModelAttribute EventDTO eventDTO){
-        eventService.update(eventDTO);
+    public String update(@ModelAttribute EventDTO eventDTO, @ModelAttribute CouponDTO couponDTO){
+        eventService.update(eventDTO, couponDTO);
         System.out.println("eventDTO = " + eventDTO);
         return "redirect:/event/"+eventDTO.getEventId();
     }
@@ -79,5 +83,12 @@ public class EventController {
     public String delete(@PathVariable Long eventId){
         eventService.deleteById(eventId);
         return "redirect:/event";
+    }
+    //이벤트 검색
+    @GetMapping("/search")
+    public String search(@RequestParam("q") String q, Model model){
+        List<EventDTO> searchList = eventService.search(q);
+        model.addAttribute("eventList", searchList);
+        return "boardPages/eventList";
     }
 }
