@@ -1,6 +1,9 @@
 package com.its.happy.controller;
 
 import com.its.happy.common.PagingConst;
+import com.its.happy.dto.*;
+import com.its.happy.entity.MemberEntity;
+import com.its.happy.entity.ProductEntity;
 import com.its.happy.dto.CategoryDTO;
 import com.its.happy.dto.ProductDTO;
 import com.its.happy.dto.ProductFilesDTO;
@@ -11,12 +14,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -30,7 +37,7 @@ public class ProductController {
     private final ProductFilesService productFilesService;
 
     @GetMapping("/save")
-    public String saveForm(){
+    public String saveForm() {
         return "/productPages/save";
     }
 
@@ -43,7 +50,7 @@ public class ProductController {
     }
 
     @GetMapping("/")
-    public String findAll(@PageableDefault(page = 1) Pageable pageable, Model model){
+    public String findAll(@PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findAll(pageable);
         model.addAttribute("productList", productList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
@@ -55,7 +62,7 @@ public class ProductController {
     }
 
     @GetMapping("/{categoryId}/")
-    public String findByCategory(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model){
+    public String findByCategory(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByCategory(pageable, categoryId);
         model.addAttribute("productList", productList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
@@ -68,7 +75,7 @@ public class ProductController {
     }
 
     @GetMapping("/highPrice/{categoryId}/")
-    public String findByHighPrice(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model){
+    public String findByHighPrice(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByHighPrice(pageable, categoryId);
         model.addAttribute("productList", productList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
@@ -81,7 +88,7 @@ public class ProductController {
     }
 
     @GetMapping("/lowPrice/{categoryId}/")
-    public String findByLowPrice(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model){
+    public String findByLowPrice(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByLowPrice(pageable, categoryId);
         model.addAttribute("productList", productList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
@@ -94,7 +101,7 @@ public class ProductController {
     }
 
     @GetMapping("/star/{categoryId}/")
-    public String findByStar(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model){
+    public String findByStar(@PathVariable Long categoryId, @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByStar(pageable, categoryId);
         model.addAttribute("productList", productList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
@@ -107,26 +114,31 @@ public class ProductController {
     }
 
     @GetMapping("/detail/{productId}")
-    public String findById(@PathVariable Long productId, Model model){
-        ProductDTO productDTO= productService.findById(productId);
+    public String findById(@PathVariable Long productId, Model model, HttpSession session) {
+        ProductDTO productDTO = productService.findById(productId);
         model.addAttribute("product", productDTO);
+
+        List<LikeDTO> likeDTOList = productService.findByLike(productId);
+        model.addAttribute("likeList", likeDTOList);
+        System.out.println("ProductController.findById");
+        System.out.println("likeDTOList = " + likeDTOList);
         return "/productPages/detail";
     }
 
     @GetMapping("/statusClose/{productId}")
-    public String statusClose(@PathVariable Long productId){
+    public String statusClose(@PathVariable Long productId) {
         productService.statusClose(productId);
         return "redirect:/admin/productList/";
     }
 
     @GetMapping("/statusOpen/{productId}")
-    public String statusOpen(@PathVariable Long productId){
+    public String statusOpen(@PathVariable Long productId) {
         productService.statusOpen(productId);
         return "redirect:/admin/productList/";
     }
 
     @PostMapping("/changeQuantity")
-    public String changeQuantity(@ModelAttribute ProductDTO productDTO){
+    public String changeQuantity(@ModelAttribute ProductDTO productDTO) {
         productService.changeQuantity(productDTO);
         return "redirect:/admin/productList/";
     }
@@ -166,4 +178,17 @@ public class ProductController {
         return "/productPages/list";
     }
 
+
+    //상품 찜하기
+    @PostMapping("/like")
+    public ResponseEntity like(@RequestParam("productId") Long productId,
+                               @RequestParam("memberId") Long memberId) {
+        String result = productService.like(productId, memberId);
+        System.out.println("result = " + result);
+        if (result == "ok") {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

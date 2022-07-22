@@ -1,8 +1,14 @@
 package com.its.happy.service;
 
 import com.its.happy.dto.CouponDTO;
-import com.its.happy.entity.CouponEntity;
+import com.its.happy.dto.CouponMemberDTO;
+import com.its.happy.dto.EventDTO;
+import com.its.happy.dto.MemberDTO;
+import com.its.happy.entity.*;
+import com.its.happy.repository.CouponMemberRepository;
 import com.its.happy.repository.CouponRepository;
+import com.its.happy.repository.EventRepository;
+import com.its.happy.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,11 +17,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CouponService {
     private final CouponRepository couponRepository;
+    private final MemberRepository memberRepository;
+    private final CouponMemberRepository couponMemberRepository;
+    private final EventRepository eventRepository;
 
     public Long save(CouponDTO couponDTO) throws IOException {
         System.out.println("couponDTO = " + couponDTO);
@@ -31,11 +41,39 @@ public class CouponService {
     }
 
     public List<CouponDTO> findAll() {
-        List<CouponEntity>entityList = couponRepository.findAll();
-        List<CouponDTO>dtoList = new ArrayList<>();
-        for(CouponEntity couponEntity : entityList){
+        List<CouponEntity> entityList = couponRepository.findAll();
+        List<CouponDTO> dtoList = new ArrayList<>();
+        for (CouponEntity couponEntity : entityList) {
             dtoList.add(CouponDTO.toCouponDTO(couponEntity));
         }
         return dtoList;
+    }
+
+    public String issueCoupon(Long couponId, Long memberId) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
+        Optional<CouponEntity> optionalCouponEntity = couponRepository.findById(couponId);
+        if (optionalMemberEntity.isPresent()) {
+            if (optionalCouponEntity.isPresent()) {
+                MemberEntity memberEntity = optionalMemberEntity.get();
+                CouponEntity couponEntity = optionalCouponEntity.get();
+                Long save = couponMemberRepository.save(CouponMemberEntity.toCouponMember(memberEntity, couponEntity)).getCouponMemberId();
+                System.out.println("save = " + save);
+                if(save!=null){
+                    return "ok";
+                } else {
+                    return "no";
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<CouponMemberDTO> findAllIssueCoupon(Long couponId) {
+        List<CouponMemberEntity> couponMemberEntityList = couponMemberRepository.findByCouponMemberId(couponId);
+        List<CouponMemberDTO> couponMemberDTOList = new ArrayList<>();
+        for (CouponMemberEntity couponMemberEntity : couponMemberEntityList) {
+            couponMemberDTOList.add(CouponMemberDTO.toSaveDTO(couponMemberEntity));
+        }
+        return couponMemberDTOList;
     }
 }
