@@ -1,5 +1,7 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.LikeDTO;
+import com.its.happy.dto.ProductDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,4 +26,11 @@ public class LikeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
+
+    public static LikeEntity toLike(ProductEntity productEntity, MemberEntity memberEntity) {
+        LikeEntity likeEntity = new LikeEntity();
+        likeEntity.setProductEntity(productEntity);
+        likeEntity.setMemberEntity(memberEntity);
+        return likeEntity;
+    }
 }

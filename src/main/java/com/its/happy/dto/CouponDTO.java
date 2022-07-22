@@ -1,6 +1,7 @@
 package com.its.happy.dto;
 
 import com.its.happy.entity.CouponEntity;
+import com.its.happy.entity.CouponMemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,9 @@ public class CouponDTO {
     private Long couponMinimumValue;
     private String couponThumbnail;
     private MultipartFile couponThumbnailFile;
+
+    private CouponMemberEntity couponMemberEntity;
+
 
     public static CouponDTO toCouponDTO(CouponEntity couponEntity) {
         CouponDTO couponDTO = new CouponDTO();

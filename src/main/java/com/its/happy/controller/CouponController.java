@@ -3,15 +3,12 @@ package com.its.happy.controller;
 import com.its.happy.dto.CouponDTO;
 import com.its.happy.service.CouponService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,14 +26,15 @@ public class CouponController {
         couponService.save(couponDTO);
         return "index";
     }
-    //쿠폰 리스트 조회
-    @GetMapping("/findAll")
-    public String findAll(Model model){
-        List<CouponDTO> couponDTOList = couponService.findAll();
-        model.addAttribute("couponList", couponDTOList);
-        System.out.println("CouponController.findAll");
-        System.out.println("couponDTOList = " + couponDTOList);
-        return "/couponPages/list";
+    //쿠폰발급
+    @PostMapping("/issueCoupon")
+    public ResponseEntity issueCoupon(@RequestParam("memberId") Long memberId, @RequestParam("couponId") Long couponId){
+        String result = couponService.issueCoupon(couponId, memberId);
+        System.out.println("result = " + result);
+        if(result.equals("ok")){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
-
 }

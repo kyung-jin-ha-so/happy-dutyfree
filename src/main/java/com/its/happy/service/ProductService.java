@@ -1,15 +1,9 @@
 package com.its.happy.service;
 
 import com.its.happy.common.PagingConst;
-import com.its.happy.dto.CategoryDTO;
-import com.its.happy.dto.ProductDTO;
-import com.its.happy.dto.ProductFilesDTO;
-import com.its.happy.entity.CategoryEntity;
-import com.its.happy.entity.ProductEntity;
-import com.its.happy.entity.ProductFilesEntity;
-import com.its.happy.repository.CategoryRepository;
-import com.its.happy.repository.ProductFilesRepository;
-import com.its.happy.repository.ProductRepository;
+import com.its.happy.dto.*;
+import com.its.happy.entity.*;
+import com.its.happy.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +27,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductFilesRepository productFilesRepository;
+    private final LikeRepository likeRepository;
+    private final MemberRepository memberRepository;
 
 
     public Long save(ProductDTO productDTO, CategoryDTO categoryDTO) throws IOException {
@@ -155,11 +151,11 @@ public class ProductService {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(productDTO.getProductId());
         if (optionalProductEntity.isPresent()) {
             ProductEntity productEntity = optionalProductEntity.get();
-             if(productEntity.getProductQuantity() == 0 && productEntity.getProductQuantity()<productDTO.getProductQuantity()){
-                 productEntity.setProductStatus("판매중");
-             }
+            if (productEntity.getProductQuantity() == 0 && productEntity.getProductQuantity() < productDTO.getProductQuantity()) {
+                productEntity.setProductStatus("판매중");
+            }
             productEntity.setProductQuantity(productDTO.getProductQuantity());
-            if(productDTO.getProductQuantity() == 0){
+            if (productDTO.getProductQuantity() == 0) {
                 productEntity.setProductStatus("품절");
             }
             productRepository.save(productEntity);
@@ -192,3 +188,38 @@ public class ProductService {
         return pageEntityToDTO(productEntities);
     }
 }
+
+    public String like(Long productId, Long memberId) {
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
+        if (optionalMemberEntity.isPresent()) {
+            if (optionalProductEntity.isPresent()) {
+                ProductEntity productEntity = optionalProductEntity.get();
+                MemberEntity memberEntity = optionalMemberEntity.get();
+                Long save = likeRepository.save(LikeEntity.toLike(productEntity, memberEntity)).getLikeId();
+                System.out.println("save = " + save);
+                if (save != null) {
+                    return "ok";
+                } else {
+                    return "no";
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<LikeDTO> findByLike(Long productId) {
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
+        List<LikeDTO> likeDTOList = new ArrayList<>();
+        if(optionalProductEntity.isPresent()){
+            ProductEntity productEntity = optionalProductEntity.get();
+            List<LikeEntity> likeEntityList = productEntity.getLikeEntityList();
+            for(LikeEntity likeEntity : likeEntityList){
+                likeDTOList.add(LikeDTO.toLikeDTO(likeEntity));
+            }
+        }
+        return likeDTOList;
+    }
+}
+
+
