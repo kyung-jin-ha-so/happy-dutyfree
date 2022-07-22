@@ -51,4 +51,11 @@ public class DepartureController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+//    @GetMapping("/findFlightList")
+//    public @ResponseBody List<CommentDTO> save(@ModelAttribute CommentDTO commentDTO) {
+//        commentService.save(commentDTO);
+//        List<CommentDTO> commentDTOList = commentService.findAll(commentDTO.getBoardId());
+//        return commentDTOList;
+//    }
+
 }
