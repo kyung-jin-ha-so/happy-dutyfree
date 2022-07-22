@@ -5,8 +5,9 @@ import com.its.happy.service.MemberService;
 import com.its.happy.service.PointService;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
-import org.json.simple.JSONObject;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,6 +77,37 @@ public class MemberController {
     @GetMapping("/sendSMS")
     public @ResponseBody String sendSMS(@RequestParam String memberMobile) throws CoolsmsException {
         return memberService.sendSMS(memberMobile);
+    }
+
+    //아이디찾기 화면 이동
+    @GetMapping("/findEmail")
+    public String findEmailForm(){
+        return "/memberPages/findEmail";
+    }
+    
+
+    // 아이디찾기 - 핸드폰번호로 일치하는 회원 찾기
+    @PostMapping("/mobile-check")
+    public @ResponseBody String mobileCheck(@RequestParam String memberMobile){
+        String mobileResult = memberService.mobileCheck(memberMobile);
+        return mobileResult;
+    }
+
+    // 핸드폰 인증 완료시 해당 전화번호를 가지고 있는 이메일 보여주기
+    @GetMapping("/findEmailResult")
+    public String findEmail(@RequestParam String memberMobile, Model model){
+        System.out.println("MemberController.findEmail");
+        System.out.println(memberMobile);
+        MemberDTO memberDTO = memberService.findEmail(memberMobile);
+        System.out.println(memberDTO);
+        model.addAttribute("member",memberDTO);
+        return "memberPages/findEmailResult";
+    }
+
+    //비밀번호찾기 화면 이동
+    @GetMapping("/findPassword")
+    public String findPasswordForm(){
+        return "/memberPages/findPassword";
     }
 
 }

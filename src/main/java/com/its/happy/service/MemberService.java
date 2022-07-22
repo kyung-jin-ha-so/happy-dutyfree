@@ -24,13 +24,14 @@ public class MemberService {
 
     // 회원가입 구현 - 비밀번호 암호화
     @Transactional
-    public void save(MemberDTO memberDTO) {
+    public Long save(MemberDTO memberDTO) {
         String password = memberDTO.getMemberPassword();
         String encodedPassword = passwordEncoder.encode(password);
         memberDTO.setMemberPassword(encodedPassword);
         MemberEntity memberEntity = MemberEntity.toSave(memberDTO);
-        memberRepository.save(memberEntity);
+        return memberRepository.save(memberEntity).getMemberId();
     }
+
 
 
     // 이메일 중복체크
@@ -81,6 +82,27 @@ public class MemberService {
         coolsms.send(params); // 메시지 전송
 
         return numStr;
+    }
+
+
+    // 아이디찾기 - 핸드폰번호로 일치하는 회원 찾기
+    public String mobileCheck(String memberMobile) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberMobile(memberMobile);
+        if(optionalMemberEntity.isEmpty()){
+            return "NO";
+        }else {
+            return "OK";
+        }
+    }
+
+
+    public MemberDTO findEmail(String memberMobile) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberMobile(memberMobile);
+        if(optionalMemberEntity.isPresent()){
+            return MemberDTO.toMemberDTO(optionalMemberEntity.get());
+        }else {
+            return null;
+        }
     }
 }
 
