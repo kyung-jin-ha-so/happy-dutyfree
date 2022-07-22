@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+
 </head>
 <body>
 상품 상세 정보
@@ -20,8 +21,9 @@
             <th>할인율</th>
             <th>인터넷할인가</th>
             <th>썸네일</th>
+            <th>찜하기</th>
         </tr>
-        <tr>
+        <tr t>
             <td th:text="${product.productId}"></td>
             <td th:text="${product.productName}"></td>
             <td th:text="${product.productDesc}"></td>
@@ -29,14 +31,71 @@
             <td th:text="${product.productDiscount}"></td>
             <td th:text="${product.productPrice}"></td>
             <td><img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""></td>
+
+            <td th:each="like: ${likeList}" th:if="${like.likeId} == null"><i class="bi bi-heart" onclick="saveWish()"></i></td>
+            <td th:each="like: ${likeList}" th:if="${like.likeId}!= null"><i class="bi bi-heart-fill" onclick="deleteWish()"></i></td>
         </tr>
     </table>
-
     상세 설명이미지
-    <div th:each="productFile: ${productFileList}" >
+    <div th:each="productFile: ${productFileList}">
         <img th:src="@{|/upload/${productFile.productFileName}|}" alt="">
     </div>
-</div>
 
+    <p2>확인용 test</p2>
+    <div th:each="like: ${likeList}">
+        <div th:text="${like.likeId}"></div>
+        <div th:text="${like.memberEntity.memberId}"></div>
+        <div th:text="${like.productEntity.productId}"></div>
+    </div>
+</div>
 </body>
+<script th:inline="javascript">
+    function saveWish() {
+        if ([[${session.loginEmail}]] == null) {
+            alert("로그인 후 찜하실 수 있습니다");
+            location.href = "/member/login";
+        } else {
+            let memberId = [[${session.loginId}]];
+            let productId = [[${product.productId}]];
+            $.ajax({
+                type: "post",
+                url: "/product/like",
+                data: {
+                    "memberId": memberId,
+                    "productId": productId
+                },
+                dataType: "text",
+                success: function (result) {
+                    alert("찜하기 성공")
+                }, error: function () {
+                    alert("찜하기 실패")
+                }
+            })
+        }
+    }
+
+    function deleteWish() {
+        if ([[${session.loginEmail}]] == null) {
+            alert("로그인 후 찜하실 수 있습니다");
+            location.href = "/member/login";
+        } else {
+            let memberId = [[${session.loginId}]];
+            let productId = [[${product.productId}]];
+            $.ajax({
+                type: "post",
+                url: "/product/like",
+                data: {
+                    "memberId": memberId,
+                    "productId": productId
+                },
+                dataType: "text",
+                success: function (result) {
+                    alert("찜취소 성공")
+                }, error: function () {
+                    alert("찜 취소 실패");
+                }
+            })
+        }
+    }
+</script>
 </html>
