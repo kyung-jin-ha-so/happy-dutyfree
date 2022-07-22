@@ -31,7 +31,7 @@ ProductList
             <td th:text="${product.productPrice}"></td>
             <td th:text="${product.productQuantity}"></td>
             <td th:text="${product.productStatus}"></td>
-            <td th:text="수정"></td>
+            <td th:href="@{|/product/update/${product.productId}|}" th:text="수정"></td>
             <td th:if="${product.productStatus.toString().equals('판매중')}">
                 <a th:href="@{|/product/statusClose/${product.productId}|}" th:text="판매중지"></a>
             </td>

@@ -52,7 +52,6 @@ public class ProductService {
 
     public void fileSave(Long savedId, List<MultipartFile> multipartFileList) throws IOException {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(savedId);
-        System.out.println("optionalProductEntity = " + optionalProductEntity);
         if (optionalProductEntity.isPresent()) {
             ProductEntity productEntity = optionalProductEntity.get();
             ProductFilesDTO productFilesDTO = new ProductFilesDTO();
@@ -162,6 +161,33 @@ public class ProductService {
             productRepository.save(productEntity);
         }
     }
+
+    public Long update(ProductDTO productDTO, CategoryDTO categoryDTO) throws IOException {
+        MultipartFile productThumbnailFile = productDTO.getProductThumbnailFile();
+        String productThumbnail = productThumbnailFile.getOriginalFilename();
+        productThumbnail = System.currentTimeMillis() + "-" + productThumbnail;
+        String savePath = "C:\\happy_img\\" + productThumbnail;
+        if (!productThumbnailFile.isEmpty()) {
+            productThumbnailFile.transferTo(new File(savePath));
+        } else {
+            productThumbnail = productRepository.findById(productDTO.getProductId()).get().getProductThumbnail();
+        }
+        productDTO.setProductThumbnail(productThumbnail);
+        Optional<CategoryEntity> optionalCategoryEntity = categoryRepository.findById(categoryDTO.getCategoryId());
+        if (optionalCategoryEntity.isPresent()) {
+            CategoryEntity categoryEntity = optionalCategoryEntity.get();
+            Long savedId = productRepository.save(ProductEntity.toUpdateEntity(productDTO, categoryEntity)).getProductId();
+            return savedId;
+        }
+        return null;
+    }
+
+    public Page<ProductDTO> findSearch(Pageable pageable, String q) {
+        int page = pageReturn(pageable);
+        Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")),q);
+        return pageEntityToDTO(productEntities);
+    }
+}
 
     public String like(Long productId, Long memberId) {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);

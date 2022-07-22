@@ -2,10 +2,12 @@ package com.its.happy.controller;
 
 import com.its.happy.dto.MemberDTO;
 import com.its.happy.service.MemberService;
+import com.its.happy.service.PointService;
 import lombok.RequiredArgsConstructor;
-import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Random;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ import java.util.Random;
 public class MemberController {
 
     private final MemberService memberService;
+    private final PointService pointService;
 
     // 회원가입 페이지 이동
     @GetMapping("/save")
@@ -32,7 +34,9 @@ public class MemberController {
     // 회원가입 구현
     @PostMapping("/save")
     public String save(@ModelAttribute MemberDTO memberDTO){
-        memberService.save(memberDTO);
+        Long savedId = memberService.save(memberDTO);
+        // 회원가입시 적립금 100만원 저장
+        pointService.save(savedId);
         return "/memberPages/login";
     }
 
@@ -69,31 +73,41 @@ public class MemberController {
         return "redirect:/";
     }
 
-//    //핸드폰 문자 인증
-//    @PostMapping("/mobileCheck")
-//    public @ResponseBody String mobilCheck(@RequestParam String memberMobile) throws CoolsmsException){
-//        String api_key = "NCSHONZYXFYSSMEB";
-//        String api_secret = "UNNGPMH4FUXIRCPQY2VSJPZFOZTB80QE";
-//        Message coolsms = new Message(api_key, api_secret);
-//
-//        Random rand  = new Random();
-//        String numStr = "";
-//        for(int i=0; i<4; i++) {
-//            String ran = Integer.toString(rand.nextInt(10));
-//            numStr+=ran;
-//        }
-//
-//        HashMap<String, String> params = new HashMap<String, String>();
-//        params.put("to", "01072248086");    // 수신전화번호 (ajax로 view 화면에서 받아온 값으로 넘김)
-//        params.put("from", "01072248086");    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
-//        params.put("type", "sms");
-//        params.put("text", "인증번호는 [" + numStr + "] 입니다.");
-//
-//        coolsms.send(params); // 메시지 전송
-//
-//        return numStr;
-//    }
+    // 핸드폰 문자 인증
+    @GetMapping("/sendSMS")
+    public @ResponseBody String sendSMS(@RequestParam String memberMobile) throws CoolsmsException {
+        return memberService.sendSMS(memberMobile);
+    }
 
+    //아이디찾기 화면 이동
+    @GetMapping("/findEmail")
+    public String findEmailForm(){
+        return "/memberPages/findEmail";
+    }
+    
 
+    // 아이디찾기 - 핸드폰번호로 일치하는 회원 찾기
+    @PostMapping("/mobile-check")
+    public @ResponseBody String mobileCheck(@RequestParam String memberMobile){
+        String mobileResult = memberService.mobileCheck(memberMobile);
+        return mobileResult;
+    }
+
+    // 핸드폰 인증 완료시 해당 전화번호를 가지고 있는 이메일 보여주기
+    @GetMapping("/findEmailResult")
+    public String findEmail(@RequestParam String memberMobile, Model model){
+        System.out.println("MemberController.findEmail");
+        System.out.println(memberMobile);
+        MemberDTO memberDTO = memberService.findEmail(memberMobile);
+        System.out.println(memberDTO);
+        model.addAttribute("member",memberDTO);
+        return "memberPages/findEmailResult";
+    }
+
+    //비밀번호찾기 화면 이동
+    @GetMapping("/findPassword")
+    public String findPasswordForm(){
+        return "/memberPages/findPassword";
+    }
 
 }

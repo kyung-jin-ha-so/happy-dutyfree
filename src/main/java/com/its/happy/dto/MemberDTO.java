@@ -1,6 +1,6 @@
 package com.its.happy.dto;
 
-import com.its.happy.entity.MemberEntity;
+import com.its.happy.entity.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -26,6 +27,17 @@ public class MemberDTO {
     private String memberKakaoId;
     private String memberTier;
     private LocalDateTime memberCreatedTime;
+    private List<PointEntity> pointEntityList;
+    private PassportEntity passportEntity;
+    private List<ReviewEntity> reviewEntityList;
+    private List<SearchEntity> searchEntityList;
+    private List<LikeEntity> likeEntityList;
+    private List<CartEntity> cartEntityList;
+    private List<OrderEntity> orderEntityList;
+    private List<OrderDepartureEntity> orderDepartureEntityList;
+    private List<CouponMemberEntity> couponMemberEntityList;
+    private List<DepartureEntity> departureEntityList;
+
 
     public static MemberDTO toMemberDTO(MemberEntity memberEntity) {
         MemberDTO memberDTO = new MemberDTO();
@@ -38,6 +50,16 @@ public class MemberDTO {
         memberDTO.setMemberKakaoId(memberEntity.getMemberKakaoId());
         memberDTO.setMemberTier(memberEntity.getMemberTier());
         memberDTO.setMemberCreatedTime(memberEntity.getCreatedTime());
+        memberDTO.setPointEntityList(memberEntity.getPointEntityList());
+        memberDTO.setPassportEntity(memberEntity.getPassportEntity());
+        memberDTO.setReviewEntityList(memberEntity.getReviewEntityList());
+        memberDTO.setSearchEntityList(memberEntity.getSearchEntityList());
+        memberDTO.setLikeEntityList(memberEntity.getLikeEntityList());
+        memberDTO.setCartEntityList(memberEntity.getCartEntityList());
+        memberDTO.setOrderEntityList(memberEntity.getOrderEntityList());
+        memberDTO.setOrderDepartureEntityList(memberEntity.getOrderDepartureEntityList());
+        memberDTO.setCouponMemberEntityList(memberEntity.getCouponMemberEntityList());
+        memberDTO.setDepartureEntityList(memberEntity.getDepartureEntityList());
         return memberDTO;
     }
 
