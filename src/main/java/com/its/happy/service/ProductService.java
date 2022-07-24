@@ -187,7 +187,6 @@ public class ProductService {
         Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")),q);
         return pageEntityToDTO(productEntities);
     }
-}
 
     public String like(Long productId, Long memberId) {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
