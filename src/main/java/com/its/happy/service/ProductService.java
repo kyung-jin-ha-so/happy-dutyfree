@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.Option;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Member;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
@@ -184,10 +186,9 @@ public class ProductService {
 
     public Page<ProductDTO> findSearch(Pageable pageable, String q) {
         int page = pageReturn(pageable);
-        Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")),q);
+        Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), q);
         return pageEntityToDTO(productEntities);
     }
-}
 
     public String like(Long productId, Long memberId) {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
@@ -207,13 +208,25 @@ public class ProductService {
         }
         return null;
     }
+    public LikeDTO findByLike(Long productId, Long memberId) {
+        Optional<LikeEntity> optionalLikeEntity = likeRepository.findByProductEntity_ProductIdAndMemberEntity_MemberId(productId, memberId);
+        if(optionalLikeEntity.isPresent()){
+            return LikeDTO.toLikeDTO(optionalLikeEntity.get());
+        } else {
+            return null;
+        }
+    }
+    @Transactional
+    public void deleteById(Long memberId, Long productId) {
+        likeRepository.deleteByMemberEntity_MemberIdAndProductEntity_ProductId(memberId, productId);
+    }
 
-    public List<LikeDTO> findByLike(Long productId) {
-        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
+    public List<LikeDTO> findByLikeList(Long memberId) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
         List<LikeDTO> likeDTOList = new ArrayList<>();
-        if(optionalProductEntity.isPresent()){
-            ProductEntity productEntity = optionalProductEntity.get();
-            List<LikeEntity> likeEntityList = productEntity.getLikeEntityList();
+        if(optionalMemberEntity.isPresent()){
+            MemberEntity memberEntity = optionalMemberEntity.get();
+            List<LikeEntity> likeEntityList = memberEntity.getLikeEntityList();
             for(LikeEntity likeEntity : likeEntityList){
                 likeDTOList.add(LikeDTO.toLikeDTO(likeEntity));
             }
