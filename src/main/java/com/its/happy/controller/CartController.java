@@ -10,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+import java.util.List;
+
 @Controller
 @RequestMapping("/cart")
 @RequiredArgsConstructor
@@ -32,6 +35,13 @@ public class CartController {
         cartService.update(productId, memberId);
         System.out.println("memberId = " + memberId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/cartList")
+    public String cartList(HttpSession session, Model model){
+        Long memberId = (Long) session.getAttribute("loginId");
+        List<CartDTO> cartDTOList = cartService.findById(memberId);
+        model.addAttribute("cartList", cartDTOList);
+        return "cartPages/list";
     }
 }
 

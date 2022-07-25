@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,6 +55,19 @@ public class CartService {
     public void update(Long productId, Long memberId) {
         System.out.println("CartService.update");
         cartRepository.cartQty(productId, memberId);
+    }
+
+    public List<CartDTO> findById(Long memberId) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
+        List<CartDTO> cartDTOList = new ArrayList<>();
+        if(optionalMemberEntity.isPresent()){
+            MemberEntity memberEntity = optionalMemberEntity.get();
+            List<CartEntity> cartEntityList = memberEntity.getCartEntityList();
+            for(CartEntity cartEntity : cartEntityList){
+                cartDTOList.add(CartDTO.toCartDTO(cartEntity));
+            }
+        }
+        return cartDTOList;
     }
 }
 
