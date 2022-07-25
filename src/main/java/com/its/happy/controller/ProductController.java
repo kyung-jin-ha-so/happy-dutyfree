@@ -7,6 +7,7 @@ import com.its.happy.entity.ProductEntity;
 import com.its.happy.dto.CategoryDTO;
 import com.its.happy.dto.ProductDTO;
 import com.its.happy.dto.ProductFilesDTO;
+import com.its.happy.service.CartService;
 import com.its.happy.service.ProductFilesService;
 import com.its.happy.service.ProductService;
 import com.its.happy.service.ReviewService;
@@ -35,6 +36,7 @@ public class ProductController {
     private final ProductService productService;
     private final ReviewService reviewService;
     private final ProductFilesService productFilesService;
+    private final CartService cartService;
 
     @GetMapping("/save")
     public String saveForm() {
@@ -120,6 +122,9 @@ public class ProductController {
         Long memberId = (Long) session.getAttribute("loginId");
         LikeDTO likeDTO = productService.findByLike(productId, memberId);
         model.addAttribute("like", likeDTO);
+        System.out.println("likeDTO = " + likeDTO);
+        CartDTO cartDTO = cartService.findByCart(productId, memberId);
+        model.addAttribute("cart", cartDTO);
         return "/productPages/detail";
     }
 
