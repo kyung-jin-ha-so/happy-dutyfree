@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 </head>
 <body>
 상품 상세 정보
@@ -21,6 +21,7 @@
             <th>인터넷할인가</th>
             <th>썸네일</th>
             <th>찜하기</th>
+            <th>장바구니 담기</th>
         </tr>
         <tr>
             <td th:text="${product.productId}"></td>
@@ -31,25 +32,21 @@
             <td th:text="${product.productPrice}"></td>
             <td><img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""></td>
 
-            <td th:each="like: ${likeList}" th:if="${like.likeId} == null"><i class="bi bi-heart" onclick="saveWish()"></i></td>
-            <td th:each="like: ${likeList}" th:if="${like.likeId}!= null"><i class="bi bi-heart-fill" onclick="deleteWish()"></i></td>
+            <td th:if="${like == null}">
+                <i class="bi bi-heart" onclick="saveWish()"></i></td>
+            <td th:if="${like != null}">
+                <i class="bi bi-heart-fill" onclick="deleteWish()"></i></td>
+            <td><input type="button" onclick="addToCart()" value="장바구니 담기"></a></td>
         </tr>
     </table>
 
-<!--    <div th:each="${session.loginEmail == 'admin'}">-->
-        <a th:href="@{|/product/update/${product.productId}|}">수정</a>
-<!--    </div>-->
+    <!--    <div th:each="${session.loginEmail == 'admin'}">-->
+    <a th:href="@{|/product/update/${product.productId}|}">수정</a>
+    <!--    </div>-->
 
     상세 설명이미지
-    <div th:each="productFile: ${product.productFilesEntityList}" >
+    <div th:each="productFile: ${product.productFilesEntityList}">
         <img th:src="@{|/upload/${productFile.productFileName}|}" alt="">
-    </div>
-
-    <p2>소희 찜 확인용 test</p2>
-    <div th:each="like: ${likeList}">
-        <div th:text="${like.likeId}"></div>
-        <div th:text="${like.memberEntity.memberId}"></div>
-        <div th:text="${like.productEntity.productId}"></div>
     </div>
 </div>
 
@@ -92,8 +89,10 @@
                 dataType: "text",
                 success: function (result) {
                     alert("찜하기 성공")
+                    location.reload();
                 }, error: function () {
                     alert("찜하기 실패")
+                    location.reload();
                 }
             })
         }
@@ -108,7 +107,7 @@
             let productId = [[${product.productId}]];
             $.ajax({
                 type: "post",
-                url: "/product/like",
+                url: "/product/dontLike",
                 data: {
                     "memberId": memberId,
                     "productId": productId
@@ -116,10 +115,60 @@
                 dataType: "text",
                 success: function (result) {
                     alert("찜취소 성공")
+                    location.reload();
                 }, error: function () {
                     alert("찜 취소 실패");
+                    location.reload();
                 }
             })
+        }
+    }
+
+    function addToCart() {
+        console.log("addToCart함수실행됨")
+        const memberId = [[${session.loginId}]];
+        const productId = [[${product.productId}]];
+        if ([[${session.loginEmail}]] == null) {
+            alert("로그인 후 이용할실 수 있습니다.");
+            location.href = "/member/login";
+        } else if ([[${cart}]] == null) {
+            console.log("null로 찍힘")
+            $.ajax({
+                type: "get",
+                url: "/cart/save",
+                data: {
+                    "memberId": memberId,
+                    "productId": productId
+                },
+                dataType: "text",
+                success: function (result) {
+                    alert("장바구니 담기")
+                    location.reload();
+                }, error: function () {
+                    alert("장바구니 담기 실패")
+                }
+            })
+        } else if ([[${cart}]] != null) {
+            console.log("else if 들어옴")
+            if (confirm("장바구니에 동일한 상품이 있습니다. 장바구니에 추가하시겠습니까?")) {
+                $.ajax({
+                    type: "get",
+                    url: "/cart/addToCart",
+                    data: {
+                        "memberId": memberId,
+                        "productId": productId
+                    },
+                    dataType: "text",
+                    success: function () {
+                        alert("장바구니 담기")
+                        location.reload();
+                    }, error: function () {
+                        alert("장바구니 담기 실패")
+                    }
+                })
+            } else {
+                location.reload();
+            }
         }
     }
 </script>
