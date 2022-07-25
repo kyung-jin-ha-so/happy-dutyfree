@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,17 @@ public class EventService {
         }
         return null;
     }
+
+    public Long update(EventDTO eventDTO, CouponDTO couponDTO) {
+        Optional<CouponEntity> optionalCouponEntity = couponRepository.findById(couponDTO.getCouponId());
+        if(optionalCouponEntity.isPresent()){
+            CouponEntity couponEntity = optionalCouponEntity.get();
+            Long savedId = eventRepository.save(EventEntity.toUpdateEntity(eventDTO, couponEntity)).getEventId();
+            return savedId;
+        }
+        return null;
+    }
+
     public void fileSave(Long savedId, List<MultipartFile> multipartFileList) throws IOException{
         Optional<EventEntity> optionalEventEntity = eventRepository.findById(savedId);
         System.out.println("optionalEventEntity = " + optionalEventEntity);
@@ -92,11 +104,16 @@ public class EventService {
         }
     }
 
-    public void update(EventDTO eventDTO) {
-        eventRepository.save(EventEntity.toUpdateEntity(eventDTO));
-    }
-
     public void deleteById(Long eventId) {
         eventRepository.deleteById(eventId);
+    }
+
+    public List<EventDTO> search(String q) {
+        List<EventEntity> eventEntityList = eventRepository.findByEventTitleContainingOrEventContentsContaining(q, q);
+        List<EventDTO> eventDTOList = new ArrayList<>();
+        for(EventEntity eventEntity: eventEntityList){
+            eventDTOList.add(EventDTO.toEventDTO(eventEntity));
+        }
+        return eventDTOList;
     }
 }

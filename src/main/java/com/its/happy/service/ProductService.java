@@ -1,15 +1,9 @@
 package com.its.happy.service;
 
 import com.its.happy.common.PagingConst;
-import com.its.happy.dto.CategoryDTO;
-import com.its.happy.dto.ProductDTO;
-import com.its.happy.dto.ProductFilesDTO;
-import com.its.happy.entity.CategoryEntity;
-import com.its.happy.entity.ProductEntity;
-import com.its.happy.entity.ProductFilesEntity;
-import com.its.happy.repository.CategoryRepository;
-import com.its.happy.repository.ProductFilesRepository;
-import com.its.happy.repository.ProductRepository;
+import com.its.happy.dto.*;
+import com.its.happy.entity.*;
+import com.its.happy.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,8 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.Option;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Member;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +29,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductFilesRepository productFilesRepository;
+    private final LikeRepository likeRepository;
+    private final MemberRepository memberRepository;
 
 
     public Long save(ProductDTO productDTO, CategoryDTO categoryDTO) throws IOException {
@@ -155,11 +153,11 @@ public class ProductService {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(productDTO.getProductId());
         if (optionalProductEntity.isPresent()) {
             ProductEntity productEntity = optionalProductEntity.get();
-             if(productEntity.getProductQuantity() == 0 && productEntity.getProductQuantity()<productDTO.getProductQuantity()){
-                 productEntity.setProductStatus("판매중");
-             }
+            if (productEntity.getProductQuantity() == 0 && productEntity.getProductQuantity() < productDTO.getProductQuantity()) {
+                productEntity.setProductStatus("판매중");
+            }
             productEntity.setProductQuantity(productDTO.getProductQuantity());
-            if(productDTO.getProductQuantity() == 0){
+            if (productDTO.getProductQuantity() == 0) {
                 productEntity.setProductStatus("품절");
             }
             productRepository.save(productEntity);
@@ -188,7 +186,53 @@ public class ProductService {
 
     public Page<ProductDTO> findSearch(Pageable pageable, String q) {
         int page = pageReturn(pageable);
-        Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")),q);
+        Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), q);
         return pageEntityToDTO(productEntities);
     }
+
+    public String like(Long productId, Long memberId) {
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
+        if (optionalMemberEntity.isPresent()) {
+            if (optionalProductEntity.isPresent()) {
+                ProductEntity productEntity = optionalProductEntity.get();
+                MemberEntity memberEntity = optionalMemberEntity.get();
+                Long save = likeRepository.save(LikeEntity.toLike(productEntity, memberEntity)).getLikeId();
+                System.out.println("save = " + save);
+                if (save != null) {
+                    return "ok";
+                } else {
+                    return "no";
+                }
+            }
+        }
+        return null;
+    }
+    public LikeDTO findByLike(Long productId, Long memberId) {
+        Optional<LikeEntity> optionalLikeEntity = likeRepository.findByProductEntity_ProductIdAndMemberEntity_MemberId(productId, memberId);
+        if(optionalLikeEntity.isPresent()){
+            return LikeDTO.toLikeDTO(optionalLikeEntity.get());
+        } else {
+            return null;
+        }
+    }
+    @Transactional
+    public void deleteById(Long memberId, Long productId) {
+        likeRepository.deleteByMemberEntity_MemberIdAndProductEntity_ProductId(memberId, productId);
+    }
+
+    public List<LikeDTO> findByLikeList(Long memberId) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
+        List<LikeDTO> likeDTOList = new ArrayList<>();
+        if(optionalMemberEntity.isPresent()){
+            MemberEntity memberEntity = optionalMemberEntity.get();
+            List<LikeEntity> likeEntityList = memberEntity.getLikeEntityList();
+            for(LikeEntity likeEntity : likeEntityList){
+                likeDTOList.add(LikeDTO.toLikeDTO(likeEntity));
+            }
+        }
+        return likeDTOList;
+    }
 }
+
+

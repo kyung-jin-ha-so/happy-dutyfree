@@ -29,6 +29,7 @@ public class FlightTest {
 
         // 가장 큰 JSONObject를 가져옵니다.
         JSONObject jObject = new JSONObject(result);
+
         // 배열을 가져옵니다.
         JSONObject  jObject2 = jObject.getJSONObject("response");
         JSONObject  jObject3 = jObject2.getJSONObject("body");

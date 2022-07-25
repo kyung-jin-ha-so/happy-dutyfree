@@ -1,9 +1,7 @@
-package com.its.happy.api;/* Java 1.8 샘플 코드 */
+package com.its.happy.api;
 
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -16,8 +14,8 @@ public class ApiExplorer {
     public static String getFlight() throws IOException, JSONException {
         StringBuilder urlBuilder = new StringBuilder("http://openapi.airport.co.kr/service/rest/FlightScheduleList/getIflightScheduleList"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=nLzuj5x1fefaIpwYrFwshTQfLrE28oSxxolY7w0e1J8mAUnAz8XESaS022qnqUW2RHnzr4bi4kM4aIVVnHlNRQ%3D%3D"); /*Service Key*/
-        urlBuilder.append("&" + URLEncoder.encode("schDate", "UTF-8") + "=" + URLEncoder.encode("20220721", "UTF-8")); /*검색일자*/
-        urlBuilder.append("&" + URLEncoder.encode("schDeptCityCode", "UTF-8") + "=" + URLEncoder.encode("FUK", "UTF-8")); /*출발 도시 코드*/
+        urlBuilder.append("&" + URLEncoder.encode("schDate", "UTF-8") + "=" + URLEncoder.encode("20220722", "UTF-8")); /*검색일자*/
+//        urlBuilder.append("&" + URLEncoder.encode("schDeptCityCode", "UTF-8") + "=" + URLEncoder.encode("FUK", "UTF-8")); /*출발 도시 코드*/
         urlBuilder.append("&" + URLEncoder.encode("schArrvCityCode", "UTF-8") + "=" + URLEncoder.encode("ICN", "UTF-8")); /*도착 도시 코드*/
         urlBuilder.append("&" + URLEncoder.encode("schAirLine", "UTF-8") + "=" + URLEncoder.encode("KE", "UTF-8")); /*항공편 코드*/
         urlBuilder.append("&" + URLEncoder.encode("_type", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*항공편 넘버*/
