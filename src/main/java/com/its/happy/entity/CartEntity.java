@@ -1,5 +1,6 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.CartDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +17,7 @@ public class CartEntity {
     private Long cartId;
 
     @Column(nullable = false)
-    private String cartQty;
+    private int cartQty;
 
     // 장바구니(n)가 상품(1)을 참조함
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,4 +29,12 @@ public class CartEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
+    public static CartEntity toCartEntity(ProductEntity productEntity, MemberEntity memberEntity) {
+        CartEntity cartEntity = new CartEntity();
+        cartEntity.setCartQty(1);
+        cartEntity.setProductEntity(productEntity);
+        cartEntity.setMemberEntity(memberEntity);
+        return cartEntity;
+
+    }
 }

@@ -7,6 +7,7 @@ import com.its.happy.entity.ProductEntity;
 import com.its.happy.dto.CategoryDTO;
 import com.its.happy.dto.ProductDTO;
 import com.its.happy.dto.ProductFilesDTO;
+import com.its.happy.service.CartService;
 import com.its.happy.service.ProductFilesService;
 import com.its.happy.service.ProductService;
 import com.its.happy.service.ReviewService;
@@ -35,6 +36,7 @@ public class ProductController {
     private final ProductService productService;
     private final ReviewService reviewService;
     private final ProductFilesService productFilesService;
+    private final CartService cartService;
 
     @GetMapping("/save")
     public String saveForm() {
@@ -117,11 +119,12 @@ public class ProductController {
     public String findById(@PathVariable Long productId, Model model, HttpSession session) {
         ProductDTO productDTO = productService.findById(productId);
         model.addAttribute("product", productDTO);
-
-        List<LikeDTO> likeDTOList = productService.findByLike(productId);
-        model.addAttribute("likeList", likeDTOList);
-        System.out.println("ProductController.findById");
-        System.out.println("likeDTOList = " + likeDTOList);
+        Long memberId = (Long) session.getAttribute("loginId");
+        LikeDTO likeDTO = productService.findByLike(productId, memberId);
+        model.addAttribute("like", likeDTO);
+        System.out.println("likeDTO = " + likeDTO);
+        CartDTO cartDTO = cartService.findByCart(productId, memberId);
+        model.addAttribute("cart", cartDTO);
         return "/productPages/detail";
     }
 
@@ -144,7 +147,7 @@ public class ProductController {
     }
 
     @GetMapping("/update/{productId}")
-    public String updateForm(@PathVariable Long productId, Model model){
+    public String updateForm(@PathVariable Long productId, Model model) {
         ProductDTO productDTO = productService.findById(productId);
         model.addAttribute("product", productDTO);
         return "productPages/update";
@@ -152,21 +155,21 @@ public class ProductController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute ProductDTO productDTO, @RequestParam("productFile") List<MultipartFile> multipartFileList,
-                       @ModelAttribute CategoryDTO categoryDTO) throws IOException {
+                         @ModelAttribute CategoryDTO categoryDTO) throws IOException {
         Long updatedId = productService.update(productDTO, categoryDTO);
         productService.fileSave(updatedId, multipartFileList);
         return "index";
     }
 
     @PostMapping("/deleteFile")
-    public @ResponseBody String deleteFile(@RequestParam("productFileId") Long productFileId){
+    public @ResponseBody String deleteFile(@RequestParam("productFileId") Long productFileId) {
         System.out.println("productFileId = " + productFileId);
         productFilesService.deleteById(productFileId);
         return "삭제";
     }
 
     @GetMapping("/search/")
-    public String search(@RequestParam("q") String q, @PageableDefault(page = 1) Pageable pageable, Model model){
+    public String search(@RequestParam("q") String q, @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findSearch(pageable, q);
         model.addAttribute("productList", productList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
@@ -178,17 +181,30 @@ public class ProductController {
         return "/productPages/list";
     }
 
-
     //상품 찜하기
     @PostMapping("/like")
     public ResponseEntity like(@RequestParam("productId") Long productId,
                                @RequestParam("memberId") Long memberId) {
         String result = productService.like(productId, memberId);
-        System.out.println("result = " + result);
         if (result == "ok") {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+    //상품 찜 취소하기
+    @PostMapping("/dontLike")
+    public @ResponseBody boolean dontLike(@RequestParam("productId") Long productId, @RequestParam("memberId") Long memberId) {
+        productService.deleteById(memberId, productId);
+        return true;
+    }
+    //회원별 상품 리스트 보기
+    @GetMapping("/likeList")
+    public String likeList(HttpSession session, Model model){
+        Long memberId = (Long) session.getAttribute("loginId");
+        List<LikeDTO> likeDTOList = productService.findByLikeList(memberId);
+        model.addAttribute("likeList", likeDTOList);
+        return "/productPages/likeList";
+    }
 }
+
