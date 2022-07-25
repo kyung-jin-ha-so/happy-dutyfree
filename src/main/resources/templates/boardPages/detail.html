@@ -2,6 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <title>Title</title>
 </head>
 <body>
@@ -14,7 +17,6 @@
         <th>작성시간</th>
         <th>수정시간</th>
         <th>썸네일</th>
-        <th>첨부사진</th>
         <th>쿠폰번호</th>
         <th>쿠폰이름</th>
         <th>쿠폰금액</th>
@@ -28,18 +30,20 @@
         <td th:text="${event.eventCreatedDate}"></td>
         <td th:text="${event.eventUpdatedDate}"></td>
         <td><img th:src="@{|/upload/${event.eventThumbnailName}|}" width="100" height="100" alt=""></td>
-        <div th:each="eventFile: ${event.eventFilesEntityList}" >
-            <img th:src="@{|/upload/${eventFile.eventFileName}|}" width="100" height="100" alt="">
-        </div>
-        <td th:text="${event.couponEntity.couponId}"></td>
-        <td th:text="${event.couponEntity.couponName}"></td>
+        <td th:text="${event.couponEntity.couponId}" th:id="couponId"></td>
+        <td th:text="${event.couponEntity.couponName}" th:id="couponName"></td>
         <td th:text="${event.couponEntity.couponValue}"></td>
         <td th:text="${event.couponEntity.couponMinimumValue}"></td>
-        <td><img th:src="@{|/upload/${event.couponEntity.couponThumbnail}|}" width="100" height="100" alt=""></td>
+        <td><img th:src="@{|/upload/${event.couponEntity.couponThumbnail}|}" width="100" height="100" alt=""
+                 onclick="issueCoupon()"></td>
         <td><input type="button" value="삭제" onclick="eventDelete()"></td>
         <td><input type="button" value="수정" onclick="eventUpdate()"></td>
     </tr>
 </table>
+<h2>첨부사진</h2>
+<div th:each="eventFile: ${event.eventFilesEntityList}">
+    <img th:src="@{|/upload/${eventFile.eventFileName}|}" width="500" height="500" alt="">
+</div>
 </body>
 <script>
     const eventDelete = () => {
@@ -49,6 +53,27 @@
     const eventUpdate = () => {
         const eventId = [[${event.eventId}]]
         location.href = "/event/update/" + eventId;
+    }
+</script>
+<script th:inline="javascript">
+    function issueCoupon() {
+        const memberId = [[${session.loginId}]];
+        const couponId = [[${event.couponEntity.couponId}]];
+
+        $.ajax({
+            type: "post",
+            url: "/coupon/issueCoupon/",
+            data: {
+                "memberId": memberId,
+                "couponId": couponId
+            },
+            dataType: "text",
+            success: function (result) {
+                alert("쿠폰발급 성공")
+            }, error: function () {
+                alert("쿠폰발급 실패")
+            }
+        });
     }
 </script>
 </html>

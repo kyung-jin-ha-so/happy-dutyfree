@@ -6,22 +6,31 @@
 </head>
 <body>
 인덱스입니다
-
+<div th:text="${session.loginEmail}"></div>
+<br>
+<h2>KT</h2>
 <a href="/passport/save-form">여권 정보 관리</a>
 <a href="/departure/">출국 정보 관리</a>
+
+<h2>JS</h2>
 <a href="/member/save">회원가입</a>
 <a href="/member/login">로그인</a>
+<a href="/member/logout">로그아웃</a>
 
+<h2>MH</h2>
 <a href="/product/save">상품등록</a><br>
 <a href="/category/save">카테고리등록</a><br>
 <a href="/product/">상품목록보기</a><br>
 <a href="/admin/productList/">관리자 상품보기</a><br>
 
+<h2>SH</h2>
 <a href="/event/saveForm">이벤트 저장(admin ver.)</a><br>
-<a href="/event">이벤트목록(admin ver.)</a><br>
+<a href="/admin/eventList">이벤트목록(admin ver.)</a><br>
 <a href="/coupon/saveForm">쿠폰 저장(admin ver.)</a><br>
-<a href="/coupon/findAll">쿠폰목록보기(admin ver.)</a><br>
+<a href="/admin/couponList">쿠폰목록보기(admin ver.)</a><br>
+<a href="/event">이벤트목록(member ver.)</a><br>
+<a href="/product/likeList/">나의 찜목록(member ver.)</a><br>
+<a href="/cart/cartList">나의 장바구니 목록</a><br>
 
-<a href="/member/sendSMS">문자테스트</a>
 </body>
 </html>

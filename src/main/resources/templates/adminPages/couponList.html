@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:inline="javascript" th:each="coupon: ${couponList}">
+
+        function setParentText(id) {
+            if (!window.opener) {
+                window.opener = window.open("", "parentForm");
+            } else {
+                window.opener = window.opener;
+            }
+            // const couponId = document.getElementById([[${coupon.couponId}]]).value
+            opener.document.getElementById("couponId").value = document.getElementById("couponId"+id).value
+            opener.document.getElementById("couponName").value = document.getElementById("couponName"+id).value
+            opener.document.getElementById("couponValue").value = document.getElementById("couponValue"+id).value
+            opener.document.getElementById("couponMinimumValue").value = document.getElementById("couponMinimumValue"+id).value
+            opener.document.getElementById("couponThumbnail").value = document.getElementById("couponThumbnail"+id).value
+            window.close()
+        }
+    </script>
+</head>
+<body>
+<h2>쿠폰 목록</h2>
+<table>
+    <tr>
+        <th>번호</th>
+        <th>이름</th>
+        <th>금액</th>
+        <th>최소금액</th>
+        <th>사진</th>
+        <th>가져오기</th>
+    </tr>
+    <tr th:each="coupon: ${couponList}">
+        <td><input type="text" th:id="${'couponId' + coupon.couponId}" th:value="${coupon.couponId}" style="border:none;" ></td>
+        <td><input type="text" th:id="${'couponName' + coupon.couponId}" th:value="${coupon.couponName}" style="border:none;" ></td>
+        <td><input type="text" th:id="${'couponValue' + coupon.couponId}" th:value="${coupon.couponValue}" style="border:none;" ></td>
+        <td><input type="text" th:id="${'couponMinimumValue' + coupon.couponId}" th:value="${coupon.couponMinimumValue}" style="border:none;" ></td>
+        <td><input type="text" th:id="${'couponThumbnail' + coupon.couponId}" th:value="${coupon.couponThumbnail}" style="border:none;" ></td>
+<!--        <td><img th:src="@{|/upload/${coupon.couponThumbnail}|}" width="100" height="100" alt=""></td>-->
+        <td><input type="button" value="전달" th:id="${coupon.couponId}" onclick="setParentText(this.id)"></td>
+    </tr>
+</table>
+</body>
+</html>

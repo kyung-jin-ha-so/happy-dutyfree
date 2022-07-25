@@ -11,7 +11,26 @@
     <input type="hidden" name="eventThumbnailName" th:value="${event.eventThumbnailName}">
     제목 <input type="text" name="eventTitle" th:value="${event.eventTitle}"><br>
     내용 <input type="text" name="eventContents" th:value="${event.eventContents}"><br>
+
+    <input type="button" value="쿠폰 불러오기" onclick="openChild()"><br>
+    쿠폰이름 <input type="text" id="couponName" name="couponName" readonly><br>
+    쿠폰사진 <input type="text" id="couponThumbnail" name="couponThumbnail" readonly><br>
+
+    <input type="hidden" id="couponId" name="couponId"><br>
+    <input type="hidden" id="couponValue" name="couponValue"><br>
+    <input type="hidden" id="couponMinimumValue" name="couponMinimumValue"><br>
     <input type="submit" value="수정">
 </form>
 </body>
+<script th:inline="javascript">
+    var openWin;
+
+    function openChild() {
+        // window.name = "부모창 이름";
+        window.name = "parentForm";
+        // window.open("open할 window", "자식창 이름", "팝업창 옵션");
+        openWin = window.open("/admin/couponList",
+            "childForm", "width=700, height=350, resizable = no, scrollbars = no");
+    }
+</script>
 </html>

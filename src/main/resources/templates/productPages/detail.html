@@ -20,6 +20,8 @@
             <th>할인율</th>
             <th>인터넷할인가</th>
             <th>썸네일</th>
+            <th>찜하기</th>
+            <th>장바구니 담기</th>
         </tr>
         <tr>
             <td th:text="${product.productId}"></td>
@@ -29,6 +31,12 @@
             <td th:text="${product.productDiscount}"></td>
             <td th:text="${product.productPrice}"></td>
             <td><img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""></td>
+
+            <td th:if="${like == null}">
+                <i class="bi bi-heart" onclick="saveWish()"></i></td>
+            <td th:if="${like != null}">
+                <i class="bi bi-heart-fill" onclick="deleteWish()"></i></td>
+            <td><input type="button" onclick="addToCart()" value="장바구니 담기"></a></td>
         </tr>
     </table>
 
@@ -63,4 +71,105 @@
 
 </div>
 </body>
+<script th:inline="javascript">
+    function saveWish() {
+        if ([[${session.loginEmail}]] == null) {
+            alert("로그인 후 찜하실 수 있습니다");
+            location.href = "/member/login";
+        } else {
+            let memberId = [[${session.loginId}]];
+            let productId = [[${product.productId}]];
+            $.ajax({
+                type: "post",
+                url: "/product/like",
+                data: {
+                    "memberId": memberId,
+                    "productId": productId
+                },
+                dataType: "text",
+                success: function (result) {
+                    alert("찜하기 성공")
+                    location.reload();
+                }, error: function () {
+                    alert("찜하기 실패")
+                    location.reload();
+                }
+            })
+        }
+    }
+
+    function deleteWish() {
+        if ([[${session.loginEmail}]] == null) {
+            alert("로그인 후 찜하실 수 있습니다");
+            location.href = "/member/login";
+        } else {
+            let memberId = [[${session.loginId}]];
+            let productId = [[${product.productId}]];
+            $.ajax({
+                type: "post",
+                url: "/product/dontLike",
+                data: {
+                    "memberId": memberId,
+                    "productId": productId
+                },
+                dataType: "text",
+                success: function (result) {
+                    alert("찜취소 성공")
+                    location.reload();
+                }, error: function () {
+                    alert("찜 취소 실패");
+                    location.reload();
+                }
+            })
+        }
+    }
+
+    function addToCart() {
+        console.log("addToCart함수실행됨")
+        const memberId = [[${session.loginId}]];
+        const productId = [[${product.productId}]];
+        if ([[${session.loginEmail}]] == null) {
+            alert("로그인 후 이용할실 수 있습니다.");
+            location.href = "/member/login";
+        } else if ([[${cart}]] == null) {
+            console.log("null로 찍힘")
+            $.ajax({
+                type: "get",
+                url: "/cart/save",
+                data: {
+                    "memberId": memberId,
+                    "productId": productId
+                },
+                dataType: "text",
+                success: function (result) {
+                    alert("장바구니 담기")
+                    location.reload();
+                }, error: function () {
+                    alert("장바구니 담기 실패")
+                }
+            })
+        } else if ([[${cart}]] != null) {
+            console.log("else if 들어옴")
+            if (confirm("장바구니에 동일한 상품이 있습니다. 장바구니에 추가하시겠습니까?")) {
+                $.ajax({
+                    type: "get",
+                    url: "/cart/addToCart",
+                    data: {
+                        "memberId": memberId,
+                        "productId": productId
+                    },
+                    dataType: "text",
+                    success: function () {
+                        alert("장바구니 담기")
+                        location.reload();
+                    }, error: function () {
+                        alert("장바구니 담기 실패")
+                    }
+                })
+            } else {
+                location.reload();
+            }
+        }
+    }
+</script>
 </html>

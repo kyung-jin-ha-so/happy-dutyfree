@@ -49,13 +49,14 @@ public class EventEntity extends BaseEntity{
         return eventEntity;
     }
 
-    public static EventEntity toUpdateEntity(EventDTO eventDTO) {
+    public static EventEntity toUpdateEntity(EventDTO eventDTO, CouponEntity couponEntity) {
         EventEntity eventEntity = new EventEntity();
         eventEntity.setEventId(eventDTO.getEventId());
         eventEntity.setEventTitle(eventDTO.getEventTitle());
         eventEntity.setEventContents(eventDTO.getEventContents());
         eventEntity.setEventContents(eventDTO.getEventContents());
         eventEntity.setEventThumbnail(eventDTO.getEventThumbnailName());
+        eventEntity.setCouponEntity(couponEntity);
         return eventEntity;
     }
 }
