@@ -43,5 +43,17 @@ public class CartController {
         model.addAttribute("cartList", cartDTOList);
         return "cartPages/list";
     }
+    @PostMapping("/update/")
+    public ResponseEntity updateCartQty(@RequestBody CartDTO cartDTO){
+        cartService.updateCartQty(cartDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+//    public ResponseEntity updateByAjax(@RequestBody MemberDTO memberDTO){
+//        memberService.update(memberDTO);
+//        System.out.println("MemberController.updateByAjax");
+//        System.out.println("memberDTO = " + memberDTO);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }
 
