@@ -21,7 +21,7 @@ public class DepartureEntity {
     private String departureAirport;
 
     @Column(length = 20, nullable = false)
-    private String departureDatetime;
+    private String departureDate;
 
     @Column(length = 20, nullable = false)
     private String departureNumber;
@@ -41,7 +41,7 @@ public class DepartureEntity {
         DepartureEntity departureEntity = new DepartureEntity();
         departureEntity.setDepartureId(departureDTO.getDepartureId());
         departureEntity.setDepartureAirport(departureDTO.getDepartureAirport());
-        departureEntity.setDepartureDatetime(departureDTO.getDepartureDatetime());
+        departureEntity.setDepartureDate(departureDTO.getDepartureDate());
         departureEntity.setDepartureNumber(departureDTO.getDepartureNumber());
         departureEntity.setArrivalRegion(departureDTO.getArrivalRegion());
         departureEntity.setDepartureFeature(departureDTO.getDepartureFeature());

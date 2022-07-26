@@ -21,7 +21,7 @@
         <th>수정/삭제</th>
     </tr>
     <tr th:each="departure: ${departureList}">
-        <td th:text="${departure.departureDatetime}"></td>
+        <td th:text="${departure.departureDate}"></td>
         <td th:text="${departure.departureAirport}"></td>
         <td th:text="${departure.arrivalRegion}"></td>
         <td th:text="${departure.departureFeature}"></td>
