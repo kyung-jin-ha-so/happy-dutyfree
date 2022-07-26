@@ -69,5 +69,18 @@ public class CartService {
         }
         return cartDTOList;
     }
+
+    public void updateCartQty(CartDTO cartDTO) {
+        Optional<CartEntity> optionalCartEntity = cartRepository.findById(cartDTO.getCartId());
+        if(optionalCartEntity.isPresent()) {
+            CartEntity cartEntity = optionalCartEntity.get();
+            MemberEntity memberEntity = cartEntity.getMemberEntity();
+            ProductEntity productEntity = cartEntity.getProductEntity();
+            CartEntity cartEntity1 = cartEntity.toUpdateCart(cartDTO);
+            cartEntity1.setMemberEntity(memberEntity);
+            cartEntity1.setProductEntity(productEntity);
+            cartRepository.save(cartEntity1);
+        }
+    }
 }
 

@@ -43,5 +43,11 @@ public class CartController {
         model.addAttribute("cartList", cartDTOList);
         return "cartPages/list";
     }
+    @PostMapping("/update/")
+    public ResponseEntity updateCartQty(@RequestBody CartDTO cartDTO){
+        cartService.updateCartQty(cartDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
 

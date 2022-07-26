@@ -2,8 +2,11 @@ package com.its.happy.controller;
 
 import com.its.happy.common.PagingConst;
 import com.its.happy.dto.*;
+import com.its.happy.entity.MemberEntity;
+import com.its.happy.entity.ProductEntity;
 import com.its.happy.dto.CategoryDTO;
 import com.its.happy.dto.ProductDTO;
+import com.its.happy.dto.ProductFilesDTO;
 import com.its.happy.service.CartService;
 import com.its.happy.service.ProductFilesService;
 import com.its.happy.service.ProductService;
@@ -164,7 +167,7 @@ public class ProductController {
     }
 
     @GetMapping("/search/")
-    public String search(@RequestParam("q") String q, @PageableDefault(page = 1) Pageable pageable, Model model) {
+    public String search(@RequestParam("q") String q, @PageableDefault(page = 1) Pageable pageable, Model model){
         Page<ProductDTO> productList = productService.findSearch(pageable, q);
         model.addAttribute("productList", productList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
@@ -176,11 +179,13 @@ public class ProductController {
         return "/productPages/list";
     }
 
+
     //상품 찜하기
     @PostMapping("/like")
     public ResponseEntity like(@RequestParam("productId") Long productId,
                                @RequestParam("memberId") Long memberId) {
         String result = productService.like(productId, memberId);
+        System.out.println("result = " + result);
         if (result == "ok") {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
