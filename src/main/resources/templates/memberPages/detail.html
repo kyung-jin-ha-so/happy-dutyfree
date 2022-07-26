@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MemberDetail</title>
+</head>
+<body>
+<h1>회원정보입력</h1>
+<table>
+    <tr>
+        <th>이메일</th>
+        <th th:text="${member.memberEmail}"></th>
+    </tr>
+    <tr>
+        <th>이름</th>
+        <th th:text="${member.memberName}"></th>
+    </tr>
+    <tr>
+        <th>생년월일</th>
+        <th th:text="${member.memberBirth}"></th>
+    </tr>
+    <tr>
+        <th>핸드폰번호</th>
+        <th th:text="${member.memberMobile}"></th>
+    </tr>
+    <tr>
+        <th>멤버쉽등급</th>
+        <th th:text="${member.memberTier}"></th>
+    </tr>
+<!--    <tr>-->
+<!--        <th>이메일</th>-->
+<!--        <th>이름</th>-->
+<!--        <th>생년월일</th>-->
+<!--        <th>핸드폰번호</th>-->
+<!--        <th>멤버쉽등급</th>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <td th:text="${member.memberEmail}"></td>-->
+<!--        <td th:text="${member.memberName}"></td>-->
+<!--        <td th:text="${member.memberBirth}"></td>-->
+<!--        <td th:text="${member.memberMobile}"></td>-->
+<!--        <td th:text="${member.memberTier}"></td>-->
+<!--    </tr>-->
+</table>
+</body>
+</html>

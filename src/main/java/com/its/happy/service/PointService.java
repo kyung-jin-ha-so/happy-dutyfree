@@ -22,10 +22,15 @@ public class PointService {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(savedId);
         if (optionalMemberEntity.isPresent()) {
             MemberEntity memberEntity = optionalMemberEntity.get();
-            PointEntity pointEntity = PointEntity.toSave(memberEntity);
+            PointDTO pointDTO = new PointDTO();
+            pointDTO.setPointValue(1000000);
+            PointEntity pointEntity = PointEntity.toSave(memberEntity,pointDTO);
             pointRepository.save(pointEntity);
         }
     }
+
+    //적립금 사용 save
+
 
 
 }

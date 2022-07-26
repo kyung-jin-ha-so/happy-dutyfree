@@ -1,6 +1,5 @@
 package com.its.happy;
 
-import com.google.gson.Gson;
 import com.its.happy.api.ApiExplorer;
 import com.its.happy.dto.FlightDTO;
 import org.json.JSONArray;
@@ -13,6 +12,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 public class FlightTest {
@@ -22,10 +23,8 @@ public class FlightTest {
     @Transactional
     @Rollback(value = false)
     public void flightApiTest() throws IOException, JSONException {
-        String result = ApiExplorer.getFlight();
-//        Gson gson = new Gson();
-//        FlightDTO flightDTO = gson.fromJson(result, FlightDTO.class);
-//        System.out.println(flightDTO.getResponse().getBody().getItems().getItem().get(0).getInternationalTime());
+        FlightDTO flightDTO = new FlightDTO("20220726", "ICN", "KE");
+        String result = ApiExplorer.getFlight(flightDTO);
 
         // 가장 큰 JSONObject를 가져옵니다.
         JSONObject jObject = new JSONObject(result);
@@ -56,6 +55,34 @@ public class FlightTest {
             System.out.println("internationalTime(" + i + "): " + internationalTime);
             System.out.println();
         }
-
     }
-}
+        @Test
+        @DisplayName("항공API 리스트 테스트")
+        @Transactional
+        @Rollback(value = false)
+        public void flightListApiTest() throws IOException, JSONException {
+            FlightDTO flightDTO = new FlightDTO("20220924", "ICN", "KE");
+            String flight = ApiExplorer.getFlight(flightDTO);
+            JSONObject jObject = new JSONObject(flight);
+            JSONObject  jObject2 = jObject.getJSONObject("response");
+            JSONObject  jObject3 = jObject2.getJSONObject("body");
+            JSONObject  jObject4 = jObject3.getJSONObject("items");
+            JSONArray jArray  = jObject4.getJSONArray("item");
+            List<FlightDTO> flightDTOList = new ArrayList<>();
+            for (int i = 0; i < jArray.length(); i++) {
+                FlightDTO flightDTO1 = new FlightDTO();
+                JSONObject obj = jArray.getJSONObject(i);
+                flightDTO1.setAirport(obj.getString("airport"));
+                flightDTO1.setAirportCode(obj.getString("airportCode"));
+                flightDTO1.setInternationalNum(obj.getString("internationalNum"));
+                flightDTO1.setInternationalTime(obj.getString("internationalTime"));
+                flightDTO1.setAirlineKorean(obj.getString("airlineKorean"));
+                System.out.println("flightDTO = " + flightDTO1);
+                flightDTOList.add(flightDTO1);
+            }
+            System.out.println("flightDTOList = " + flightDTOList);
+            for (int i = 0; i < flightDTOList.size(); i++) {
+                System.out.println(flightDTOList.get(i));
+            }
+        }
+    }
