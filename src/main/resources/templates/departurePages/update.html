@@ -4,6 +4,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+            crossorigin="anonymous"></script>
+
+    <!--    momentjs-->
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.3/moment.min.js"></script>
+
+    <!--    datepicker-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          rel="stylesheet">
+
+    <!--    datetimepicker-->
+    <!-- Popperjs -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.2/dist/umd/popper.min.js"
+            crossorigin="anonymous"></script>
+    <!-- Tempus Dominus JavaScript -->
+    <script src="https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@master/dist/js/tempus-dominus.js"
+            crossorigin="anonymous"></script>
+
+    <!-- Tempus Dominus Styles -->
+    <link href="https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@master/dist/css/tempus-dominus.css"
+          rel="stylesheet" crossorigin="anonymous">
+
 </head>
 <body>
 <h2>save.html</h2>
@@ -12,19 +45,17 @@
     출국장소
     <select name="departureAirport" th:value="${departure.departureAirport}">
         <option value="">선택하세요</option>
-        <option th:selected="${departure.departureAirport}=='인천공항'" value="인천공항">인천공항</option>
-        <option th:selected="${departure.departureAirport}=='김포공항'" value="김포공항">김포공항</option>
-        <option th:selected="${departure.departureAirport}=='김해공항'" value="김해공항">김해공항</option>
-        <option th:selected="${departure.departureAirport}=='대구공항'" value="대구공항">대구공항</option>
-        <option th:selected="${departure.departureAirport}=='제주공항'" value="제주공항">제주공항</option>
-        <option th:selected="${departure.departureAirport}=='청주공항'" value="청주공항">청주공항</option>
-        <option th:selected="${departure.departureAirport}=='부산항'" value="부산항">부산항</option>
-        <option th:selected="${departure.departureAirport}=='인천항 신국제여객터미널'" value="인천항 신국제여객터미널">인천항 신국제여객터미널</option>
+        <option th:selected="${departure.departureAirport}=='ICN'" value="ICN">인천공항</option>
+        <option th:selected="${departure.departureAirport}=='GMP'" value="GMP">김포공항</option>
+        <option th:selected="${departure.departureAirport}=='PUS'" value="PUS">김해공항</option>
     </select><br>
     출국일시
-    <input type="text" name="departureDatetime" th:value="${departure.departureDatetime}"><br>
+    <input type="text" name="departureDate" th:value="${departure.departureDate}"><br>
     편명
-    <input type="text" name="departureNumber" th:value="${departure.departureNumber}"><br>
+    <input type="text" name="departureNumber" th:value="${departure.departureNumber}">
+    <a class="btn btn-primary" data-bs-toggle="modal" id="searchBtn" href="#exampleModalToggle" role="button"
+       hidden></a>
+    <a class="btn btn-primary" onclick="airportCheck()" role="button">편명 검색</a><br>
     직항/경유 여부
     <div th:if="${departure.departureFeature.toString().equals('직항')}">
         <input type="radio" name="departureFeature" value="직항" checked="checked">직항
@@ -48,10 +79,168 @@
     <input type="submit" value="확인">
     <input type="button" value="취소" onclick="cancel()">
 </form>
+
+<!--     modal-->
+<div class="modal fade modal-lg" id="exampleModalToggle" aria-hidden="true"
+     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel">항공편명 선택</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="radio" class="btn-check" name="selectAirline" id="KE" autocomplete="off">
+                <label class="btn btn-primary" for="KE">대한항공</label>
+
+                <input type="radio" class="btn-check" name="selectAirline" id="OZ" autocomplete="off">
+                <label class="btn btn-primary" for="OZ">아시아나항공</label>
+
+                <input type="radio" class="btn-check" name="selectAirline" id="7C" autocomplete="off">
+                <label class="btn btn-primary" for="7C">제주항공</label>
+
+                <input type="radio" class="btn-check" name="selectAirline" id="LJ" autocomplete="off">
+                <label class="btn btn-primary" for="LJ">진에어항공</label>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="flightNext" data-bs-target="#exampleModalToggle2"
+                        data-bs-toggle="modal"
+                        onclick="flightList(this.name, this.value, this.accessKey)">다음
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-lg" id="exampleModalToggle2" aria-hidden="true"
+     aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel2">항공편명 선택</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="flight-list">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">이전
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 <script>
     const cancel = () => {
         location.href = "/member/mypage"
     }
+
+    // 편명 검색 클릭 시 항공사 정보 체크 및 이동(flightNext 태그의 name값으로 지정)
+    const airportCheck = () => {
+        const selectAirport = $("select[name=departureAirport]").val();
+        const selectDate = $("input[name=departureDate]").val();
+        if (selectAirport == "") {
+            alert("출국장소를 선택하세요")
+        } else if (selectDate == "") {
+            alert("출국일시를 선택하세요")
+        } else {
+            document.getElementById("flightNext").setAttribute("name", selectAirport);
+            document.getElementById("flightNext").setAttribute("accessKey", selectDate);
+            console.log(document.getElementById("flightNext"));
+            $('#searchBtn').get(0).click();
+        }
+    }
+
+    // 항공사 라디오 선택 시, 해당 항공사명(id)을 flightNext 태그의 value값으로 지정
+    $("input:radio[name=selectAirline]").click(function () {
+        document.getElementById("flightNext").setAttribute("value", $("input:radio[name=selectAirline]:checked").attr('id'));
+        console.log(document.getElementById("flightNext"));
+    });
+
+    // 해당 공항, 항공사 운항 스케쥴 불러오기
+    const flightList = (cityCode, airline, departureDate) => {
+        console.log(cityCode);
+        console.log(airline);
+        console.log(departureDate);
+        $.ajax({
+            type: "get",
+            url: "/departure/findFlightList",
+            data: {
+                "departureDate": departureDate,
+                "cityCode": cityCode,
+                "airline": airline
+            },
+            dataType: "json",
+            success: function (result) {
+                console.log(result);
+                let output = "<table class='table'>";
+                for (let i in result) {
+                    output += "<tr>";
+                    output += "<td>" + result[i].airlineKorean + "(" + airline + ")" + "</td>";
+                    output += "<td>" + result[i].airport + "(" + result[i].airportCode + ")" + "</td>";
+                    output += "<td>" + result[i].internationalNum + "</td>";
+                    output += "<td>" + result[i].internationalTime + "</td>";
+                    output += "<td>" + "<button type='button' data-bs-dismiss=\"modal\" class='btn-outline' onclick=\"flightUpdate('" + result[i].internationalNum + "')\">" + "선택" + "</button>" + "</td>";
+                    output += "</tr>";
+                }
+                output += "</table>";
+                document.getElementById('flight-list').innerHTML = output;
+            },
+            error: function () {
+                alert("error");
+            }
+        })
+    }
+
+    const flightUpdate = (internationalNum) => {
+        console.log(internationalNum)
+        document.getElementById("departureNumber").value = internationalNum;
+    }
+
+    // datepicker(달력)
+    $(function () {
+        //모든 datepicker에 대한 공통 옵션 설정
+        $.datepicker.setDefaults({
+            dateFormat: 'yymmdd' //Input Display Format 변경
+            , showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
+            , showMonthAfterYear: true //년도 먼저 나오고, 뒤에 월 표시
+            , changeYear: true //콤보박스에서 년 선택 가능
+            , changeMonth: true //콤보박스에서 월 선택 가능
+            , showOn: "both" //button:버튼을 표시하고,버튼을 눌러야만 달력 표시 ^ both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시
+            , buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
+            , buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
+            , buttonText: "선택" //버튼에 마우스 갖다 댔을 때 표시되는 텍스트
+            , yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
+            , monthNamesShort: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] //달력의 월 부분 텍스트
+            , monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] //달력의 월 부분 Tooltip 텍스트
+            , dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'] //달력의 요일 부분 텍스트
+            , dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'] //달력의 요일 부분 Tooltip 텍스트
+            , minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+            , maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)
+        });
+
+        //input을 datepicker로 선언
+        $("#datepicker").datepicker();
+        $("#datepicker2").datepicker();
+
+        //From의 초기값을 오늘 날짜로 설정
+        $('#datepicker').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
+        //To의 초기값을 내일로 설정
+        $('#datepicker2').datepicker('setDate', '+1D'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
+
+        //return날짜를 depart날짜보다 앞으로 설정 못하게, depart날짜를 과거 선택 못하게
+        $('#datepicker').datepicker();
+        $('#datepicker').datepicker('option', 'minDate', '0');
+        $('#datepicker').datepicker("option", "maxDate", $("#datepicker2").val());
+        $('#datepicker').datepicker("option", "onClose", function (selectedDate) {
+            $("#datepicker2").datepicker("option", "minDate", selectedDate);
+        });
+        $('#datepicker2').datepicker();
+        $('#datepicker2').datepicker("option", "minDate", $("#datepicker").val());
+        $('#datepicker2').datepicker("option", "onClose", function (selectedDate) {
+            $("#datepicker").datepicker("option", "maxDate", selectedDate);
+        });
+    });
 </script>
 </html>

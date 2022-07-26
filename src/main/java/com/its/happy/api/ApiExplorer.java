@@ -1,7 +1,7 @@
 package com.its.happy.api;
 
 
-import org.json.JSONException;
+import com.its.happy.dto.FlightDTO;
 
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -11,14 +11,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class ApiExplorer {
-    public static String getFlight() throws IOException, JSONException {
+    public static String getFlight(FlightDTO flightDTO) throws IOException {
         StringBuilder urlBuilder = new StringBuilder("http://openapi.airport.co.kr/service/rest/FlightScheduleList/getIflightScheduleList"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=nLzuj5x1fefaIpwYrFwshTQfLrE28oSxxolY7w0e1J8mAUnAz8XESaS022qnqUW2RHnzr4bi4kM4aIVVnHlNRQ%3D%3D"); /*Service Key*/
-        urlBuilder.append("&" + URLEncoder.encode("schDate", "UTF-8") + "=" + URLEncoder.encode("20220722", "UTF-8")); /*검색일자*/
+        urlBuilder.append("&" + URLEncoder.encode("schDate", "UTF-8") + "=" + URLEncoder.encode(flightDTO.getDepartureDate(), "UTF-8")); /*검색일자*/
 //        urlBuilder.append("&" + URLEncoder.encode("schDeptCityCode", "UTF-8") + "=" + URLEncoder.encode("FUK", "UTF-8")); /*출발 도시 코드*/
-        urlBuilder.append("&" + URLEncoder.encode("schArrvCityCode", "UTF-8") + "=" + URLEncoder.encode("ICN", "UTF-8")); /*도착 도시 코드*/
-        urlBuilder.append("&" + URLEncoder.encode("schAirLine", "UTF-8") + "=" + URLEncoder.encode("KE", "UTF-8")); /*항공편 코드*/
-        urlBuilder.append("&" + URLEncoder.encode("_type", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*항공편 넘버*/
+        urlBuilder.append("&" + URLEncoder.encode("schArrvCityCode", "UTF-8") + "=" + URLEncoder.encode(flightDTO.getCityCode(), "UTF-8")); /*도착 도시 코드*/
+        urlBuilder.append("&" + URLEncoder.encode("schAirLine", "UTF-8") + "=" + URLEncoder.encode(flightDTO.getAirline(), "UTF-8")); /*항공편 코드*/
+        urlBuilder.append("&" + URLEncoder.encode("_type", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
