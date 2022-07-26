@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -18,5 +21,14 @@ public class CategoryService {
 
     public Long save(CategoryDTO categoryDTO) {
         return categoryRepository.save(CategoryEntity.toSaveEntity(categoryDTO)).getCategoryId();
+    }
+
+    public List<CategoryDTO> findAll() {
+        List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
+        List<CategoryDTO> categoryDTOList = new ArrayList<>();
+        for (CategoryEntity category:categoryEntityList) {
+            categoryDTOList.add(CategoryDTO.toDTO(category));
+        }
+        return categoryDTOList;
     }
 }

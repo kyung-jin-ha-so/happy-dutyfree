@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,6 +7,51 @@
 </head>
 <body>
 <h2>save.html</h2>
-
+해피멤버쉽: <p th:text="${member.memberTier}"></p>
+<p th:text="${member.memberName}">님 께서 즉시 받으실 수 있는 쇼핑 혜택입니다.</p>
+할인쿠폰: <p th:text="${member.couponMemberEntityList.size()}">&nbsp;개</p>
+<table>
+    <tr>
+        <th>상품명</th>
+        <th>판매금액</th>
+        <th>수량</th>
+        <th>할인율</th>
+        <th>구매금액</th>
+    </tr>
+    <tr th:each="cart: ${cartList}">
+        <td th:src="@{|/upload/${cart.productThumbnail}|}" th:text="${cart.productName}"></td>
+        <td th:text="${cart.productOriginalPrice}"></td>
+        <td th:text="${cart.cartQty}"></td>
+        <td th:text="${cart.productDiscount}"></td>
+        <td th:text="${cart.productPrice}"></td>
+    </tr>
+</table>
+<h2>고객정보</h2>
+<table class="tg">
+    <thead>
+    <tr>
+        <th class="tg-0pky">영문이름</th>
+        <td class="tg-0pky">성 이름</td>
+        <th class="tg-0pky">생년월일</th>
+        <td class="tg-0pky">1991년~~~</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th class="tg-0pky">여권번호</th>
+        <td class="tg-0pky">M1234</td>
+        <th class="tg-0pky">여권만료일</th>
+        <td class="tg-0pky">2025년~~~</td>
+    </tr>
+    <tr>
+        <th class="tg-0pky">휴대폰번호</th>
+        <td class="tg-0pky" colspan="3">010-2323</td>
+    </tr>
+    <tr>
+        <th class="tg-0pky">이메일</th>
+        <td class="tg-0pky" colspan="3">wqdqwd@gmail.com</td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

@@ -37,4 +37,11 @@ public class CartEntity {
         return cartEntity;
 
     }
+
+    public static CartEntity toUpdateCart(CartDTO cartDTO) {
+        CartEntity cartEntity = new CartEntity();
+        cartEntity.setCartId(cartDTO.getCartId());
+        cartEntity.setCartQty(cartDTO.getCartQty());
+        return cartEntity;
+    }
 }
