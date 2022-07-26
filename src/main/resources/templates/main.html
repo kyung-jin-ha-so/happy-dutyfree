@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<title>경진하소</title>
+	<meta charset="UTF-8">
+
+	<script src="js/jquery.js"></script>
+
+	<!-- css 연결 -->
+	<link rel="stylesheet" href="../static/css/layout.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="../static/css/main.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="../static/css/basic.css" type="text/css" media="all" />
+
+	<!-- swiper 슬라이더 -->
+	<link rel="stylesheet" href="../static/css/swiper.min.css" type="text/css" media="all" />
+	<script src="../static/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body>
+	<div id="wrap">
+		<!-- header -->
+			<div id="haeder">
+				<div class="gnb">
+					<ul>
+						<li><a href="javascript:;">로그인</a></li>
+						<li><a href="javascript:;">회원가입</a></li>
+						<li><a href="javascript:;">MY행복</a></li>
+						<li><a href="javascript:;">장바구니</a></li>
+						<li><a href="javascript:;">주문가능시간</a></li>
+						<li><a href="javascript:;">오늘의 환율 1$ = <b>1,299.3</b>원</a></li>
+					</ul>
+				</div>
+			</div>
+		<!-- header// -->
+
+		<div class="content">
+			<!-- header 아래 검색창 -->
+			<div class="search">
+				<div class="left_box">
+					<!-- logo img_size 133 * 57 -->
+					<div class="logo">
+						<a href="/static">
+							<!-- <img src="" alt=""> -->
+						</a>
+					</div>
+					<div class="category">
+						<a href="javascript:;">카테고리</a>
+						<ul class="depth02">
+							<li><a href="javscript:;">1번</a></li>
+							<li><a href="javscript:;">2번</a></li>
+							<li><a href="javscript:;">3번</a></li>
+							<li><a href="javscript:;">4번</a></li>
+							<li><a href="javscript:;">5번</a></li>
+							<li><a href="javscript:;">6번</a></li>
+							<li><a href="javscript:;">7번</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="center_box">
+					<div class="input_box">
+						<input type="text" placeholder="검색">
+						<a href="javascript"><img src="../static/img/input_click.png" alt=""></a>
+					</div>	
+				</div>
+				<!-- img_size 225 * 80 -->
+				<div class="right_box">
+					<a href="javascript:;">
+						<!-- <img src="" alt=""> -->
+					</a>
+				</div>
+			</div>
+			<!-- header 아래 검색창 -->
+			<!-- main_visual -->
+			<div class="main_visual">
+				<ul class="swiper-wrapper">
+					<!-- img_size 1400*500 -->
+					<li class="swiper-slide">
+						<!-- <img src="" alt=""> -->
+					</li>
+					<li class="swiper-slide">
+						<!-- <img src="" alt=""> -->
+					</li>
+					<li class="swiper-slide">
+						<!-- <img src="" alt=""> -->
+					</li>
+				</ul>
+			</div>
+			<script>
+				var main_visual_sldie = new Swiper('.main_visual', {
+//					loop:true,				
+					autoplay: {   // 슬라이드 자동
+						delay: 6000,  // 멈춰있는시간
+						disableOnInteraction: false, // 마우스로 드래그 해도 계속해서 슬라이드 진행
+					},
+				});
+			</script>
+			<!-- main_visual -->
+		
+		
+		<!-- footer -->
+		
+		<!-- footer// -->
+	</div>
+	<!--html 인클루드시 사용 -->
+
+</body>
+</html>
