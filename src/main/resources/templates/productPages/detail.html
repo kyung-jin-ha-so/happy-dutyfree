@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 </head>
 <body>
@@ -40,12 +41,12 @@
         </tr>
     </table>
 
-    <!--    <div th:each="${session.loginEmail == 'admin'}">-->
-    <a th:href="@{|/product/update/${product.productId}|}">수정</a>
-    <!--    </div>-->
+<!--    <div th:each="${session.loginEmail == 'admin'}">-->
+        <a th:href="@{|/product/update/${product.productId}|}">수정</a>
+<!--    </div>-->
 
     상세 설명이미지
-    <div th:each="productFile: ${product.productFilesEntityList}">
+    <div th:each="productFile: ${product.productFilesEntityList}" >
         <img th:src="@{|/upload/${productFile.productFileName}|}" alt="">
     </div>
 </div>

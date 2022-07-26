@@ -15,18 +15,8 @@
     상품 이름 <input type="text" name="productName" th:value="${product.productName}"> <br>
     상품 카테고리
     <select id="categoryId" name="categoryId">
-        <option th:value="${product.categoryEntity.categoryId}">수정사항 없음</option>
-        <option value="1">스킨케어</option>
-        <option value="2">메이크업</option>
-        <option value="3">향수/바디/헤어</option>
-        <option value="4">가방/신발/잡화</option>
-        <option value="5">시계/쥬얼리</option>
-        <option value="6">의류/아이웨어</option>
-        <option value="7">스포츠/레저 </option>
-        <option value="8">디지털/리빙</option>
-        <option value="9">식품</option>
-        <option value="10">유아동</option>
-        <option value="11">남성관</option>
+        <option th:value="${product.categoryEntity.categoryId}">--수정사항 없음--</option>
+        <option th:each="category: ${categoryDTOList}" th:value="${category.categoryId}" th:utext="${category.categoryName}"></option>
     </select><br>
     상품 설명
     <textarea name="productDesc" th:text="${product.productDesc}"> [[${product.productDesc}]] </textarea> <br>

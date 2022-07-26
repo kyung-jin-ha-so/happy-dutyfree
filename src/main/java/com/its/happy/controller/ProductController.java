@@ -11,12 +11,16 @@ import com.its.happy.service.CartService;
 import com.its.happy.service.ProductFilesService;
 import com.its.happy.service.ProductService;
 import com.its.happy.service.ReviewService;
+import com.its.happy.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +40,13 @@ public class ProductController {
     private final ProductFilesService productFilesService;
     private final CartService cartService;
 
+    private final CategoryService categoryService;
+
+
     @GetMapping("/save")
-    public String saveForm() {
+    public String saveForm(Model model) {
+        List<CategoryDTO> categoryDTOList = categoryService.findAll();
+        model.addAttribute("categoryDTOList", categoryDTOList);
         return "/productPages/save";
     }
 
@@ -147,6 +156,7 @@ public class ProductController {
     @GetMapping("/update/{productId}")
     public String updateForm(@PathVariable Long productId, Model model) {
         ProductDTO productDTO = productService.findById(productId);
+        model.addAttribute("categoryDTOList", categoryService.findAll());
         model.addAttribute("product", productDTO);
         return "productPages/update";
     }
