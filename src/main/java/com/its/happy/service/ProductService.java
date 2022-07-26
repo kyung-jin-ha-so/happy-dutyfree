@@ -2,14 +2,11 @@ package com.its.happy.service;
 
 import com.its.happy.common.PagingConst;
 import com.its.happy.dto.CategoryDTO;
+import com.its.happy.dto.LikeDTO;
 import com.its.happy.dto.ProductDTO;
 import com.its.happy.dto.ProductFilesDTO;
-import com.its.happy.entity.CategoryEntity;
-import com.its.happy.entity.ProductEntity;
-import com.its.happy.entity.ProductFilesEntity;
-import com.its.happy.repository.CategoryRepository;
-import com.its.happy.repository.ProductFilesRepository;
-import com.its.happy.repository.ProductRepository;
+import com.its.happy.entity.*;
+import com.its.happy.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

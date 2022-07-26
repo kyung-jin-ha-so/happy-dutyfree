@@ -117,8 +117,6 @@ public class ProductController {
     }
 
     @GetMapping("/detail/{productId}")
-    public String findById(@PathVariable Long productId, Model model){
-        ProductDTO productDTO= productService.findById(productId);
     public String findById(@PathVariable Long productId, Model model, HttpSession session) {
         ProductDTO productDTO = productService.findById(productId);
         model.addAttribute("product", productDTO);
