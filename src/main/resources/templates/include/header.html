@@ -1,0 +1,72 @@
+<div id="header">
+	<div class="inner">
+		<h1 class="logo">
+			<a href="/static"><img src="/img/logo.png" alt=""></a>
+		</h1>
+		<div class="right_box">
+			<div class="gnb">
+				<ul>
+					<li class="depth01"><a href="javascript:;">앱 다운로드</a></li>
+					<li>
+						<a href="/about/air/index.html">서비스 소개</a>
+						<ul class="depth02">
+							<li><a href="/about/air/index.html"><span>항공권 소개</span></a></li>
+							<li><a href="/about/country/index.html"><span>국가별 서비스 설명</span></a></li>
+							<li><a href="/about/blanking/index.html"><span>타발 소개</span></a></li>
+						</ul>
+					</li>
+					<li class="depth01"><a href="javascript:;">블로그</a></li>
+					<li class="depth01"><a href="javascript:;">비즈니스</a></li>
+					<li class="depth01"><a href="javascript:;">고객센터</a></li>
+				</ul>
+			</div>
+			<div class="lang pret">
+				<a href="javascript:;" onclick="$(this).next('ul').stop().slideToggle(200)"><img src="/img/lang_kor.png" alt="">KOR</a></a>
+				<ul>
+					<li><a href="javascript:;"><img src="/img/lang_eng.png" alt="">ENG</a></li>
+					<li><a href="javascript:;"><img src="/img/lang_chi.png" alt="">CHI</a></li>
+					<li><a href="javascript:;"><img src="/img/lang_jap.png" alt="">JAP</a></li>
+				</ul>
+			</div>
+			<div class="m_btn">
+				<i></i><i></i><i></i>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="m_menu_bg"></div>
+<div id="m_menu">
+	<div class="top_box">
+		<img src="/img/logo.png" alt="">
+		<a class="close_btn" href="javascript:;"><i></i><i></i></a>
+	</div>
+	<div class="gnb_box">
+	</div>
+</div>
+
+<script>
+	// 메뉴 모바일에 뿌려주기
+	var gnb_html = $("#header .gnb").html();
+	$("#m_menu .gnb_box").html(gnb_html);
+
+	// 모바일 클릭
+	$("#header .m_btn").on("click",function(){
+		$("#m_menu").addClass("on");
+		$(".m_menu_bg").fadeIn();
+	});
+	$(".m_menu_bg, #m_menu .close_btn").on("click",function(){
+		$("#m_menu").removeClass("on");
+		$(".m_menu_bg").fadeOut();
+	});
+
+	$(window).on("scroll load",function(){
+		var winS = $(window).scrollTop();
+
+		if(winS > 100){
+			$("#header").addClass("fixed");
+		}else{
+			$("#header").removeClass("fixed");
+		}
+	});
+</script>
