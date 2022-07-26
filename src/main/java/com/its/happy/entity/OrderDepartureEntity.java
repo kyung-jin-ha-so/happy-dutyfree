@@ -20,7 +20,7 @@ public class OrderDepartureEntity {
     private String orderDepartureAirport;
 
     @Column(nullable = false)
-    private LocalDateTime orderDepartureDatetime;
+    private LocalDateTime orderDepartureDate;
 
     @Column(length = 20, nullable = false)
     private String orderDepartureNumber;

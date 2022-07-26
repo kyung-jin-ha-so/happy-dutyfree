@@ -48,32 +48,10 @@
         <option value="PUS">김해공항</option>
     </select><br>
     출국일시
-    <div class="col-sm-3">
-        <div
-                class='input-group'
-                id='datetimepicker1'
-                data-td-target-input='nearest'
-                data-td-target-toggle='nearest'
-        >
-            <input
-                    id='datetimepicker1Input'
-                    type='text'
-                    class='form-control'
-                    data-td-target='#datetimepicker1'
-                    name="departureDatetime"
-            />
-            <span
-                    class='input-group-text'
-                    data-td-target='#datetimepicker1'
-                    data-td-toggle='datetimepicker'
-            >
-     <span class='fa fa-solid fa-calendar'></span>
-   </span>
-        </div>
-    </div>
+    <input type="text" id="datepicker" name="departureDate">
     <br>
     편명
-    <input type="text" name="departureNumber">
+    <input type="text" name="departureNumber" id="departureNumber">
     <a class="btn btn-primary" data-bs-toggle="modal" id="searchBtn" href="#exampleModalToggle" role="button"
        hidden></a>
     <a class="btn btn-primary" onclick="airportCheck()" role="button">편명 검색</a>
@@ -121,7 +99,7 @@
             <div class="modal-footer">
                 <button class="btn btn-primary" id="flightNext" data-bs-target="#exampleModalToggle2"
                         data-bs-toggle="modal"
-                        onclick="flightList(this.name, this.value, this.size)">다음
+                        onclick="flightList(this.name, this.value, this.accessKey)">다음
                 </button>
             </div>
         </div>
@@ -142,47 +120,23 @@
             <div class="modal-footer">
                 <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">이전
                 </button>
-                <button class="btn btn-primary" id="confirmBtn" data-bs-dismiss="modal" onclick="confirm()">확인</button>
             </div>
         </div>
     </div>
 </div>
 </body>
 <script>
-    // datetimepicker
-    new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'), {
-        display: {
-            components: {
-                seconds: false,
-                useTwentyfourHour: false,
-            },
-            icons: {
-                type: 'icons',
-                time: 'fa fa-solid fa-clock',
-                date: 'fa fa-solid fa-calendar',
-                up: 'fa fa-solid fa-arrow-up',
-                down: 'fa fa-solid fa-arrow-down',
-                previous: 'fa fa-solid fa-chevron-left',
-                next: 'fa fa-solid fa-chevron-right',
-                today: 'fa fa-solid fa-calendar-check',
-                clear: 'fa fa-solid fa-trash',
-                close: 'fas fa-solid fa-xmark'
-            },
-        },
-    });
-
     // 편명 검색 클릭 시 항공사 정보 체크 및 이동(flightNext 태그의 name값으로 지정)
     const airportCheck = () => {
         const selectAirport = $("select[name=departureAirport]").val();
-        const selectDatetime = $("input[name=departureDatetime]").val();
+        const selectDate = $("input[name=departureDate]").val();
         if (selectAirport == "") {
             alert("출국장소를 선택하세요")
-        } else if (selectDatetime == "") {
+        } else if (selectDate == "") {
             alert("출국일시를 선택하세요")
         } else {
             document.getElementById("flightNext").setAttribute("name", selectAirport);
-            const formattedDatetime = moment(new Date(selectDatetime)).format('YYYY-MM-DD HH:mm:ss');
-            document.getElementById("flightNext").setAttribute("size", formattedDatetime);
+            document.getElementById("flightNext").setAttribute("accessKey", selectDate);
             console.log(document.getElementById("flightNext"));
             $('#searchBtn').get(0).click();
         }
@@ -200,32 +154,50 @@
     }
 
     // 해당 공항, 항공사 운항 스케쥴 불러오기
-    const flightList = (airport, airline, departureDatetime) => {
+    const flightList = (cityCode, airline, departureDate) => {
+        console.log(cityCode);
+        console.log(airline);
+        console.log(departureDate);
         $.ajax({
             type: "get",
             url: "/departure/findFlightList",
             data: {
-                "airport": airport,
-                "airline": airline,
-                "departureDatetime": departureDatetime
+                "departureDate": departureDate,
+                "cityCode": cityCode,
+                "airline": airline
             },
             dataType: "json",
             success: function (result) {
-
-
+                console.log(result);
+                let output = "<table class='table'>";
+                for (let i in result) {
+                    output += "<tr>";
+                    output += "<td>" + result[i].airlineKorean + "(" + airline + ")" + "</td>";
+                    output += "<td>" + result[i].airport + "(" + result[i].airportCode + ")" + "</td>";
+                    output += "<td>" + result[i].internationalNum + "</td>";
+                    output += "<td>" + result[i].internationalTime + "</td>";
+                    output += "<td>" + "<button type='button' data-bs-dismiss=\"modal\" class='btn-outline' onclick=\"flightUpdate('" + result[i].internationalNum + "')\">" + "선택" + "</button>" + "</td>";
+                    output += "</tr>";
+                }
+                output += "</table>";
                 document.getElementById('flight-list').innerHTML = output;
             },
             error: function () {
-                alert("실패");
+                alert("error");
             }
         })
+    }
+
+    const flightUpdate = (internationalNum) => {
+        console.log(internationalNum)
+        document.getElementById("departureNumber").value = internationalNum;
     }
 
     // datepicker(달력)
     $(function () {
         //모든 datepicker에 대한 공통 옵션 설정
         $.datepicker.setDefaults({
-            dateFormat: 'yy-mm-dd' //Input Display Format 변경
+            dateFormat: 'yymmdd' //Input Display Format 변경
             , showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
             , showMonthAfterYear: true //년도 먼저 나오고, 뒤에 월 표시
             , changeYear: true //콤보박스에서 년 선택 가능

@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 public class OrderDepartureDTO {
     private Long orderDepartureId;
     private String orderDepartureAirport;
-    private LocalDateTime orderDepartureDatetime;
+    private LocalDateTime orderDepartureDate;
     private String orderDepartureNumber;
 }

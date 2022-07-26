@@ -15,14 +15,9 @@
         <option th:selected="${departure.departureAirport}=='인천공항'" value="인천공항">인천공항</option>
         <option th:selected="${departure.departureAirport}=='김포공항'" value="김포공항">김포공항</option>
         <option th:selected="${departure.departureAirport}=='김해공항'" value="김해공항">김해공항</option>
-        <option th:selected="${departure.departureAirport}=='대구공항'" value="대구공항">대구공항</option>
-        <option th:selected="${departure.departureAirport}=='제주공항'" value="제주공항">제주공항</option>
-        <option th:selected="${departure.departureAirport}=='청주공항'" value="청주공항">청주공항</option>
-        <option th:selected="${departure.departureAirport}=='부산항'" value="부산항">부산항</option>
-        <option th:selected="${departure.departureAirport}=='인천항 신국제여객터미널'" value="인천항 신국제여객터미널">인천항 신국제여객터미널</option>
     </select><br>
     출국일시
-    <input type="text" name="departureDatetime" th:value="${departure.departureDatetime}"><br>
+    <input type="text" name="departureDate" th:value="${departure.departureDate}"><br>
     편명
     <input type="text" name="departureNumber" th:value="${departure.departureNumber}"><br>
     직항/경유 여부
