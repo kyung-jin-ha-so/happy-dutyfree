@@ -49,11 +49,5 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    public ResponseEntity updateByAjax(@RequestBody MemberDTO memberDTO){
-//        memberService.update(memberDTO);
-//        System.out.println("MemberController.updateByAjax");
-//        System.out.println("memberDTO = " + memberDTO);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
 }
 
