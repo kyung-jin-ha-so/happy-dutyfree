@@ -1,0 +1,96 @@
+<div class="sub_visual">
+	<div class="inner">
+		<div class="txt_box">
+			<p>우리 모두의 <b>해외송금.</b> <br/>지금 이 순간 만나보세요.</p>
+		</div>
+	</div>
+</div>
+<div class="sub_tab">
+	<div class="inner">
+		<ul></ul>
+	</div>
+</div>
+<div class="sub_path">
+	<div class="inner">
+		<div class="depth01">
+			<p></p>
+			<ul></ul>
+		</div>
+		<div class="depth02">
+			<p></p>
+		</div>
+	</div>
+</div>
+
+<script>
+	var url = window.location.pathname;
+	var urlPathname = url.substring( 0, url.substring(1).indexOf('/') + 2 );
+	var fileName = url.substring(url.lastIndexOf('/') + 1);
+	var isForDev = fileName == "read.jsp" || fileName == "edit.jsp" || fileName == "write.jsp" || fileName == "password.jsp" || fileName == "call.jsp" || fileName == "list.jsp" ;
+
+	$("#header .gnb .depth01, #header .gnb .depth02 li").each(function() {
+		console.log("aa")
+		if ( $(this).find("> a").attr("href") == url ){
+			var depth01Html = "";
+			$(this).addClass("on")
+			$("#header .gnb > ul > li > a").each(function(){
+				var href = $(this).attr("href");
+				var txt = $(this).text();
+				var list = "<li><a href="+href+">"+txt+"</a></li>";
+				depth01Html += list;
+			});
+
+			if( $(this).hasClass("depth01")){
+				var depth01Text = $(this).text();
+				$(".sub_dpeth").hide();
+			}else{
+				// 2depth가 있을 경우
+				var depth01Text = $(this).parents(".depth02").prev().text();
+				var depth02Text = $(this).text();
+				var depth02Html = $(this).parents(".depth02").html();
+				var depth02Count = $(this).parents(".depth02").find("li").length;
+
+				$(".sub_tab ul").html(depth02Html);
+				$(".sub_tab ul").addClass("grid"+depth02Count);
+				$(".sub_path .depth02 p").text(depth02Text)
+			}
+			
+			$(".sub_path .depth01 p").text(depth01Text);
+			$(".sub_path .depth01 ul").html(depth01Html);
+
+		} else if ( isForDev ){
+			if ( $(this).find(">a").attr("href").indexOf( url.substring(0, url.lastIndexOf('/')+1 ) ) > -1 ){
+				var depth01Html = "";
+				$(this).addClass("on")
+				$("#header .gnb > ul > li > a").each(function(){
+					var href = $(this).attr("href");
+					var txt = $(this).text();
+					var list = "<li><a href="+href+">"+txt+"</a></li>";
+					depth01Html += list;
+				});
+
+				if( $(this).hasClass("depth01")){
+					var depth01Text = $(this).text();
+					$(".sub_dpeth").hide();
+				}else{
+					// 2depth가 있을 경우
+					var depth01Text = $(this).parents(".depth02").prev().text();
+					var depth02Text = $(this).text();
+					var depth02Html = $(this).parents(".depth02").html();
+					var depth02Count = $(this).parents(".depth02").find("li").length;
+
+					$(".sub_tab ul").html(depth02Html);
+					$(".sub_tab ul").addClass("grid"+depth02Count);
+					$(".sub_path .depth02 p").text(depth02Text)
+				}
+				
+				$(".sub_path .depth01 p").text(depth01Text);
+				$(".sub_path .depth01 ul").html(depth01Html);
+			}
+		}
+	});
+	$(".sub_path .depth01 p").on('click', function(){
+		$(this).next().slideToggle(200);
+		$(this).parent().siblings().find('ul').slideUp(200);
+	});
+</script>
