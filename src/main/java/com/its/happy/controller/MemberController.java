@@ -109,4 +109,22 @@ public class MemberController {
         return "/memberPages/findPassword";
     }
 
+
+    // 비밀번호 확인 화면 이동
+    @GetMapping("/passwordCheck")
+    public String passwordCheck(){
+        return "/memberPages/passwordCheck";
+    }
+
+    //개인정보 상세조회
+    @GetMapping("/{memberId}")
+    public String findById(@PathVariable Long memberId, Model model){
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
+        return "memberPages/detail";
+    }
+
+
+
+
 }

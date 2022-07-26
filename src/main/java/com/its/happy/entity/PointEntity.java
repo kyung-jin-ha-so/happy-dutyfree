@@ -18,19 +18,21 @@ public class PointEntity extends BaseEntity {
     private Long pointId;
 
     @Column(name = "point_value", nullable = false)
-    private String pointValue;
+    private int pointValue;
 
     // 적립금(n)이 회원(1)을 참조함
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-    public static PointEntity toSave(MemberEntity memberEntity){
+    public static PointEntity toSave(MemberEntity memberEntity,PointDTO pointDTO){
         PointEntity pointEntity = new PointEntity();
-        pointEntity.setPointValue("1000000");
+        pointEntity.setPointValue(pointDTO.getPointValue());
         pointEntity.setMemberEntity(memberEntity);
         return pointEntity;
     }
+
+
 }
 
 

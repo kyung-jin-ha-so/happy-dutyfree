@@ -29,7 +29,7 @@ public class MemberEntity extends BaseEntity{
     @Column(name = "member_name",length = 20,nullable = false)
     private String memberName;
 
-    @Column(name = "member_mobile",length = 20,nullable = false)
+    @Column(name = "member_mobile",length = 20,unique = true,nullable = false)
     private String memberMobile;
 
     @Column(name = "member_birth",length = 20)
