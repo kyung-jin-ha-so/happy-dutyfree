@@ -126,6 +126,11 @@
 </div>
 </body>
 <script>
+    // 항공권 등록 취소(마이페이지 이동)
+    const cancel = () => {
+        location.href = "/member/mypage"
+    }
+
     // 편명 검색 클릭 시 항공사 정보 체크 및 이동(flightNext 태그의 name값으로 지정)
     const airportCheck = () => {
         const selectAirport = $("select[name=departureAirport]").val();
@@ -147,11 +152,6 @@
         document.getElementById("flightNext").setAttribute("value", $("input:radio[name=selectAirline]:checked").attr('id'));
         console.log(document.getElementById("flightNext"));
     });
-
-    // 항공권 등록 취소(마이페이지 이동)
-    const cancel = () => {
-        location.href = "/member/mypage"
-    }
 
     // 해당 공항, 항공사 운항 스케쥴 불러오기
     const flightList = (cityCode, airline, departureDate) => {

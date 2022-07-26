@@ -61,6 +61,8 @@ public class DepartureController {
 
     @GetMapping("/findFlightList")
     public @ResponseBody List<FlightDTO> findFlightList(@ModelAttribute FlightDTO flightDTO) throws JSONException, IOException {
+        System.out.println("DepartureController.findFlightList");
+        System.out.println("flightDTO = " + flightDTO);
         String flight = ApiExplorer.getFlight(flightDTO);
         JSONObject jObject = new JSONObject(flight);
         JSONObject  jObject2 = jObject.getJSONObject("response");

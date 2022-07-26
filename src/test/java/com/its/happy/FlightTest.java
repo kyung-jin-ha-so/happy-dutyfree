@@ -1,6 +1,5 @@
 package com.its.happy;
 
-import com.google.gson.Gson;
 import com.its.happy.api.ApiExplorer;
 import com.its.happy.dto.FlightDTO;
 import org.json.JSONArray;
@@ -26,9 +25,6 @@ public class FlightTest {
     public void flightApiTest() throws IOException, JSONException {
         FlightDTO flightDTO = new FlightDTO("20220726", "ICN", "KE");
         String result = ApiExplorer.getFlight(flightDTO);
-//        Gson gson = new Gson();
-//        FlightDTO flightDTO = gson.fromJson(result, FlightDTO.class);
-//        System.out.println(flightDTO.getResponse().getBody().getItems().getItem().get(0).getInternationalTime());
 
         // 가장 큰 JSONObject를 가져옵니다.
         JSONObject jObject = new JSONObject(result);

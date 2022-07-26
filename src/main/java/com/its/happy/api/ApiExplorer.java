@@ -2,7 +2,6 @@ package com.its.happy.api;
 
 
 import com.its.happy.dto.FlightDTO;
-import org.json.JSONException;
 
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -12,7 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class ApiExplorer {
-    public static String getFlight(FlightDTO flightDTO) throws IOException, JSONException {
+    public static String getFlight(FlightDTO flightDTO) throws IOException {
         StringBuilder urlBuilder = new StringBuilder("http://openapi.airport.co.kr/service/rest/FlightScheduleList/getIflightScheduleList"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=nLzuj5x1fefaIpwYrFwshTQfLrE28oSxxolY7w0e1J8mAUnAz8XESaS022qnqUW2RHnzr4bi4kM4aIVVnHlNRQ%3D%3D"); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("schDate", "UTF-8") + "=" + URLEncoder.encode(flightDTO.getDepartureDate(), "UTF-8")); /*검색일자*/
