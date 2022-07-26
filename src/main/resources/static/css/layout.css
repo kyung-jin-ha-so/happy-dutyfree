@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+
+/*=========================================================
+	header
+==========================================================*/
+#haeder{position:relative; text-align:right; padding:20px 0;}
+#haeder ul li{display:inline-block; vertical-align:middle;}
+#haeder ul li a{display:block; padding:0 10px; font-size:14px; letter-spacing:-0.04em; color:#333; font-weight:400; position:relative;}
+#haeder ul li a:after{content:''; position:absolute; right:0; top:50%; transform:translateY(-50%); width:1px; height:10px; background:#aaa;}
+#haeder ul li:last-of-type a:after{display:none;}
+
+/*=========================================================
+	footer
+==========================================================*/

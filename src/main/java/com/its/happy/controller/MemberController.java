@@ -5,7 +5,6 @@ import com.its.happy.service.MemberService;
 import com.its.happy.service.PointService;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -109,5 +108,23 @@ public class MemberController {
     public String findPasswordForm(){
         return "/memberPages/findPassword";
     }
+
+
+    // 비밀번호 확인 화면 이동
+    @GetMapping("/passwordCheck")
+    public String passwordCheck(){
+        return "/memberPages/passwordCheck";
+    }
+
+    //개인정보 상세조회
+    @GetMapping("/{memberId}")
+    public String findById(@PathVariable Long memberId, Model model){
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
+        return "memberPages/detail";
+    }
+
+
+
 
 }
