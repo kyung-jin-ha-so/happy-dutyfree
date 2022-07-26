@@ -4,10 +4,7 @@ import com.its.happy.common.PagingConst;
 import com.its.happy.dto.*;
 import com.its.happy.dto.CategoryDTO;
 import com.its.happy.dto.ProductDTO;
-import com.its.happy.service.CartService;
-import com.its.happy.service.ProductFilesService;
-import com.its.happy.service.ProductService;
-import com.its.happy.service.ReviewService;
+import com.its.happy.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,8 +33,13 @@ public class ProductController {
     private final ProductFilesService productFilesService;
     private final CartService cartService;
 
+    private final CategoryService categoryService;
+
+
     @GetMapping("/save")
-    public String saveForm() {
+    public String saveForm(Model model) {
+        List<CategoryDTO> categoryDTOList = categoryService.findAll();
+        model.addAttribute("categoryDTOList", categoryDTOList);
         return "/productPages/save";
     }
 
@@ -147,6 +149,7 @@ public class ProductController {
     @GetMapping("/update/{productId}")
     public String updateForm(@PathVariable Long productId, Model model) {
         ProductDTO productDTO = productService.findById(productId);
+        model.addAttribute("categoryDTOList", categoryService.findAll());
         model.addAttribute("product", productDTO);
         return "productPages/update";
     }
