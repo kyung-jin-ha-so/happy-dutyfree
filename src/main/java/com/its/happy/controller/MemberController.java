@@ -109,4 +109,11 @@ public class MemberController {
         return "/memberPages/findPassword";
     }
 
+
+    // 비밀번호 확인 화면 이동
+    @GetMapping("/passwordCheck")
+    public String passwordCheck(){
+        return "/memberPages/passwordCheck";
+    }
+
 }
