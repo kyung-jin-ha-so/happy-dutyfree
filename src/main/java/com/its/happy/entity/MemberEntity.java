@@ -88,6 +88,7 @@ public class MemberEntity extends BaseEntity{
         orderEntityList.forEach(order -> order.setMemberEntity(null));
     }
 
+
     public static MemberEntity toSave(MemberDTO memberDTO){
         MemberEntity memberEntity = new MemberEntity();
         memberEntity.setMemberEmail(memberDTO.getMemberEmail());
@@ -98,6 +99,19 @@ public class MemberEntity extends BaseEntity{
         memberEntity.setMemberTier("브론즈");
         return memberEntity;
     }
+
+    public static MemberEntity toUpdate(MemberDTO memberDTO){
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setMemberId(memberDTO.getMemberId());
+        memberEntity.setMemberEmail(memberDTO.getMemberEmail());
+        memberEntity.setMemberPassword(memberDTO.getMemberPassword());
+        memberEntity.setMemberName(memberDTO.getMemberName());
+        memberEntity.setMemberBirth(memberDTO.getMemberBirth());
+        memberEntity.setMemberMobile(memberDTO.getMemberMobile());
+        memberEntity.setMemberTier(memberDTO.getMemberTier());
+        return memberEntity;
+    }
+
 
 
 }

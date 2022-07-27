@@ -1,5 +1,6 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.ReviewDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name = "review_table")
-public class ReviewEntity extends BaseEntity{
+public class ReviewEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
@@ -35,4 +36,13 @@ public class ReviewEntity extends BaseEntity{
     private OrderEntity orderEntity;
 
 
+    public static ReviewEntity toSaveEntity(ReviewDTO reviewDTO, MemberEntity memberEntity, ProductEntity productEntity, OrderEntity orderEntity) {
+        ReviewEntity reviewEntity = new ReviewEntity();
+        reviewEntity.setReviewContents(reviewDTO.getReviewContents());
+        reviewEntity.setReviewStar(reviewDTO.getReviewStar());
+        reviewEntity.setMemberEntity(memberEntity);
+        reviewEntity.setOrderEntity(orderEntity);
+        reviewEntity.setProductEntity(productEntity);
+        return reviewEntity;
+    }
 }
