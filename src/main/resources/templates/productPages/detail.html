@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 </head>
 <body>
@@ -20,8 +21,10 @@
             <th>할인율</th>
             <th>인터넷할인가</th>
             <th>썸네일</th>
+            <th>수량</th>
             <th>찜하기</th>
             <th>장바구니 담기</th>
+            <th>바로구매</th>
         </tr>
         <tr>
             <td th:text="${product.productId}"></td>
@@ -31,21 +34,26 @@
             <td th:text="${product.productDiscount}"></td>
             <td th:text="${product.productPrice}"></td>
             <td><img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""></td>
-
+            <td>
+                <button type="button" class="minus_btn" onclick="qtyCount('minus')">-</button>
+                <input type="text" id="productQty" value="1" readonly="readonly" style="text-align:center;"/>
+                <button type ="button" class="plus_btn" onclick="qtyCount('plus')">+</button>
+            </td>
             <td th:if="${like == null}">
                 <i class="bi bi-heart" onclick="saveWish()"></i></td>
             <td th:if="${like != null}">
                 <i class="bi bi-heart-fill" onclick="deleteWish()"></i></td>
             <td><input type="button" onclick="addToCart()" value="장바구니 담기"></a></td>
+            <td><input type="button" onclick="addToOrder()" value="주문하기"></a></td>
         </tr>
     </table>
 
-    <!--    <div th:each="${session.loginEmail == 'admin'}">-->
-    <a th:href="@{|/product/update/${product.productId}|}">수정</a>
-    <!--    </div>-->
+<!--    <div th:each="${session.loginEmail == 'admin'}">-->
+        <a th:href="@{|/product/update/${product.productId}|}">수정</a>
+<!--    </div>-->
 
     상세 설명이미지
-    <div th:each="productFile: ${product.productFilesEntityList}">
+    <div th:each="productFile: ${product.productFilesEntityList}" >
         <img th:src="@{|/upload/${productFile.productFileName}|}" alt="">
     </div>
 </div>
@@ -126,6 +134,7 @@
 
     function addToCart() {
         console.log("addToCart함수실행됨")
+        const cartQty = document.getElementById("productQty").value;
         const memberId = [[${session.loginId}]];
         const productId = [[${product.productId}]];
         if ([[${session.loginEmail}]] == null) {
@@ -138,7 +147,8 @@
                 url: "/cart/save",
                 data: {
                     "memberId": memberId,
-                    "productId": productId
+                    "productId": productId,
+                    "cartQty": cartQty
                 },
                 dataType: "text",
                 success: function (result) {
@@ -156,7 +166,8 @@
                     url: "/cart/addToCart",
                     data: {
                         "memberId": memberId,
-                        "productId": productId
+                        "productId": productId,
+                        "cartQty": cartQty
                     },
                     dataType: "text",
                     success: function () {
@@ -170,6 +181,24 @@
                 location.reload();
             }
         }
+    }
+
+    function qtyCount(type){
+        const productQty = document.getElementById("productQty");
+
+        if(type=='plus'){
+            productQty.value = Number(productQty.value)+1;
+        }else{
+            if(productQty.value > 1){
+                productQty.value = Number(productQty.value)-1;
+            }
+        }
+    }
+
+    function addToOrder() {
+        const productId = [[${product.productId}]];
+        const orderQty = document.getElementById("productQty").value;
+        location.href = "/order/save-form&?orderQty="+orderQty+"&?productId="+productId;
     }
 </script>
 </html>

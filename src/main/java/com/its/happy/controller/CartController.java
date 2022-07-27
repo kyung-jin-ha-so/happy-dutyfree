@@ -20,8 +20,8 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping("/save")
-    public ResponseEntity save(@RequestParam("productId") Long productId, @RequestParam("memberId") Long memberId) {
-        String result = cartService.save(productId, memberId);
+    public ResponseEntity save(@RequestParam("productId") Long productId, @RequestParam("memberId") Long memberId, @RequestParam("cartQty") int cartQty) {
+        String result = cartService.save(productId, memberId, cartQty);
         System.out.println("result = " + result);
         if (result == "ok") {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -30,9 +30,9 @@ public class CartController {
         }
     }
     @GetMapping("/addToCart")
-    public ResponseEntity update(@RequestParam("productId") Long productId, @RequestParam("memberId") Long memberId){
+    public ResponseEntity update(@RequestParam("productId") Long productId, @RequestParam("memberId") Long memberId, @RequestParam("cartQty") int cartQty){
         System.out.println("productId = " + productId);
-        cartService.update(productId, memberId);
+        cartService.update(productId, memberId, cartQty);
         System.out.println("memberId = " + memberId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
