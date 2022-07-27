@@ -43,4 +43,9 @@ public class OrderController {
         return "/orderPages/save";
     }
 
+    @GetMapping("/test")
+    public String iamportTest() {
+        return "/orderPages/test";
+    }
+
 }

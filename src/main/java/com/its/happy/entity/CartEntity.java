@@ -29,9 +29,9 @@ public class CartEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-    public static CartEntity toCartEntity(ProductEntity productEntity, MemberEntity memberEntity) {
+    public static CartEntity toCartEntity(int cartQty, ProductEntity productEntity, MemberEntity memberEntity) {
         CartEntity cartEntity = new CartEntity();
-        cartEntity.setCartQty(1);
+        cartEntity.setCartQty(cartQty);
         cartEntity.setProductEntity(productEntity);
         cartEntity.setMemberEntity(memberEntity);
         return cartEntity;
