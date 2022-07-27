@@ -25,13 +25,13 @@ public class CartService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public String save(Long productId, Long memberId) {
+    public String save(Long productId, Long memberId, int cartQty) {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
         if (optionalProductEntity.isPresent()) {
             ProductEntity productEntity = optionalProductEntity.get();
             MemberEntity memberEntity = optionalMemberEntity.get();
-            Long save = cartRepository.save(CartEntity.toCartEntity(productEntity, memberEntity)).getCartId();
+            Long save = cartRepository.save(CartEntity.toCartEntity(cartQty, productEntity, memberEntity)).getCartId();
             System.out.println("save = " + save);
             if (save != null) {
                 return "ok";
@@ -52,9 +52,9 @@ public class CartService {
     }
 
     @Transactional
-    public void update(Long productId, Long memberId) {
+    public void update(Long productId, Long memberId, int cartQty) {
         System.out.println("CartService.update");
-        cartRepository.cartQty(productId, memberId);
+        cartRepository.cartQty(productId, memberId, cartQty);
     }
 
     public List<CartDTO> findById(Long memberId) {

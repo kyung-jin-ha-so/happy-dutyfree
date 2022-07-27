@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<CartEntity, Long> {
     @Modifying
-    @Query(value = "update CartEntity  c set c.cartQty = c.cartQty+1 where c.productEntity.productId= :productId and c.memberEntity.memberId= :memberId")
-    void cartQty(@Param("productId") Long productId, @Param("memberId") Long memberId);
+    @Query(value = "update CartEntity  c set c.cartQty = c.cartQty+:cartQty where c.productEntity.productId= :productId and c.memberEntity.memberId= :memberId")
+    void cartQty(@Param("productId") Long productId, @Param("memberId") Long memberId, @Param("cartQty") int cartQty);
 
     Optional<CartEntity> findByProductEntity_ProductIdAndMemberEntity_MemberId(Long productId, Long memberId);
 }
