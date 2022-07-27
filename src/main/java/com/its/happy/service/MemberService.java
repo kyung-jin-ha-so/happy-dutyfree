@@ -35,11 +35,21 @@ public class MemberService {
 
 
     // 이메일 중복체크
-    public String duplicateCheck(String memberEmail) {
+    public String emailDuplicateCheck(String memberEmail) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberEmail);
         if (optionalMemberEntity.isEmpty()) {
             return "OK";
         } else {
+            return "NO";
+        }
+    }
+
+    //핸드폰번호 중복체크
+    public String mobileDuplicateCheck(String memberMobile) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberMobile(memberMobile);
+        if(optionalMemberEntity.isEmpty()){
+            return "OK";
+        }else {
             return "NO";
         }
     }
@@ -96,6 +106,7 @@ public class MemberService {
     }
 
 
+    // 일치한 핸드폰번호로 해당회원 이메일 찾기
     public MemberDTO findEmail(String memberMobile) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberMobile(memberMobile);
         if(optionalMemberEntity.isPresent()){
@@ -105,6 +116,7 @@ public class MemberService {
         }
     }
 
+    // 개인정보 상세조회
     public MemberDTO findById(Long memberId) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
         if(optionalMemberEntity.isPresent()){

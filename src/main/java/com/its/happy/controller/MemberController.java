@@ -40,11 +40,19 @@ public class MemberController {
     }
 
     // 이메일 중복체크
-    @PostMapping("/duplicate-check")
-    public @ResponseBody String duplicateCheck(@RequestParam String memberEmail){
-        String emailResult = memberService.duplicateCheck(memberEmail);
+    @PostMapping("/email-duplicate-check")
+    public @ResponseBody String emailDuplicateCheck(@RequestParam String memberEmail){
+        String emailResult = memberService.emailDuplicateCheck(memberEmail);
         return emailResult;
     }
+
+    // 핸드폰번호 중복체크
+    @PostMapping("/mobile-duplicate-check")
+    public @ResponseBody String mobileDuplicateCheck(@RequestParam String memberMobile){
+        String mobileResult = memberService.mobileDuplicateCheck(memberMobile);
+        return mobileResult;
+    }
+
 
     // 로그인 페이지 이동
     @GetMapping("/login")
@@ -124,6 +132,14 @@ public class MemberController {
         return "memberPages/detail";
     }
 
+    // 수정화면 요청
+    @GetMapping("/update")
+    public String updateForm(HttpSession session,Model model){
+        Long memberId = (Long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
+        return "memberPages/update";
+    }
 
 
 
