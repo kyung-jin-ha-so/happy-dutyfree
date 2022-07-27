@@ -3,6 +3,7 @@ package com.its.happy.controller;
 import com.its.happy.dto.CartDTO;
 import com.its.happy.dto.LikeDTO;
 import com.its.happy.service.CartService;
+import com.its.happy.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CartController {
     private final CartService cartService;
+    private final ProductService productService;
 
     @GetMapping("/save")
     public ResponseEntity save(@RequestParam("productId") Long productId, @RequestParam("memberId") Long memberId, @RequestParam("cartQty") int cartQty) {
@@ -37,10 +39,12 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/cartList")
-    public String cartList(HttpSession session, Model model){
+    public String cartList(HttpSession session, Model model, @ModelAttribute LikeDTO likeDTO){
         Long memberId = (Long) session.getAttribute("loginId");
         List<CartDTO> cartDTOList = cartService.findById(memberId);
         model.addAttribute("cartList", cartDTOList);
+        productService.findLike(likeDTO);
+        model.addAttribute("like", likeDTO);
         return "cartPages/list";
     }
     @PostMapping("/update/")
@@ -48,6 +52,10 @@ public class CartController {
         cartService.updateCartQty(cartDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
+    @GetMapping("/delete/{cartId}")
+    public String deleteById(@PathVariable Long cartId){
+        cartService.deleteById(cartId);
+        return "redirect:/cart/cartList";
+    }
 }
 
