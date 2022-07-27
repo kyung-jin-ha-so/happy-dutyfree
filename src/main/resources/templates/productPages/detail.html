@@ -30,7 +30,7 @@
             <td th:text="${product.productId}"></td>
             <td th:text="${product.productName}"></td>
             <td th:text="${product.productDesc}"></td>
-            <td th:text="${product.productOriginalPrice}"></td>
+            <td><STRIKE th:text="${product.productOriginalPrice}"></STRIKE></td>
             <td th:text="${product.productDiscount}"></td>
             <td th:text="${product.productPrice}"></td>
             <td><img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""></td>

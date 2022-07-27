@@ -3,6 +3,7 @@ package com.its.happy.dto;
 import com.its.happy.entity.MemberEntity;
 import com.its.happy.entity.OrderEntity;
 import com.its.happy.entity.ProductEntity;
+import com.its.happy.entity.ReviewEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,16 @@ public class ReviewDTO {
     private MemberEntity memberEntity;
     private ProductEntity productEntity;
     private OrderEntity orderEntity;
+
+    public static ReviewDTO toDTO(ReviewEntity reviewEntity) {
+        ReviewDTO reviewDTO = new ReviewDTO();
+        reviewDTO.setReviewId(reviewEntity.getReviewId());
+        reviewDTO.setReviewContents(reviewEntity.getReviewContents());
+        reviewDTO.setReviewStar(reviewEntity.getReviewStar());
+        reviewDTO.setReviewCreatedTime(reviewEntity.getCreatedTime());
+        reviewDTO.setMemberEntity(reviewEntity.getMemberEntity());
+        reviewDTO.setProductEntity(reviewEntity.getProductEntity());
+        reviewDTO.setOrderEntity(reviewEntity.getOrderEntity());
+        return reviewDTO;
+    }
 }
