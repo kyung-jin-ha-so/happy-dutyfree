@@ -7,9 +7,14 @@
 </head>
 <body>
 <h2>장바구니</h2>
-<table>
+<!-- 체크박스 전체 여부 -->
+<div class="all_check_input_div">
+    <input type="checkbox" class="all_check_input input_size_20" checked="checked"><span
+        class="all_chcek_span">전체선택</span>
+</div>
+<table th:each="cart : ${cartList}">
     <tr>
-        <th>ex</th>
+        <th>선택</th>
         <th>상품</th>
         <th>원가</th>
         <th>할인율</th>
@@ -18,9 +23,13 @@
         <th>썸네일</th>
         <th>상품별 총 금액</th>
     </tr>
-    <tr th:each="cart : ${cartList}">
+    <tr>
         <td class="cart_info_td">
-            <input type="text" class="individual_totalPrice_input" th:value="${cart.cartQty * cart.productPrice}"></div>
+            <input type="hidden" class="individual_totalPrice_input"
+                   th:value="${cart.cartQty * cart.productPrice}"></div>
+            <input type="checkbox" class="individual_cart_checkbox input_size_20" checked="checked">
+            <input type="hidden" class="individual_productId_input" th:value="${cart.productId}">
+            <input type="hidden" class="individual_cartQty_input" th:value="${cart.cartQty}">
         </td>
         <td><a th:href="@{|/product/detail/${cart.productId}|}" th:text="${cart.productName}"></a></td>
         <td><STRIKE th:text="${cart.productOriginalPrice}"></STRIKE></td>
@@ -34,9 +43,19 @@
 
         <td><img th:src="@{|/upload/${cart.productThumbnail}|}" width="100" height="100" alt=""></td>
         <td th:text="${cart.cartQty*cart.productPrice}"></td>
-        <td class="total"></td>
     </tr>
 </table>
+
+<span class="total"></span>
+
+<div th:each="cart : ${cartList}">
+    <form th:action="@{|/order/${cart.memberId}|}" method="get" class="order_form">
+    </form>
+</div>
+<div class="content_btn_section">
+    <button class="order_btn">주문하기</button>
+</div>
+
 </body>
 <script th:inline="javascript" th:each="cart: ${cartList}">
     function plusBtn(cartId) {
@@ -89,13 +108,57 @@
         }
     }
 
-    $(document).ready(function(){
+    $(document).ready(function () {
+        setTotalInfo();
+    });
+    /* 체크여부에따른 종합 정보 변화 */
+    $(".individual_cart_checkbox").on("change", function () {
+        /* 총 주문 정보 세팅(배송비, 총 가격, 마일리지, 물품 수, 종류) */
+        setTotalInfo($(".cart_info_td"));
+    });
+
+    function setTotalInfo() {
         let totalPrice = 0;
-        $(".cart_info_td").each(function(index, element){
-            // 총 가격
-            totalPrice += parseFloat($(element).find(".individual_totalPrice_input").val());
+        $(".cart_info_td").each(function (index, element) {
+            if ($(element).find(".individual_cart_checkbox").is(":checked") === true) {	//체크여부
+                // 총 가격
+                totalPrice += parseFloat($(element).find(".individual_totalPrice_input").val());
+            }
         });
-        $(".total").text(totalPrice.toLocaleString());
+        $(".total").text("총금액: " + totalPrice.toLocaleString());
+    }
+
+    /* 체크박스 전체 선택 */
+    $(".all_check_input").on("click", function () {
+        /* 체크박스 체크/해제 */
+        if ($(".all_check_input").prop("checked")) {
+            $(".individual_cart_checkbox").attr("checked", true);
+        } else {
+            $(".individual_cart_checkbox").attr("checked", false);
+        }
+        /* 총 주문 정보 세팅(배송비, 총 가격, 마일리지, 물품 수, 종류) */
+        setTotalInfo($(".cart_info_td"));
+    });
+
+    /* 주문 페이지 이동 */
+    $(".order_btn").on("click", function(){
+        let form_contents ='';
+        let orderNumber = 0;
+        $(".cart_info_td").each(function(index, element){
+            if($(element).find(".individual_cart_checkbox").is(":checked") === true){	//체크여부
+                let productId = $(element).find(".individual_productId_input").val();
+                let cartQty = $(element).find(".individual_cartQty_input").val();
+                let productId_input = "<input name='carts[" + orderNumber + "].productId' type='hidden' value='" + productId + "'>";
+                form_contents += productId_input;
+
+                let cartQty_input = "<input name='carts[" + orderNumber + "].cartQty' type='hidden' value='" + cartQty + "'>";
+                form_contents += cartQty_input;
+
+                orderNumber += 1;
+            }
+        });
+        $(".order_form").html(form_contents);
+        $(".order_form").submit();
     });
 </script>
 </html>
