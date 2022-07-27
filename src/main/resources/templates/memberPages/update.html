@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>MemberUpdate</title>
+</head>
+<body>
+<h1>회원정보수정</h1>
+<form action="/member/update" method="post">
+    <input type="hidden" name="memberId" th:value="${member.memberId}">
+    <input type="hidden" name="memberPassword" th:value="${member.memberPassword}">
+<table>
+    <tr>
+        <th>이메일</th>
+        <th><input type="text" name="memberEmail" th:value="${member.memberEmail}" readonly></th>
+    </tr>
+    <tr>
+        <th>이름</th>
+        <th><input type="text" name="memberName" th:value="${member.memberName}" readonly></th>
+    </tr>
+    <tr>
+        <th>생년월일</th>
+        <th><input type="text" name="memberBirth" th:value="${member.memberBirth}" readonly></th>
+    </tr>
+    <tr>
+        <th>핸드폰번호</th>
+        <th><input type="text" name="memberMobile" id="memberMobile" th:value="${member.memberMobile}"></th>
+        <th><input type="button" value="중복확인" onclick="mobileDuplicateCheck()"></th>
+        <th><input type="button" value="인증하기" id="sendSMS"></th>
+        <th><input type="text" id="userNum" placeholder="인증번호입력"></th>
+        <th><input type="button" id="mobileCk" value="인증번호확인"></th>
+    </tr>
+    <tr>
+        <th>멤버쉽등급</th>
+        <th><input type="text" name="memberTier" th:value="${member.memberTier}" readonly></th>
+    </tr>
+</table>
+<input type="submit" value="수정완료">
+</form>
+</body>
+<script th:inline="javascript">
+    // 핸드폰번호 중복체크
+    function mobileDuplicateCheck(){
+        var memberMobile = document.getElementById("memberMobile").value;
+        console.log(memberMobile)
+        $.ajax({
+            type: 'post',
+            url: '/member/mobile-duplicate-check',
+            data: {"memberMobile": memberMobile},
+            dataType: 'text',
+            success: function (result) {
+                console.log(result)
+                if (result == "OK") {
+                    alert("사용가능한 핸드폰번호입니다. 인증을 진행해주세요")
+                } else {
+                    alert("이미 사용중인 핸드폰번호입니다. 확인 후 다시 입력해주세요")
+                }
+            }, error: function () {
+                alert("오류");
+            }
+        });
+    }
+
+    // 인증문자 보내기
+    $('#sendSMS').click(function() {
+
+        const memberMobile = $('#memberMobile').val();
+
+        $.ajax ({
+            url: '/member/sendSMS',
+            type: 'GET',
+            data: {"memberMobile" : memberMobile},
+            success: function(data) {
+                const checkNum = data;
+
+                console.log(checkNum)
+
+                alert('문자를 확인해주세요');
+
+                // 인증문자확인 버튼 클릭시 호출
+                $('#mobileCk').click(function() {
+                    const userNum = $('#userNum').val();
+
+                    if(checkNum === userNum) {
+                        alert('인증 성공하였습니다.');
+                    }
+                    else {
+                        alert('인증 실패하였습니다. 다시 입력해주세요.');
+                    }
+                });
+
+            }
+        });
+    });
+</script>
+</html>

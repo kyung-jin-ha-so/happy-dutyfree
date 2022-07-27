@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MemberDeleteMyself</title>
+</head>
+<body>
+<h1>회원탈퇴</h1>
+회원 탈퇴시 복구가 불가능합니다<br>
+정말 탈퇴하시겠습니까? <br>
+<a href="/myPageMain">이전</a>
+<button th:onclick="deleteMyself([[${session.loginId}]])">회원탈퇴</button>
+</body>
+<script th:inline="javascript">
+    function deleteMyself(loginId){
+        console.log("함수호출")
+        result = confirm("정말 탈퇴하시겠습니까?");
+        if(result == true){
+            location.href = "/member/deleteMyself";
+        }
+    }
+</script>
+</html>

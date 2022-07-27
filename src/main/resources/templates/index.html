@@ -7,10 +7,13 @@
 <body>
 인덱스입니다
 <div th:text="${session.loginEmail}"></div>
+<a href="/adminMain">관리자페이지 메인</a>
+<a href="/myPageMain">마이페이지 메인</a>
 <br>
 <h2>KT</h2>
 <a href="/passport/save-form">여권 정보 관리</a>
 <a href="/departure/">출국 정보 관리</a>
+<a href="/order/test">아임포트 테스트</a>
 
 <h2>JS</h2>
 <a href="/member/save">회원가입</a>
@@ -18,6 +21,8 @@
 <a href="/member/logout">로그아웃</a>
 <a href="/member/passwordCheck">비밀번호 확인</a>
 <a th:href="@{|/member/${session.loginId}|}">상세조회</a>
+<a href="/admin/memberList">회원목록조회(관리자버전)</a>
+<a href="/member/deleteMyselfForm">회원삭제(회원버전)</a>
 
 <h2>MH</h2>
 <a href="/product/save">상품등록</a><br>
