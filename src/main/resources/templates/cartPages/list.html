@@ -22,6 +22,8 @@
         <th>수량</th>
         <th>썸네일</th>
         <th>상품별 총 금액</th>
+        <th>관심상품</th>
+        <th>삭제</th>
     </tr>
     <tr>
         <td class="cart_info_td">
@@ -29,6 +31,7 @@
                    th:value="${cart.cartQty * cart.productPrice}"></div>
             <input type="checkbox" class="individual_cart_checkbox input_size_20" checked="checked">
             <input type="hidden" class="individual_productId_input" th:value="${cart.productId}">
+            <input type="hidden" class="individual_cartId_input" th:value="${cart.cartId}">
             <input type="hidden" class="individual_cartQty_input" th:value="${cart.cartQty}">
         </td>
         <td><a th:href="@{|/product/detail/${cart.productId}|}" th:text="${cart.productName}"></a></td>
@@ -43,14 +46,16 @@
 
         <td><img th:src="@{|/upload/${cart.productThumbnail}|}" width="100" height="100" alt=""></td>
         <td th:text="${cart.cartQty*cart.productPrice}"></td>
+        <td><input type="button" onclick="saveWish()" value="찜"></a></td>
+        <td><input type="button" th:onclick="deleteCart([[${cart.cartId}]])" value="삭제"></a></td>
     </tr>
 </table>
 
 <span class="total"></span>
 
 <div th:each="cart : ${cartList}">
-    <form th:action="@{|/order/${cart.memberId}|}" method="get" class="order_form">
-    </form>
+    <form th:action="@{|/order/${cart.memberId}|}" method="get" class="order_form"></form>
+    <form th:action="@{|/cart/delete/${cart.cartId}|}" method="get" class="delete_form"></form>
 </div>
 <div class="content_btn_section">
     <button class="order_btn">주문하기</button>
@@ -58,6 +63,7 @@
 
 </body>
 <script th:inline="javascript" th:each="cart: ${cartList}">
+    //상품수량 수정 (더하기)
     function plusBtn(cartId) {
         let quantity = document.getElementById(cartId).value;
         quantity = ++quantity;
@@ -73,7 +79,6 @@
             url: "/cart/update/",
             contentType: "application/json",
             success: function () {
-                alert("수정을 성공")
                 location.reload();
             },
             error: function () {
@@ -82,6 +87,7 @@
         });
     }
 
+    //상품수량 수정 (빼기)
     function minusBtn(cartId) {
         let quantity = document.getElementById(cartId).value;
         if (quantity > 1) {
@@ -98,7 +104,6 @@
                 url: "/cart/update/",
                 contentType: "application/json",
                 success: function () {
-                    alert("수정을 성공")
                     location.reload();
                 },
                 error: function () {
@@ -113,7 +118,7 @@
     });
     /* 체크여부에따른 종합 정보 변화 */
     $(".individual_cart_checkbox").on("change", function () {
-        /* 총 주문 정보 세팅(배송비, 총 가격, 마일리지, 물품 수, 종류) */
+        /* 총 주문 정보 세팅(총 가격) */
         setTotalInfo($(".cart_info_td"));
     });
 
@@ -128,24 +133,22 @@
         $(".total").text("총금액: " + totalPrice.toLocaleString());
     }
 
-    /* 체크박스 전체 선택 */
+    //체크박스 전체 선택
     $(".all_check_input").on("click", function () {
-        /* 체크박스 체크/해제 */
+        //체크박스 선택 & 해제
         if ($(".all_check_input").prop("checked")) {
-            $(".individual_cart_checkbox").attr("checked", true);
+            $(".individual_cart_checkbox").prop('checked', true);
         } else {
-            $(".individual_cart_checkbox").attr("checked", false);
+            $(".individual_cart_checkbox").prop('checked', false);
         }
-        /* 총 주문 정보 세팅(배송비, 총 가격, 마일리지, 물품 수, 종류) */
         setTotalInfo($(".cart_info_td"));
     });
-
-    /* 주문 페이지 이동 */
-    $(".order_btn").on("click", function(){
-        let form_contents ='';
+    //주문페이지로 이동
+    $(".order_btn").on("click", function () {
+        let form_contents = '';
         let orderNumber = 0;
-        $(".cart_info_td").each(function(index, element){
-            if($(element).find(".individual_cart_checkbox").is(":checked") === true){	//체크여부
+        $(".cart_info_td").each(function (index, element) {
+            if ($(element).find(".individual_cart_checkbox").is(":checked") === true) {	//체크여부
                 let productId = $(element).find(".individual_productId_input").val();
                 let cartQty = $(element).find(".individual_cartQty_input").val();
                 let productId_input = "<input name='carts[" + orderNumber + "].productId' type='hidden' value='" + productId + "'>";
@@ -160,5 +163,36 @@
         $(".order_form").html(form_contents);
         $(".order_form").submit();
     });
+
+    //장바구니에 담겨있는 상품 찜하기
+    function saveWish() {
+        if ([[${session.loginEmail}]] == null) {
+            alert("로그인 후 찜하실 수 있습니다");
+            location.href = "/member/login";
+        } else {
+            let memberId = [[${session.loginId}]];
+            let productId = [[${cart.productId}]];
+            $.ajax({
+                type: "post",
+                url: "/product/like",
+                data: {
+                    "memberId": memberId,
+                    "productId": productId
+                },
+                dataType: "text",
+                success: function (result) {
+                    alert("찜하기 성공")
+                    location.reload();
+                }, error: function () {
+                    alert("찜하기 실패")
+                    location.reload();
+                }
+            })
+        }
+    }
+    //장바구니 개별삭제
+    const deleteCart = (cartId) => {
+        location.href = "/cart/delete/" + cartId;
+    }
 </script>
 </html>

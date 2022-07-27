@@ -3,15 +3,13 @@ package com.its.happy.controller;
 import com.its.happy.dto.CartArrayDTO;
 import com.its.happy.dto.CartDTO;
 import com.its.happy.dto.MemberDTO;
+import com.its.happy.dto.OrderDTO;
 import com.its.happy.service.MemberService;
 import com.its.happy.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -23,6 +21,13 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
     private final MemberService memberService;
+
+    @GetMapping("/{memberId}")
+    public String orderTest(@PathVariable Long memberId, CartArrayDTO cartArrayDTO){
+        System.out.println("memberId = " + memberId);
+        System.out.println("cartArrayDTO = " + cartArrayDTO);
+        return "index";
+    }
 
     @GetMapping("/save-form")
     public String saveForm(@ModelAttribute CartArrayDTO cartArrayDTO, Model model, HttpSession session, @RequestParam("productId") Long productId, @RequestParam("orderQty") int orderQty) {
