@@ -10,9 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -129,6 +127,21 @@ public class MemberService {
 
     public void update(MemberDTO memberDTO) {
         memberRepository.save(MemberEntity.toUpdate(memberDTO));
+    }
+
+    public List<MemberDTO> findAll() {
+        List<MemberEntity> memberEntityList = memberRepository.findAll();
+        List<MemberDTO> memberDTOList = new ArrayList<>();
+        for(MemberEntity memberEntity : memberEntityList){
+            memberDTOList.add(MemberDTO.toMemberDTO(memberEntity));
+        }
+        return memberDTOList;
+    }
+
+
+    // 회원삭제
+    public void deleteById(Long memberId) {
+        memberRepository.deleteById(memberId);
     }
 }
 
