@@ -7,10 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.dom4j.rule.Mode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -30,14 +29,38 @@ public class ReviewController {
         model.addAttribute("orderId", reviewEntity.getOrderEntity().getOrderId());
         return "/reviewPages/save";
     }
+    @PostMapping("/save")
+    public String save(@ModelAttribute ReviewDTO reviewDTO, @RequestParam Long productId, @RequestParam Long memberId,
+                       @RequestParam Long orderId){
+        reviewService.save(reviewDTO, memberId, productId, orderId);
+        return "redirect: /review/findByMemberId/" + memberId;
+    }
 
+    //save form테스트용
     @GetMapping("/saveFormTest")
     public String save(){
         return "/reviewPages/save";
     }
 
-//    @GetMapping("/findByMemberId/{memberId}")
-//    public String findByMemberId(@PathVariable Long memberId){
-//        List<ReviewDTO> reviewDTOList = reviewService.findByMemberId(memberId);
-//    }
+    @GetMapping("/findByMemberId/{memberId}")
+    public String findByMemberId(@PathVariable Long memberId, Model model){
+        List<ReviewDTO> reviewDTOList = reviewService.findByMemberId(memberId);
+        model.addAttribute("reviewList", reviewDTOList);
+        return "/reviewPages/list";
+    }
+
+    //후기 목록 test 용
+    @GetMapping("/list")
+    public String list(){
+        return "/reviewPages/list";
+    }
+
+    //후기 삭제 test중
+    @GetMapping("/delete/{reviewId}")
+    public String reviewDelete(@PathVariable Long reviewId, HttpSession session){
+        reviewService.deleteById(reviewId);
+        Long memberId = (Long) session.getAttribute("loginId");
+        return "redirect: /review/findByMemberId/" + memberId;
+    }
+
 }
