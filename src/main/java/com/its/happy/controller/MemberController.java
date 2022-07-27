@@ -148,5 +148,19 @@ public class MemberController {
         return "redirect:/member/"+memberDTO.getMemberId();
     }
 
+    // 회원탈퇴 페이지 이동
+    @GetMapping("/deleteMyselfForm")
+    public String deleteMyselfForm(){
+        return "/memberPages/deleteMyself";
+    }
+
+    // 회원탈퇴 - 회원
+    @GetMapping("/deleteMyself")
+    public String deleteMyself(HttpSession session){
+        Long memberId = (Long) session.getAttribute("loginId");
+        memberService.deleteById(memberId);
+        return "redirect:/";
+    }
+
 
 }
