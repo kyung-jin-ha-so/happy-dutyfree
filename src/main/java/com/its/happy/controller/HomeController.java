@@ -15,4 +15,15 @@ public class HomeController {
     public String main(){
         return "main";
     }
+
+    @GetMapping("/myPageMain")
+    public String myPageMain(){
+        return "myPages/main";
+    }
+
+    @GetMapping("/adminMain")
+    public String adminMain(){
+        return "adminPages/main";
+    }
+
 }

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>이메일</th>
+        <th>이름</th>
+        <th>전화번호</th>
+        <th>생년월일</th>
+        <th>삭제</th>
+    </tr>
+    <tr th:each="member : ${memberList}">
+        <td th:text="${member.memberEmail}"></td>
+        <td th:text="${member.memberName}"></td>
+        <td th:text="${member.memberMobile}"></td>
+        <td th:text="${member.memberBirth}"></td>
+        <td><button th:onclick="memberDelete([[${member.memberId}]])">강제탈퇴</button></td>
+    </tr>
+</table>
+</body>
+<script th:inline="javascript" th:each="member : ${memberList}">
+    function memberDelete(memberId){
+        result = confirm("해당 회원을 강제탈퇴 시키겠습니까?")
+        if(result == true){
+            location.href = "/admin/delete/" + memberId;
+        }
+    }
+</script>
+</html>
