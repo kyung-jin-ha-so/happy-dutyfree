@@ -82,5 +82,9 @@ public class CartService {
             cartRepository.save(cartEntity1);
         }
     }
+    @Transactional
+    public void deleteById(Long cartId) {
+        cartRepository.deleteById(cartId);
+    }
 }
 
