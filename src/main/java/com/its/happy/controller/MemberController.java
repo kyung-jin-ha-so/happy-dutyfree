@@ -141,6 +141,12 @@ public class MemberController {
         return "memberPages/update";
     }
 
+    // 회원정보 수정 구현
+    @PostMapping("/update")
+    public String update(@ModelAttribute MemberDTO memberDTO){
+        memberService.update(memberDTO);
+        return "redirect:/member/"+memberDTO.getMemberId();
+    }
 
 
 }
