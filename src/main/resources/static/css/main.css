@@ -36,3 +36,21 @@
 .main_visual .swiper-wrapper .swiper-slide:nth-of-type(2){background:#0f0}
 .main_visual .swiper-wrapper .swiper-slide:nth-of-type(3){background:#f00}
 /**/
+
+/* prod_list */
+.prod_list{font-size:0; letter-spacing:-4px; padding:100px 0 150px;}
+.prod_list .main_tit{padding-bottom:30px; text-align:center;}
+.prod_list .main_tit p{font-size:34px; letter-spacing:-0.045em; color:#000; font-weight: bold;}
+.prod_list ul li{display:inline-block; vertical-align:top; width:calc(25% - 37.5px); margin-right:50px;}
+.prod_list ul li:last-of-type{margin-right:0;}
+.prod_list ul li a{display:block;}
+/* 이미지 삽입후 삭제 */
+.prod_list ul li .img_box{width:100%; height:200px; background:#222}
+/* 이미지 삽입후 삭제 */
+/* 이미지 삽입후 바로아랫줄 주석풀어주세요 */
+/*.prod_list ul li .img_box img{width:100%:}*/
+.prod_list ul li .txt_box{padding-top:20px; text-align:center;}
+.prod_list ul li .txt_box p.tit{font-size:24px; letter-spacing:-0.045em; color:#000; font-weight:500;}
+.prod_list ul li .txt_box p.desc{font-size:22px; letter-spacing:-0.045em; color:#444; font-weight:400;}
+.prod_list ul li .txt_box p.txt{font-size:26px; letter-spacing:-0.045em; color:#f60; font-weight:400;}
+.prod_list ul li .txt_box p.text{font-size:18px; letter-spacing:-0.045em; color:#999; font-weight:300;}
