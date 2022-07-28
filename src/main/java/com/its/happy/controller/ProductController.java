@@ -49,7 +49,7 @@ public class ProductController {
                        @ModelAttribute CategoryDTO categoryDTO) throws IOException {
         Long savedId = productService.save(productDTO, categoryDTO);
         productService.fileSave(savedId, multipartFileList);
-        return "index";
+        return "index2";
     }
 
     @GetMapping("/")
@@ -172,7 +172,7 @@ public class ProductController {
                          @ModelAttribute CategoryDTO categoryDTO) throws IOException {
         Long updatedId = productService.update(productDTO, categoryDTO);
         productService.fileSave(updatedId, multipartFileList);
-        return "index";
+        return "index2";
     }
 
     @PostMapping("/deleteFile")
