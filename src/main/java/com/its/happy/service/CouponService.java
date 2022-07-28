@@ -46,23 +46,19 @@ public class CouponService {
         return dtoList;
     }
 
-    public String issueCoupon(Long couponId, Long memberId, String today) {
+    public String issueCoupon(Long couponId, Long memberId) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
         Optional<CouponEntity> optionalCouponEntity = couponRepository.findById(couponId);
         if (optionalMemberEntity.isPresent()) {
             if (optionalCouponEntity.isPresent()) {
                 MemberEntity memberEntity = optionalMemberEntity.get();
                 CouponEntity couponEntity = optionalCouponEntity.get();
-                String memberBirth = memberEntity.getMemberBirth();
-                memberBirth = memberBirth.substring(5,10);
-                System.out.println("memberBirth = " + memberBirth);
-                if (today.equals(memberBirth)) {
-                    Long save = couponMemberRepository.save(CouponMemberEntity.toCouponMember(memberEntity, couponEntity)).getCouponMemberId();
-                    if (save != null) {
-                        return "ok";
-                    } else {
-                        return "no";
-                    }
+                Long save = couponMemberRepository.save(CouponMemberEntity.toCouponMember(memberEntity, couponEntity)).getCouponMemberId();
+                System.out.println("save = " + save);
+                if(save!=null){
+                    return "ok";
+                } else {
+                    return "no";
                 }
             }
         }

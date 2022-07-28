@@ -24,6 +24,7 @@
         <th>쿠폰사진</th>
     </tr>
     <tr>
+        <td th:text="${couponMember.memberEntity.createdTime}"></td>
         <td th:text="${event.eventId}"></td>
         <td th:text="${event.eventTitle}"></td>
         <td th:text="${event.eventContents}"></td>
@@ -34,8 +35,11 @@
         <td th:value="${event.couponEntity.couponName}" th:id="couponName"></td>
         <td th:text="${event.couponEntity.couponValue}"></td>
         <td th:text="${event.couponEntity.couponMinimumValue}"></td>
-        <td><img th:src="@{|/upload/${event.couponEntity.couponThumbnail}|}" width="100" height="100" alt=""
+
+        <td th:if="${couponMember == null}"><img th:src="@{|/upload/${event.couponEntity.couponThumbnail}|}" width="100" height="100" alt=""
                  onclick="issueCoupon()"></td>
+        <td th:if="${couponMember != null}"><img th:src="@{|/upload/${event.couponEntity.couponThumbnail}|}" width="100" height="100" alt=""
+                                                 onclick="dontIssueCoupon()"></td>
         <td><input type="button" value="삭제" onclick="eventDelete()"></td>
         <td><input type="button" value="수정" onclick="eventUpdate()"></td>
     </tr>
@@ -57,25 +61,24 @@
 </script>
 <script th:inline="javascript">
     function issueCoupon() {
-        const couponId = document.getElementById("couponId").innerHTML;
-        if (couponId == 1) {
-            const memberId = [[${session.loginId}]];
-            const couponId = [[${event.couponEntity.couponId}]];
-            let today = new Date();
-            let month = today.getMonth() + 1;  // 월
-            if (month < 10) {
-                month = "0" + month;
-            }
-            let date = today.getDate();  // 날짜
-            let todayReal = month + '-' + date;
-            console.log(todayReal);
+        const id = document.getElementById("couponId").innerHTML;
+        const memberId = [[${session.loginId}]];
+        const couponId = [[${event.couponEntity.couponId}]];
+        const memberB = [[${couponMember.memberEntity.memberBirth}]];
+        let today = new Date();
+        let month = today.getMonth() + 1;  // 월
+        if (month < 10) {
+            month = "0" + month;
+        }
+        let date = today.getDate();  // 날짜
+        // 노조건 이벤트
+        if (id == 1) {
             $.ajax({
                 type: "post",
                 url: "/coupon/issueCoupon/",
                 data: {
                     "memberId": memberId,
                     "couponId": couponId,
-                    "today": todayReal
                 },
                 dataType: "text",
                 success: function (result) {
@@ -85,6 +88,55 @@
                 }
             });
         }
+        //생일 이벤트
+        if (id == 2) {
+            let todayDate = month + '-' + date;
+            let memberBirth = memberB.substring(5, 10);
+            if (memberBirth == todayDate) {
+                $.ajax({
+                    type: "post",
+                    url: "/coupon/issueCoupon/",
+                    data: {
+                        "memberId": memberId,
+                        "couponId": couponId,
+                    },
+                    dataType: "text",
+                    success: function (result) {
+                        alert("쿠폰발급 성공")
+                    }, error: function () {
+                        alert("쿠폰 발급 조건에 부합하지 않습니다.")
+                    }
+                });
+            } else {
+                alert("쿠폰 발급 조건에 부합하지 않습니다.")
+            }
+        }
+        //띠 조건 이벤트
+        if (id == 3) {
+            let memberYear = parseInt(memberB.substring(0, 4));
+            let year = today.getFullYear();
+            if (memberYear % 12 == year % 12) {
+                $.ajax({
+                    type: "post",
+                    url: "/coupon/issueCoupon/",
+                    data: {
+                        "memberId": memberId,
+                        "couponId": couponId,
+                    },
+                    dataType: "text",
+                    success: function (result) {
+                        alert("쿠폰발급 성공")
+                    }, error: function () {
+                        alert("쿠폰 발급 조건에 부합하지 않습니다.")
+                    }
+                });
+            } else {
+                alert("쿠폰 발급 조건에 부합하지 않습니다.")
+            }
+        }
+    }
+    function dontIssueCoupon(){
+        alert("이미 보유하고 있는 쿠폰입니다.")
     }
 </script>
 </html>
