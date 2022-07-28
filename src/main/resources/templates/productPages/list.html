@@ -52,7 +52,7 @@
             <td><img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""></td>
             <td><a th:href="@{|/product/detail/${product.productId}|}" th:text="${product.productName}">이름</a></td>
             <td th:text="${product.productStar}"></td>
-            <td th:text="${product.productPrice}"></td>
+            <td th:text="|$${product.productPrice}|"></td>
         </tr>
         </tbody>
     </table>

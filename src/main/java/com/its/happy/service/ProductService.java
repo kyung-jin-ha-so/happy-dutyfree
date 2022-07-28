@@ -241,6 +241,15 @@ public class ProductService {
         }
         return likeDTOList;
     }
+
+    //상품 할인율이 23퍼센트 이상인 목록 출력
+    public List<ProductDTO> findMainAll() {
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        List<ProductEntity> productEntityList = productRepository.findByProductDiscountGreaterThanEqual(23L);
+        for (ProductEntity product: productEntityList) {
+            productDTOList.add(ProductDTO.toDTO(product));
+        }return productDTOList;
+    }
 }
 
 
