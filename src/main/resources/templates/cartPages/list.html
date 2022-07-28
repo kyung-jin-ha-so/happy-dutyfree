@@ -32,7 +32,6 @@
             <input type="checkbox" class="individual_cart_checkbox input_size_20" checked="checked">
             <input type="hidden" class="individual_cartId_input" th:value="${cart.cartId}">
             <input type="hidden" class="individual_productId_input" th:value="${cart.productId}">
-            <input type="hidden" class="individual_cartId_input" th:value="${cart.cartId}">
             <input type="hidden" class="individual_cartQty_input" th:value="${cart.cartQty}">
             <input type="hidden" class="individual_memberId_input" th:value="${cart.memberId}">
             <input type="hidden" class="individual_productName_input" th:value="${cart.productName}">
@@ -156,6 +155,7 @@
                 let cartId = $(element).find(".individual_cartId_input").val();
                 let cartQty = $(element).find(".individual_cartQty_input").val();
                 let productId = $(element).find(".individual_productId_input").val();
+                let productId_input = "<input name='carts[" + orderNumber + "].productId' type='hidden' value='" + productId + "'>";
                 let memberId = $(element).find(".individual_memberId_input").val();
                 let productName = $(element).find(".individual_productName_input").val();
                 let productOriginalPrice = $(element).find(".individual_productOriginalPrice_input").val();
@@ -167,7 +167,6 @@
                 form_contents += cartId_input;
                 let cartQty_input = "<input name='carts[" + orderNumber + "].cartQty' type='hidden' value='" + cartQty + "'>";
                 form_contents += cartQty_input;
-                let productId_input = "<input name='carts[" + orderNumber + "].productId' type='hidden' value='" + productId + "'>";
                 form_contents += productId_input;
                 let memberId_input = "<input name='carts[" + orderNumber + "].memberId' type='hidden' value='" + memberId + "'>";
                 form_contents += memberId_input;
