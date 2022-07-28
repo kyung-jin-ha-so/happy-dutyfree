@@ -1,170 +1,44 @@
-<!doctype html>
-<html lang="ko">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<title>경진하소</title>
-	<meta charset="UTF-8">
-
-	<script src="js/jquery.js"></script>
-
-	<!-- css 연결 -->
-	<link rel="stylesheet" href="css/layout.css" type="text/css" media="all" />
-	<link rel="stylesheet" href="css/main.css" type="text/css" media="all" />
-	<link rel="stylesheet" href="css/basic.css" type="text/css" media="all" />
-
-	<!-- swiper 슬라이더 -->
-	<link rel="stylesheet" href="css/swiper.min.css" type="text/css" media="all" />
-	<script src="js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
-
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
 <body>
-	<div id="wrap">
-		<!-- header -->
-			<div id="haeder">
-				<div class="gnb">
-					<ul>
-						<li><a href="javascript:;">로그인</a></li>
-						<li><a href="javascript:;">회원가입</a></li>
-						<li><a href="javascript:;">MY행복</a></li>
-						<li><a href="javascript:;">장바구니</a></li>
-						<li><a href="javascript:;">주문가능시간</a></li>
-						<li><a href="javascript:;">오늘의 환율 1$ = <b>1,299.3</b>원</a></li>
-					</ul>
-				</div>
-			</div>
-		<!-- header// -->
+인덱스입니다
+<div th:text="${session.loginEmail}"></div>
+<a href="/adminMain">관리자페이지 메인</a>
+<a href="/myPageMain">마이페이지 메인</a>
+<br>
+<h2>KT</h2>
+<a href="/passport/save-form">여권 정보 관리</a>
+<a href="/departure/">출국 정보 관리</a>
+<a href="/order/test">아임포트 테스트</a>
 
-		<div class="content">
-			<!-- header 아래 검색창 -->
-			<div class="search">
-				<div class="left_box">
-					<!-- logo img_size 133 * 57 -->
-					<div class="logo">
-						<a href="/">
-							<!-- <img src="" alt=""> -->
-						</a>
-					</div>
-					<div class="category">
-						<a href="javascript:;">카테고리</a>
-						<ul class="depth02">
-							<li><a href="javscript:;">1번</a></li>
-							<li><a href="javscript:;">2번</a></li>
-							<li><a href="javscript:;">3번</a></li>
-							<li><a href="javscript:;">4번</a></li>
-							<li><a href="javscript:;">5번</a></li>
-							<li><a href="javscript:;">6번</a></li>
-							<li><a href="javscript:;">7번</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="center_box">
-					<div class="input_box">
-						<input type="text" placeholder="검색">
-						<a href="javascript"><img src="img/input_click.png" alt=""></a>
-					</div>	
-				</div>
-				<!-- img_size 225 * 80 -->
-				<div class="right_box">
-					<a href="javascript:;">
-						<!-- <img src="" alt=""> -->
-					</a>
-				</div>
-			</div>
-			<!-- header 아래 검색창 -->
+<h2>JS</h2>
+<a href="/member/save">회원가입</a>
+<a href="/member/login">로그인</a>
+<a href="/member/logout">로그아웃</a>
+<a href="/member/passwordCheck">비밀번호 확인</a>
+<a th:href="@{|/member/${session.loginId}|}">상세조회</a>
+<a href="/admin/memberList">회원목록조회(관리자버전)</a>
+<a href="/member/deleteMyselfForm">회원삭제(회원버전)</a>
 
-			<!-- main_visual -->
-			<div class="main_visual">
-				<ul class="swiper-wrapper">
-					<!-- img_size 1400*500 -->
-					<li class="swiper-slide">
-						<!-- <img src="" alt=""> -->
-					</li>
-					<li class="swiper-slide">
-						<!-- <img src="" alt=""> -->
-					</li>
-					<li class="swiper-slide">
-						<!-- <img src="" alt=""> -->
-					</li>
-				</ul>
-			</div>
-			<script>
-				var main_visual_sldie = new Swiper('.main_visual', {
-//					loop:true,				
-					autoplay: {   // 슬라이드 자동
-						delay: 6000,  // 멈춰있는시간
-						disableOnInteraction: false, // 마우스로 드래그 해도 계속해서 슬라이드 진행
-					},
-				});
-			</script>
-			<!-- main_visual -->
+<h2>MH</h2>
+<a href="/product/save">상품등록</a><br>
+<a href="/category/save">카테고리등록</a><br>
+<a href="/product/">상품목록보기</a><br>
+<a href="/admin/productList/">관리자 상품보기</a><br>
+<a href="review/saveFormTest">상품후기 작성</a><br>
 
-			<!-- 상품창 -->
-			<div class="prod_list">
-				<div class="main_tit">
-					<p>상품목록</p>
-				</div>
-				<ul>
-					<li>
-						<a href="javascript:;">
-							<!-- img_size 310*200 -->
-							<div class="img_box">
-								<!-- <img src="" alt=""> -->
-							</div>
-							<div class="txt_box">
-								<p class="tit">조 말론 런던</p>
-								<p class="desc">비타민 E 립 컨디셔너</p>
-								<p class="txt">$38</p>
-								<p class="text">(49,844원)</p>
-							</div>
-						</a>
-					</li>
-					<li>
-						<a href="javascript:;">
-							<div class="img_box">
-								<!-- <img src="" alt=""> -->
-							</div>
-							<div class="txt_box">
-								<p class="tit">조 말론 런던</p>
-								<p class="desc">비타민 E 립 컨디셔너</p>
-								<p class="txt">$38</p>
-								<p class="text">(49,844원)</p>
-							</div>
-						</a>
-					</li>
-					<li>
-						<a href="javascript:;">
-							<div class="img_box">
-								<!-- <img src="" alt=""> -->
-							</div>
-							<div class="txt_box">
-								<p class="tit">조 말론 런던</p>
-								<p class="desc">비타민 E 립 컨디셔너</p>
-								<p class="txt">$38</p>
-								<p class="text">(49,844원)</p>
-							</div>
-						</a>
-					</li>
-					<li>
-						<a href="javascript:;">
-							<div class="img_box">
-								<!-- <img src="" alt=""> -->
-							</div>
-							<div class="txt_box">
-								<p class="tit">조 말론 런던</p>
-								<p class="desc">비타민 E 립 컨디셔너</p>
-								<p class="txt">$38</p>
-								<p class="text">(49,844원)</p>
-							</div>
-						</a>
-					</li>
-				</ul>
-			</div>
-			<!-- 상품창 -->
-		
-		<!-- footer -->
-		
-		<!-- footer// -->
-	</div>
-	<!--html 인클루드시 사용 -->
+<h2>SH</h2>
+<a href="/event/saveForm">이벤트 저장(admin ver.)</a><br>
+<a href="/admin/eventList">이벤트목록(admin ver.)</a><br>
+<a href="/coupon/saveForm">쿠폰 저장(admin ver.)</a><br>
+<a href="/admin/couponList">쿠폰목록보기(admin ver.)</a><br>
+<a href="/event">이벤트목록(member ver.)</a><br>
+<a href="/product/likeList/">나의 찜목록(member ver.)</a><br>
+<a href="/cart/cartList">나의 장바구니 목록</a><br>
 
 </body>
 </html>
