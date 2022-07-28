@@ -28,8 +28,8 @@ public class CouponController {
     }
     //쿠폰발급
     @PostMapping("/issueCoupon")
-    public ResponseEntity issueCoupon(@RequestParam("memberId") Long memberId, @RequestParam("couponId") Long couponId){
-        String result = couponService.issueCoupon(couponId, memberId);
+    public ResponseEntity issueCoupon(@RequestParam("memberId") Long memberId, @RequestParam("couponId") Long couponId, @RequestParam("today") String today){
+        String result = couponService.issueCoupon(couponId, memberId, today);
         System.out.println("result = " + result);
         if(result.equals("ok")){
             return new ResponseEntity<>(HttpStatus.OK);

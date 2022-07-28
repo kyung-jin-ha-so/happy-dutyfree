@@ -30,8 +30,8 @@
         <td th:text="${event.eventCreatedDate}"></td>
         <td th:text="${event.eventUpdatedDate}"></td>
         <td><img th:src="@{|/upload/${event.eventThumbnailName}|}" width="100" height="100" alt=""></td>
-        <td th:text="${event.couponEntity.couponId}" th:id="couponId"></td>
-        <td th:text="${event.couponEntity.couponName}" th:id="couponName"></td>
+        <td th:text="${event.couponEntity.couponId}" id="couponId"></td>
+        <td th:value="${event.couponEntity.couponName}" th:id="couponName"></td>
         <td th:text="${event.couponEntity.couponValue}"></td>
         <td th:text="${event.couponEntity.couponMinimumValue}"></td>
         <td><img th:src="@{|/upload/${event.couponEntity.couponThumbnail}|}" width="100" height="100" alt=""
@@ -57,23 +57,34 @@
 </script>
 <script th:inline="javascript">
     function issueCoupon() {
-        const memberId = [[${session.loginId}]];
-        const couponId = [[${event.couponEntity.couponId}]];
-
-        $.ajax({
-            type: "post",
-            url: "/coupon/issueCoupon/",
-            data: {
-                "memberId": memberId,
-                "couponId": couponId
-            },
-            dataType: "text",
-            success: function (result) {
-                alert("쿠폰발급 성공")
-            }, error: function () {
-                alert("쿠폰발급 실패")
+        const couponId = document.getElementById("couponId").innerHTML;
+        if (couponId == 1) {
+            const memberId = [[${session.loginId}]];
+            const couponId = [[${event.couponEntity.couponId}]];
+            let today = new Date();
+            let month = today.getMonth() + 1;  // 월
+            if (month < 10) {
+                month = "0" + month;
             }
-        });
+            let date = today.getDate();  // 날짜
+            let todayReal = month + '-' + date;
+            console.log(todayReal);
+            $.ajax({
+                type: "post",
+                url: "/coupon/issueCoupon/",
+                data: {
+                    "memberId": memberId,
+                    "couponId": couponId,
+                    "today": todayReal
+                },
+                dataType: "text",
+                success: function (result) {
+                    alert("쿠폰발급 성공")
+                }, error: function () {
+                    alert("쿠폰 발급 조건에 부합하지 않습니다.")
+                }
+            });
+        }
     }
 </script>
 </html>
