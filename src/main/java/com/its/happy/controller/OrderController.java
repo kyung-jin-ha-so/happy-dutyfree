@@ -25,7 +25,7 @@ public class OrderController {
     public String orderTest(@PathVariable Long memberId, CartArrayDTO cartArrayDTO){
         System.out.println("memberId = " + memberId);
         System.out.println("cartArrayDTO = " + cartArrayDTO);
-        return "index2";
+        return "index";
     }
 
     @GetMapping("/save-form")

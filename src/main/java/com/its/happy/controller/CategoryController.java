@@ -24,6 +24,6 @@ public class CategoryController {
     public String save(@ModelAttribute CategoryDTO categoryDTO){
         Long categoryId = categoryService.save(categoryDTO);
         System.out.println("categoryId = " + categoryId);
-        return "index2";
+        return "index";
     }
 }
