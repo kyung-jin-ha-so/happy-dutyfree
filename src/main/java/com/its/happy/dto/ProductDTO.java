@@ -63,4 +63,10 @@ public class ProductDTO {
         this.productBrand = productBrand;
         this.productStatus = productStatus;
     }
+
+    public ProductDTO(String productName, double productOriginalPrice, double productPrice) {
+        this.productName = productName;
+        this.productOriginalPrice = productOriginalPrice;
+        this.productPrice = productPrice;
+    }
 }
