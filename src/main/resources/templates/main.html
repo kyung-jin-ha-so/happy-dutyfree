@@ -46,17 +46,9 @@
                 <div class="category">
                     <a href="javascript:;">카테고리</a>
                     <ul class="depth02">
-                        <li><a href="/product/1/">스킨케어</a></li>
-                        <li><a href="/product/2/">메이크업</a></li>
-                        <li><a href="/product/3/">향수/바디/헤어</a></li>
-                        <li><a href="/product/4/">가방/신발/잡화</a></li>
-                        <li><a href="/product/5/">시계/쥬얼리</a></li>
-                        <li><a href="/product/6/">의류/아이웨어</a></li>
-                        <li><a href="/product/7/">스포츠/레저</a></li>
-                        <li><a href="/product/8/">디지털/리빙</a></li>
-                        <li><a href="/product/9/">식품</a></li>
-                        <li><a href="/product/10/">유아동</a></li>
-                        <li><a href="/product/11/">남성관</a></li>
+                        <li th:each="category: ${categoryList}">
+                            <a th:href="@{|/product/${category.categoryId}/|}" th:utext="${category.categoryName}"></a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -97,55 +89,17 @@
                 <p>상품목록</p>
             </div>
             <ul>
-                <li>
-                    <a href="javascript:;">
+                <li th:each="product: ${productList}">
+                    <a th:href="@{|/product/detail/${product.productId}|}">
                         <!-- img_size 310*200 -->
                         <div class="img_box">
-                            <!-- <img src="" alt=""> -->
+                            <img th:src="@{|/upload/${product.productThumbnail}|}" width="320" height="200" alt="">
                         </div>
                         <div class="txt_box">
-                            <p class="tit">조 말론 런던</p>
-                            <p class="desc">비타민 E 립 컨디셔너</p>
-                            <p class="txt">$38</p>
-                            <p class="text">(49,844원)</p>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:;">
-                        <div class="img_box">
-                            <!-- <img src="" alt=""> -->
-                        </div>
-                        <div class="txt_box">
-                            <p class="tit">조 말론 런던</p>
-                            <p class="desc">비타민 E 립 컨디셔너</p>
-                            <p class="txt">$38</p>
-                            <p class="text">(49,844원)</p>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:;">
-                        <div class="img_box">
-                            <!-- <img src="" alt=""> -->
-                        </div>
-                        <div class="txt_box">
-                            <p class="tit">조 말론 런던</p>
-                            <p class="desc">비타민 E 립 컨디셔너</p>
-                            <p class="txt">$38</p>
-                            <p class="text">(49,844원)</p>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:;">
-                        <div class="img_box">
-                            <!-- <img src="" alt=""> -->
-                        </div>
-                        <div class="txt_box">
-                            <p class="tit">조 말론 런던</p>
-                            <p class="desc">비타민 E 립 컨디셔너</p>
-                            <p class="txt">$38</p>
+                            <p class="tit" th:text="${product.productBrand}"></p>
+                            <p class="desc" th:text="${product.productName}"></p>
+                            <p class="tit"><STRIKE th:text="|$${product.productOriginalPrice}|"></STRIKE></p>
+                            <p class="txt" th:text="|$${product.productPrice}|"></p>
                             <p class="text">(49,844원)</p>
                         </div>
                     </a>
@@ -163,43 +117,43 @@
     <!--html 인클루드시 사용 -->
 </div>
 </body>
-        <script>
-            var main_visual_sldie = new Swiper('.main_visual', {
+<script>
+    var main_visual_sldie = new Swiper('.main_visual', {
 //					loop:true,
-                autoplay: {   // 슬라이드 자동
-                    delay: 6000,  // 멈춰있는시간
-                    disableOnInteraction: false, // 마우스로 드래그 해도 계속해서 슬라이드 진행
-                },
-            });
+        autoplay: {   // 슬라이드 자동
+            delay: 6000,  // 멈춰있는시간
+            disableOnInteraction: false, // 마우스로 드래그 해도 계속해서 슬라이드 진행
+        },
+    });
 
-            $("#search").click(function () {
-                $("#searchForm").submit();
-            });
+    $("#search").click(function () {
+        $("#searchForm").submit();
+    });
 
-            $(document).ready(function () {
+    $(document).ready(function () {
 
-                const exchangeRate = document.getElementById("rate");
-                let exchange = "";
+        const exchangeRate = document.getElementById("rate");
+        let exchange = "";
 
-                var myHeaders = new Headers();
-                myHeaders.append("apikey", "");
+        var myHeaders = new Headers();
+        myHeaders.append("apikey", "");
 
-                var requestOptions = {
-                    method: 'GET',
-                    redirect: 'follow',
-                    headers: myHeaders
-                };
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow',
+            headers: myHeaders
+        };
 
-                fetch("https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=1", requestOptions)
-                    .then(response => {
-                        return response.json();
-                    })
-                    .then(json => {
-                        exchangeRate.innerHTML = json["result"].toFixed(2);
-                        exchange = json["result"];
-                    })
-                    .catch(error => console.log('error', error));
-            });
-        </script>
+        fetch("https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=1", requestOptions)
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                exchangeRate.innerHTML = json["result"].toFixed(2);
+                exchange = json["result"];
+            })
+            .catch(error => console.log('error', error));
+    });
+</script>
 
 </html>
