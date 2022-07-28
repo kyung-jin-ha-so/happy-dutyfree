@@ -36,7 +36,7 @@ public class EventController {
         System.out.println("eventDTO = " + eventDTO + ", multipartFileList = " + multipartFileList + ", couponDTO = " + couponDTO);
         Long savedId = eventService.save(eventDTO, couponDTO);
         eventService.fileSave(savedId, multipartFileList);
-        return "index";
+        return "index2";
     }
 
     //이벤트 페이징목록

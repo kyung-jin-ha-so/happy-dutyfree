@@ -3,7 +3,6 @@ package com.its.happy.controller;
 import com.its.happy.dto.CartArrayDTO;
 import com.its.happy.dto.CartDTO;
 import com.its.happy.dto.MemberDTO;
-import com.its.happy.dto.OrderDTO;
 import com.its.happy.service.MemberService;
 import com.its.happy.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class OrderController {
     public String orderTest(@PathVariable Long memberId, CartArrayDTO cartArrayDTO){
         System.out.println("memberId = " + memberId);
         System.out.println("cartArrayDTO = " + cartArrayDTO);
-        return "index";
+        return "index2";
     }
 
     @GetMapping("/save-form")

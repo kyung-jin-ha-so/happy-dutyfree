@@ -24,7 +24,7 @@ public class CouponController {
     @PostMapping("/save")
     public String save(@ModelAttribute CouponDTO couponDTO)throws IOException {
         couponService.save(couponDTO);
-        return "index";
+        return "index2";
     }
     //쿠폰발급
     @PostMapping("/issueCoupon")
