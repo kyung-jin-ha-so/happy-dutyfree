@@ -24,4 +24,12 @@ public class CouponMemberDTO {
         couponMemberDTO.setMemberEntity(couponMemberDTO.getMemberEntity());
         return couponMemberDTO;
     }
+
+    public static CouponMemberDTO toCouponMemberDTO(CouponMemberEntity couponMemberEntity) {
+        CouponMemberDTO couponMemberDTO = new CouponMemberDTO();
+        couponMemberDTO.setCouponMemberId(couponMemberEntity.getCouponMemberId());
+        couponMemberDTO.setCouponEntity(couponMemberEntity.getCouponEntity());
+        couponMemberDTO.setMemberEntity(couponMemberEntity.getMemberEntity());
+        return couponMemberDTO;
+    }
 }

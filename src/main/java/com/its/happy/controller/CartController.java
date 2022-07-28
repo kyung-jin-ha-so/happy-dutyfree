@@ -43,8 +43,6 @@ public class CartController {
         Long memberId = (Long) session.getAttribute("loginId");
         List<CartDTO> cartDTOList = cartService.findById(memberId);
         model.addAttribute("cartList", cartDTOList);
-        productService.findLike(likeDTO);
-        model.addAttribute("like", likeDTO);
         return "cartPages/list";
     }
     @PostMapping("/update/")

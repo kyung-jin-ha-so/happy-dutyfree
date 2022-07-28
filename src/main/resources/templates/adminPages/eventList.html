@@ -19,7 +19,7 @@
         <td th:text="${event.eventId}"></td>
         <td><a th:href="@{|/event/${event.eventId}|}" th:text="${event.eventTitle}"></a></td>
         <td th:text="${event.eventCreatedDate}"></td>
-        <td th:text="${event.couponEntity.couponName}"></td>
+        <td th:text="${event.couponEntity.couponName}" id="birth"></td>
         <td th:text="${event.couponEntity.couponValue}"></td>
         <td><img th:src="@{|/upload/${event.eventThumbnailName}|}" width="100" height="100" alt=""></td>
     </tr>

@@ -1,9 +1,6 @@
 package com.its.happy.service;
 
-import com.its.happy.dto.CouponDTO;
-import com.its.happy.dto.CouponMemberDTO;
-import com.its.happy.dto.EventDTO;
-import com.its.happy.dto.MemberDTO;
+import com.its.happy.dto.*;
 import com.its.happy.entity.*;
 import com.its.happy.repository.CouponMemberRepository;
 import com.its.happy.repository.CouponRepository;
@@ -49,19 +46,23 @@ public class CouponService {
         return dtoList;
     }
 
-    public String issueCoupon(Long couponId, Long memberId) {
+    public String issueCoupon(Long couponId, Long memberId, String today) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
         Optional<CouponEntity> optionalCouponEntity = couponRepository.findById(couponId);
         if (optionalMemberEntity.isPresent()) {
             if (optionalCouponEntity.isPresent()) {
                 MemberEntity memberEntity = optionalMemberEntity.get();
                 CouponEntity couponEntity = optionalCouponEntity.get();
-                Long save = couponMemberRepository.save(CouponMemberEntity.toCouponMember(memberEntity, couponEntity)).getCouponMemberId();
-                System.out.println("save = " + save);
-                if(save!=null){
-                    return "ok";
-                } else {
-                    return "no";
+                String memberBirth = memberEntity.getMemberBirth();
+                memberBirth = memberBirth.substring(5,10);
+                System.out.println("memberBirth = " + memberBirth);
+                if (today.equals(memberBirth)) {
+                    Long save = couponMemberRepository.save(CouponMemberEntity.toCouponMember(memberEntity, couponEntity)).getCouponMemberId();
+                    if (save != null) {
+                        return "ok";
+                    } else {
+                        return "no";
+                    }
                 }
             }
         }
@@ -75,5 +76,14 @@ public class CouponService {
             couponMemberDTOList.add(CouponMemberDTO.toSaveDTO(couponMemberEntity));
         }
         return couponMemberDTOList;
+    }
+
+    public CouponMemberDTO findById(Long memberId) {
+        Optional<CouponMemberEntity> optionalCouponMemberEntity = couponMemberRepository.findById(memberId);
+        if(optionalCouponMemberEntity.isPresent()){
+            return CouponMemberDTO.toCouponMemberDTO(optionalCouponMemberEntity.get());
+        } else {
+            return null;
+        }
     }
 }
