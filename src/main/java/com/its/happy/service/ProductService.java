@@ -237,8 +237,6 @@ public class ProductService {
         return likeDTOList;
     }
 
-    public void findLike(LikeDTO likeDTO) {
-    }
 }
 
 

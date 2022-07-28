@@ -39,12 +39,10 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/cartList")
-    public String cartList(HttpSession session, Model model, @ModelAttribute LikeDTO likeDTO){
+    public String cartList(HttpSession session, Model model){
         Long memberId = (Long) session.getAttribute("loginId");
         List<CartDTO> cartDTOList = cartService.findById(memberId);
         model.addAttribute("cartList", cartDTOList);
-        productService.findLike(likeDTO);
-        model.addAttribute("like", likeDTO);
         return "cartPages/list";
     }
     @PostMapping("/update/")
