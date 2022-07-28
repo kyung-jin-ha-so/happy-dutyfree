@@ -2,6 +2,7 @@ package com.its.happy.controller;
 
 import com.its.happy.common.PagingConst;
 import com.its.happy.dto.CouponDTO;
+import com.its.happy.dto.CouponMemberDTO;
 import com.its.happy.dto.EventDTO;
 import com.its.happy.service.CouponService;
 import com.its.happy.service.EventService;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -58,9 +60,12 @@ public class EventController {
 
     //이벤트 상세조회
     @GetMapping("/{eventId}")
-    public String findById(@PathVariable Long eventId, Model model){
+    public String findById(@PathVariable Long eventId, Model model, HttpSession session){
+        Long memberId = (Long) session.getAttribute("loginId");
         EventDTO eventDTO = eventService.findById(eventId);
         model.addAttribute("event", eventDTO);
+        CouponMemberDTO couponMemberDTO = couponService.findById(memberId);
+        model.addAttribute("couponMember", couponMemberDTO);
         return "/boardPages/detail";
     }
     //이벤트 수정페이지 요청
