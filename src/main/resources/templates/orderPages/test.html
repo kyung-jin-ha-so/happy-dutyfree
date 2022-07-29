@@ -42,10 +42,18 @@
     </tr>
     <tr th:each="cart: ${cartList}">
         <td th:src="@{|/upload/${cart.productThumbnail}|}" th:text="${cart.productName}"></td>
-        <td th:text="'$ ' + ${cart.productOriginalPrice}"></td>
+        <td>
+            <span style="text-decoration: line-through; font-weight: bold"
+                  th:text="'$ ' + ${cart.productOriginalPrice}"></span><br>
+            <span style="color: red; font-weight: bold" th:text="'$ ' + ${cart.productPrice}"></span>
+        </td>
         <td th:text="${cart.cartQty}"></td>
         <td th:text="${cart.productDiscount} + '%'"></td>
-        <td th:text="'$ ' + ${cart.productPrice}"></td>
+        <td>
+            <span style="color: red; font-weight: bold" th:text="'$ ' + ${cart.productPrice * cart.cartQty}"></span><br>
+            <span style="color: gray; font-size: small"
+                  th:text="'(' + ${#numbers.formatInteger(cart.productPrice * cart.cartQty * exRate.exchangeRate, 1, 'COMMA') } + '원)'"></span>
+        </td>
     </tr>
 </table>
 
@@ -104,10 +112,13 @@
                 <tr th:each="departure: ${member.departureEntityList}">
                     <td><input type="radio" name="departureRadio" th:attrappend="id=${departureStat.index}"></td>
                     <td th:text="${departure.departureDate}" th:id="${'departureDate' + departureStat.index}"></td>
-                    <td th:text="${departure.departureAirport}" th:id="${'departureAirport' + departureStat.index}"></td>
+                    <td th:text="${departure.departureAirport}"
+                        th:id="${'departureAirport' + departureStat.index}"></td>
                     <td th:text="${departure.arrivalRegion}" th:id="${'arrivalRegion' + departureStat.index}"></td>
-                    <td th:text="${departure.departureNumber}" th:id="${'departureNumber' + departureStat.index}" hidden></td>
-                    <td th:text="${departure.departureFeature}" th:id="${'departureFeature' + departureStat.index}" hidden></td>
+                    <td th:text="${departure.departureNumber}" th:id="${'departureNumber' + departureStat.index}"
+                        hidden></td>
+                    <td th:text="${departure.departureFeature}" th:id="${'departureFeature' + departureStat.index}"
+                        hidden></td>
                 </tr>
             </table>
         </div>
@@ -174,12 +185,13 @@
     <tr>
         <th>쿠폰</th>
         <td>
-            <select>
+            <select id="selectCoupon" onchange="selectCoupon()">
                 <option value="">선택</option>
                 <option th:each="coupon : ${member.couponMemberEntityList}"
                         th:value="${coupon.couponEntity.couponValue}"
                         th:text="${coupon.couponEntity.couponName}"
-                        th:if="${coupon.couponStatus.equals('사용 전')}">
+                        th:if="${coupon.couponStatus.equals('사용 전')}"
+                th:name="${coupon.couponMemberId}">
                 </option>
             </select>
             사용 가능한 쿠폰:
@@ -193,7 +205,7 @@
         <th>적립금</th>
         <td>
             사용 가능한 적립금: <span id="point" th:text="${#aggregates.sum(member.pointEntityList.![pointValue])}">원</span><br>
-            <input id="inputPoint" type="text">원
+            <input id="inputPoint" type="text" onchange="inputPoint(this.value)">원
             <input type="checkbox" id="useAll" onclick="useAll()">전액사용
         </td>
     </tr>
@@ -237,38 +249,45 @@
     <tr>
         <td>총 주문 상품</td>
         <td th:text="${cartList.size()} + '개'"></td>
-        <td><button onclick="location.href='/cart/cartList';">상품 수정</button></td>
+        <td>
+            <button onclick="location.href='/cart/cartList';">상품 수정</button>
+        </td>
     </tr>
     <tr>
         <td>총 주문금액</td>
         <td th:text="'$ ' + ${#aggregates.sum(cartList.![productOriginalPrice * cartQty])}"></td>
-        <td th:text="'(' + ${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * 1300, 1, 'COMMA') } + '원)'"></td>
+        <td th:text="'(' + ${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * exRate.exchangeRate, 1, 'COMMA') } + '원)'"></td>
     </tr>
     <tr>
         <td>총 할인금액</td>
         <td th:text="'$ ' + ${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}"></td>
-        <td th:text="'(' + ${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * 1300, 1, 'COMMA') } + '원)'"></td>
+        <td th:text="'(' + ${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * exRate.exchangeRate, 1, 'COMMA') } + '원)'"></td>
     </tr>
 </table>
 <table>
     <tr>
         <td>인터넷 회원 할인</td>
-        <td th:text="'-' + ${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * 1300, 1, 'COMMA') } + '원'"></td>
+        <td th:text="'-' + ${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * exRate.exchangeRate, 1, 'COMMA') } + '원'"></td>
     </tr>
     <tr>
         <td>적립금 사용</td>
-        <td>-5000원</td>
+        <td>
+            <span id="usePoint"></span><span>원</span>
+        </td>
     </tr>
     <tr>
         <td>쿠폰 사용</td>
-        <td>-10000원</td>
+        <td>
+            <span id="useCoupon"></span><span>원</span>
+        </td>
     </tr>
 </table>
 <p>최종 결제금액</p>
 <p>$ 252.45</p>
 <p>328.123원</p>
 <p><input type="checkbox">주문 정보를 확인하였으며, 구매에 동의합니다.</p>
-<button id="requestPay" onclick="requestPay(this.name, this.value, this.accessKey)" name="kakaopay.TC0ONETIME">주문하기</button>
+<button id="requestPay" onclick="requestPay(this.name, this.value, this.accessKey)" name="kakaopay.TC0ONETIME">주문하기
+</button>
 
 <!--     modal-->
 <div class="modal fade modal-lg" id="exampleModalToggle" aria-hidden="true"
@@ -348,19 +367,22 @@
         document.getElementById("departureAirport").value = departureAirport;
         document.getElementById("arrivalRegion").value = arrivalRegion;
         document.getElementById("departureNumber").value = departureNumber;
-        if(departureFeature == '직항')
-        $("input:radio[name='departureFeature']:radio[value='직항']").prop('checked', true);
+        if (departureFeature == '직항')
+            $("input:radio[name='departureFeature']:radio[value='직항']").prop('checked', true);
         else
-        $("input:radio[name='departureFeature']:radio[value='경유']").prop('checked', true);
+            $("input:radio[name='departureFeature']:radio[value='경유']").prop('checked', true);
     });
 
+    // 전액사용
     function useAll() {
         if ($("#useAll").is(":checked")) {
             console.log("if")
             document.getElementById("inputPoint").value = document.getElementById("point").innerHTML;
+            document.getElementById("usePoint").innerHTML = -document.getElementById("point").innerHTML;
         } else {
             console.log("else")
             document.getElementById("inputPoint").value = 0;
+            document.getElementById("usePoint").innerHTML = 0;
         }
     }
 
@@ -369,10 +391,9 @@
         if ($('input:radio[id=card]').is(':checked')) {
             // $('#cardDiv').show();
             document.getElementById("requestPay").setAttribute("name", "html5_inicis.INIpayTest");
-        } else if($('input:radio[id=kakao]').is(':checked')) {
+        } else if ($('input:radio[id=kakao]').is(':checked')) {
             document.getElementById("requestPay").setAttribute("name", "kakaopay.TC0ONETIME");
-        }
-        else if($('input:radio[id=toss]').is(':checked')) {
+        } else if ($('input:radio[id=toss]').is(':checked')) {
             document.getElementById("requestPay").setAttribute("name", "tosspay.tosstest");
         }
     }
@@ -410,6 +431,27 @@
                 alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
             }
         });
+    }
+
+    // 포인트 입력 처리
+    function inputPoint(inputPoint) {
+        const point = document.getElementById("point").innerHTML;
+        if (inputPoint > point) {
+            alert("포인트가 부족합니다.")
+            document.getElementById("inputPoint").value = point;
+            document.getElementById("usePoint").innerHTML = -point;
+            $("input:checkbox[id='useAll']").prop("checked",true);
+        } else
+            document.getElementById("usePoint").innerHTML = -inputPoint;
+    }
+
+    // 쿠폰 선택 처리
+    function selectCoupon() {
+        let couponValue = $("#selectCoupon option:selected").val();
+        let couponMemberId = $("#selectCoupon option:selected").attr("name");
+        console.log(couponValue);
+        console.log(couponMemberId);
+        document.getElementById("useCoupon").innerHTML = -couponValue;
     }
 </script>
 </html>
