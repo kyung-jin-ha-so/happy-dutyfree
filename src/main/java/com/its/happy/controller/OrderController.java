@@ -2,9 +2,11 @@ package com.its.happy.controller;
 
 import com.its.happy.dto.CartArrayDTO;
 import com.its.happy.dto.CartDTO;
+import com.its.happy.dto.ExchangeRateDTO;
 import com.its.happy.dto.MemberDTO;
 import com.its.happy.entity.CartEntity;
 import com.its.happy.repository.CartRepository;
+import com.its.happy.service.ExchangeRateService;
 import com.its.happy.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,7 @@ import java.util.Optional;
 public class OrderController {
     private final OrderService orderService;
     private final CartRepository cartRepository;
+    private final ExchangeRateService exchangeRateService;
 
     @GetMapping("/{memberId}")
     public String orderTest(@PathVariable Long memberId, CartArrayDTO cartArrayDTO){
@@ -79,9 +82,14 @@ public class OrderController {
         cartDTOList.add(cartDTO2);
         model.addAttribute("cartList", cartDTOList);
 
+        // loginId(member) model
         Long loginId = (Long) session.getAttribute("loginId");
         MemberDTO memberDTO = orderService.findByMemberId(loginId);
         model.addAttribute("member", memberDTO);
+
+        //
+        ExchangeRateDTO exchangeRateDTO = new ExchangeRateDTO(2L, 1298.91, "2022-07-29");
+        model.addAttribute("exRate", exchangeRateDTO);
         return "/orderPages/test";
     }
 
