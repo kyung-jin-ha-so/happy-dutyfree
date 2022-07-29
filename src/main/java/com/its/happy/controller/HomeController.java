@@ -1,10 +1,28 @@
 package com.its.happy.controller;
 
+import com.its.happy.dto.CategoryDTO;
+import com.its.happy.dto.ProductDTO;
+import com.its.happy.entity.CategoryEntity;
+import com.its.happy.entity.ProductEntity;
+import com.its.happy.repository.CategoryRepository;
+import com.its.happy.repository.ProductRepository;
+import com.its.happy.service.CategoryService;
+import com.its.happy.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
+
+    private final ProductService productService;
+    private final CategoryService categoryService;
+
 
     @GetMapping("/")
     public String index(){
@@ -12,7 +30,11 @@ public class HomeController {
     }
 
     @GetMapping("/main")
-    public String main(){
+    public String main(Model model){
+        List<CategoryDTO> categoryDTOList = categoryService.findAll();
+        List<ProductDTO> productDTOList = productService.findMainAll();
+        model.addAttribute("categoryList", categoryDTOList);
+        model.addAttribute("productList", productDTOList);
         return "main";
     }
 

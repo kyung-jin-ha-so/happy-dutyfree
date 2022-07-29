@@ -58,7 +58,7 @@
 <span class="total"></span>
 
 <div th:each="cart : ${cartList}">
-    <form th:action="@{|/order/${cart.memberId}|}" method="get" class="order_form"></form>
+    <form action="/order/save-form" method="get" class="order_form"></form>
 </div>
 <div class="content_btn_section">
     <button class="order_btn">주문하기</button>
