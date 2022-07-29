@@ -57,7 +57,6 @@ public class MemberService {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberDTO.getMemberEmail());
         if (optionalMemberEntity.isPresent()) {
             MemberEntity loginEntity = optionalMemberEntity.get();
-//            if(loginEntity.getMemberPassword().equals(memberDTO.getMemberPassword())) {
             if (passwordEncoder.matches(memberDTO.getMemberPassword(), loginEntity.getMemberPassword())) {
                 return MemberDTO.toMemberDTO(loginEntity);
             } else {
@@ -85,7 +84,7 @@ public class MemberService {
         params.put("to", memberMobile);
         params.put("from", "01072248086");
         params.put("type", "SMS");
-        params.put("text", "해피면세점 인증번호는 ["+numStr+"] 입니다");
+        params.put("text", "행복면세점 인증번호는 ["+numStr+"] 입니다");
 
         coolsms.send(params); // 메시지 전송
 
@@ -143,6 +142,22 @@ public class MemberService {
     public void deleteById(Long memberId) {
         memberRepository.deleteById(memberId);
     }
+
+    public String passwordCk(String memberPassword,Long memberId) {
+        System.out.println("멤버서비스 실행");
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
+        if(optionalMemberEntity.isPresent()){
+            MemberEntity memberEntity = optionalMemberEntity.get();
+            if(passwordEncoder.matches(memberPassword,memberEntity.getMemberPassword())){
+                return "OK";
+            }else{
+                return "NO";
+            }
+        }
+        return "NO";
+    }
+
+
 }
 
 
