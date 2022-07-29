@@ -21,7 +21,7 @@
     </tr>
     <tr th:each="event: ${eventList}">
         <td th:text="${event.eventId}"></td>
-        <td><a th:href="@{|/event/${event.eventId}|}" th:text="${event.eventTitle}"></a></td>
+        <td><a th:href="@{|/event/${event.eventId}(couponName=${event.couponEntity.couponName},couponId=${event.couponEntity.couponId})}" th:text="${event.eventTitle}"></a></td>
         <td th:text="${event.eventCreatedDate}"></td>
         <td th:text="${event.couponEntity.couponName}"></td>
         <td th:text="${event.couponEntity.couponValue}"></td>
