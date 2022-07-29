@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,23 +47,19 @@ public class CouponService {
         return dtoList;
     }
 
-    public String issueCoupon(Long couponId, Long memberId, String today) {
+    public String issueCoupon(Long couponId, Long memberId) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
         Optional<CouponEntity> optionalCouponEntity = couponRepository.findById(couponId);
         if (optionalMemberEntity.isPresent()) {
             if (optionalCouponEntity.isPresent()) {
                 MemberEntity memberEntity = optionalMemberEntity.get();
                 CouponEntity couponEntity = optionalCouponEntity.get();
-                String memberBirth = memberEntity.getMemberBirth();
-                memberBirth = memberBirth.substring(5,10);
-                System.out.println("memberBirth = " + memberBirth);
-                if (today.equals(memberBirth)) {
-                    Long save = couponMemberRepository.save(CouponMemberEntity.toCouponMember(memberEntity, couponEntity)).getCouponMemberId();
-                    if (save != null) {
-                        return "ok";
-                    } else {
-                        return "no";
-                    }
+                Long save = couponMemberRepository.save(CouponMemberEntity.toCouponMember(memberEntity, couponEntity)).getCouponMemberId();
+                System.out.println("save = " + save);
+                if(save!=null){
+                    return "ok";
+                } else {
+                    return "no";
                 }
             }
         }
@@ -78,12 +75,16 @@ public class CouponService {
         return couponMemberDTOList;
     }
 
-    public CouponMemberDTO findById(Long memberId) {
-        Optional<CouponMemberEntity> optionalCouponMemberEntity = couponMemberRepository.findById(memberId);
+    public CouponMemberDTO findById(Long memberId, String couponName, Long couponId) {
+        Optional<CouponMemberEntity> optionalCouponMemberEntity = couponMemberRepository.findByCouponEntity_CouponNameAndMemberEntity_MemberIdAndCouponEntity_CouponId(couponName, memberId, couponId);
         if(optionalCouponMemberEntity.isPresent()){
             return CouponMemberDTO.toCouponMemberDTO(optionalCouponMemberEntity.get());
         } else {
             return null;
         }
+    }
+    @Transactional
+    public void deleteById(Long couponId) {
+        couponRepository.deleteById(couponId);
     }
 }

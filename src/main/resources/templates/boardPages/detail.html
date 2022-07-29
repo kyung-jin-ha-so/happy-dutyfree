@@ -31,12 +31,12 @@
         <td th:text="${event.eventUpdatedDate}"></td>
         <td><img th:src="@{|/upload/${event.eventThumbnailName}|}" width="100" height="100" alt=""></td>
         <td th:text="${event.couponEntity.couponId}" id="couponId"></td>
-        <td th:value="${event.couponEntity.couponName}" th:id="couponName"></td>
+        <td th:text="${event.couponEntity.couponName}" id="couponName"></td>
         <td th:text="${event.couponEntity.couponValue}"></td>
         <td th:text="${event.couponEntity.couponMinimumValue}"></td>
 
         <td th:if="${couponMember == null}"><img th:src="@{|/upload/${event.couponEntity.couponThumbnail}|}" width="100" height="100" alt=""
-                 onclick="issueCoupon()"></td>
+                                                 onclick="issueCoupon()"></td>
         <td th:if="${couponMember != null}"><img th:src="@{|/upload/${event.couponEntity.couponThumbnail}|}" width="100" height="100" alt=""
                                                  onclick="dontIssueCoupon()"></td>
         <td><input type="button" value="삭제" onclick="eventDelete()"></td>
@@ -60,10 +60,12 @@
 </script>
 <script th:inline="javascript">
     function issueCoupon() {
-        const id = document.getElementById("couponId").innerHTML;
+        console.log("함수 들어옴")
+        const couponName = document.getElementById("couponName").innerHTML;
+        console.log(couponName);
         const memberId = [[${session.loginId}]];
         const couponId = [[${event.couponEntity.couponId}]];
-        const memberB = [[${couponMember.memberEntity.memberBirth}]];
+        const memberB = [[${member.memberBirth}]];
         let today = new Date();
         let month = today.getMonth() + 1;  // 월
         if (month < 10) {
@@ -71,7 +73,8 @@
         }
         let date = today.getDate();  // 날짜
         // 노조건 이벤트
-        if (id == 1) {
+        if (couponName == "조건없음") {
+            console.log("조건부합함")
             $.ajax({
                 type: "post",
                 url: "/coupon/issueCoupon/",
@@ -82,16 +85,18 @@
                 dataType: "text",
                 success: function (result) {
                     alert("쿠폰발급 성공")
+                    location.reload();
                 }, error: function () {
                     alert("쿠폰 발급 조건에 부합하지 않습니다.")
                 }
             });
         }
         //생일 이벤트
-        if (id == 2) {
+        if (couponName == "생일") {
             let todayDate = month + '-' + date;
             let memberBirth = memberB.substring(5, 10);
             if (memberBirth == todayDate) {
+                console.log("둘이 같음")
                 $.ajax({
                     type: "post",
                     url: "/coupon/issueCoupon/",
@@ -102,6 +107,7 @@
                     dataType: "text",
                     success: function (result) {
                         alert("쿠폰발급 성공")
+                        location.reload();
                     }, error: function () {
                         alert("쿠폰 발급 조건에 부합하지 않습니다.")
                     }
@@ -111,10 +117,13 @@
             }
         }
         //띠 조건 이벤트
-        if (id == 3) {
+        if (couponName == "띠") {
             let memberYear = parseInt(memberB.substring(0, 4));
             let year = today.getFullYear();
+            console.log(memberYear);
+            console.log(year);
             if (memberYear % 12 == year % 12) {
+                console.log("if문 들어옴")
                 $.ajax({
                     type: "post",
                     url: "/coupon/issueCoupon/",
@@ -125,11 +134,13 @@
                     dataType: "text",
                     success: function (result) {
                         alert("쿠폰발급 성공")
+                        location.reload();
                     }, error: function () {
                         alert("쿠폰 발급 조건에 부합하지 않습니다.")
                     }
                 });
             } else {
+                console.log("else문 들어옴")
                 alert("쿠폰 발급 조건에 부합하지 않습니다.")
             }
         }

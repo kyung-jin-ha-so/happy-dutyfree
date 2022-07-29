@@ -5,6 +5,30 @@
 </head>
 <body>
 <h2>쿠폰 목록</h2>
-
+<table>
+    <tr>
+        <th>번호</th>
+        <th>이름</th>
+        <th>금액</th>
+        <th>최소금액</th>
+        <th>사진</th>
+        <th>수정</th>
+        <th>삭제</th>
+    </tr>
+    <tr th:each="coupon: ${couponList}">
+        <td th:text="${coupon.couponId}"></td>
+        <td th:text="${coupon.couponName}"></td>
+        <td th:text="${coupon.couponValue}"></td>
+        <td th:text="${coupon.couponMinimumValue}"></td>
+        <td><img th:src="@{|/upload/${coupon.couponThumbnail}|}" width="100" height="100" alt=""></td>
+        <td><input type="button" th:onclick="toDelete([[${coupon.couponId}]])" value="삭제"></td>
+    </tr>
+</table>
+<script th:inline="javascript" th:each="coupon: ${couponList}">
+    const toDelete = (couponId) => {
+        location.href = "/coupon/delete/" + couponId;
+        alert("삭제성공")
+    }
+</script>
 </body>
 </html>
