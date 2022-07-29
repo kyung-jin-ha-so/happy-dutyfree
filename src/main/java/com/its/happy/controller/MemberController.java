@@ -111,6 +111,12 @@ public class MemberController {
         return "memberPages/findEmailResult";
     }
 
+    // 비밀번호 변경 화면 요청
+    @GetMapping("/passwordUpdate")
+    public String passwordUpdateForm(){
+        return "/memberPages/passwordUpdate";
+    }
+
     //비밀번호찾기 화면 이동
     @GetMapping("/findPassword")
     public String findPasswordForm(){
@@ -120,9 +126,20 @@ public class MemberController {
 
     // 비밀번호 확인 화면 이동
     @GetMapping("/passwordCheck")
-    public String passwordCheck(){
+    public String passwordCheckForm(HttpSession session,Model model){
+        Long memberId = (long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
         return "/memberPages/passwordCheck";
     }
+
+    // 비밀번호 일치여부 확인
+    @PostMapping("/passwordCheck")
+    public @ResponseBody String passwordCheck(@RequestParam String memberPassword,@RequestParam Long memberId){
+        String result = memberService.passwordCk(memberPassword,memberId);
+        return result;
+    }
+
 
     //개인정보 상세조회
     @GetMapping("/{memberId}")
