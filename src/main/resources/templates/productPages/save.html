@@ -23,7 +23,7 @@
     상품 브랜드
     <input type="text" name="productBrand"><br>
     상품 정가
-    <input type="text" name="productOriginalPrice" id="productOriginalPrice"><br>
+    <input type="text" name="productOriginalPrice" id="productOriginalPrice" th:onblur="calPrice()"><br>
     할인율
     <input type="text" name="productDiscount" id="productDiscount" th:onblur="calPrice()"><br>
     상품 회원가

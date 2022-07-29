@@ -20,6 +20,7 @@
             <th>원가</th>
             <th>할인율</th>
             <th>인터넷할인가</th>
+            <th>인터넷원화</th>
             <th>썸네일</th>
             <th>수량</th>
             <th>찜하기</th>
@@ -33,6 +34,7 @@
             <td><STRIKE th:text="${product.productOriginalPrice}"></STRIKE></td>
             <td th:text="${product.productDiscount}"></td>
             <td th:text="${product.productPrice}"></td>
+            <td th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원'"></td>
             <td><img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""></td>
             <td>
                 <button type="button" class="minus_btn" onclick="qtyCount('minus')">-</button>

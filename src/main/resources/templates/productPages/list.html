@@ -43,7 +43,9 @@
             <th scope="col">상품썸네일</th>
             <th scope="col">상품이름</th>
             <th scope="col">상품별점</th>
+            <th scope="col">상품원가</th>
             <th scope="col">상품인터넷가격</th>
+            <th scope="col">원화</th>
         </tr>
         </thead>
         <tbody>
@@ -52,7 +54,9 @@
             <td><img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""></td>
             <td><a th:href="@{|/product/detail/${product.productId}|}" th:text="${product.productName}">이름</a></td>
             <td th:text="${product.productStar}"></td>
+            <td th:text="|$${product.productOriginalPrice}|"></td>
             <td th:text="|$${product.productPrice}|"></td>
+            <td th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원'"></td>
         </tr>
         </tbody>
     </table>

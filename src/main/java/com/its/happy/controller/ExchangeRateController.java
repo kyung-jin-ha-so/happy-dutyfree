@@ -26,7 +26,7 @@ public class ExchangeRateController {
     // 매일 오전 9시에 환율이 환율테이블로 날짜와 환율이 들어갈 예정
     // api Key가 있어야 실행됨
 
-//    @Scheduled(cron = "0 0 9 * * ?", zone = "Asia/Seoul") // 매일 25분에 실행
+//    @Scheduled(cron = "0 25 15 * * ?", zone = "Asia/Seoul") // 매일 오전 9시에 실행
 //    public void cronRun() throws JSONException, IOException {
 //        exchangeRate();
 //    }
@@ -37,7 +37,7 @@ public class ExchangeRateController {
 //
 //        Request request = new Request.Builder()
 //                .url("https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=1")
-//                .addHeader("apikey", "")
+//                .addHeader("apikey", "1X68zvAjhny9f7K2nO86UqIxO4rfh1Xn")
 //                //value에 api키가 들어갈 예정
 //                .method("GET", null)
 //                .build();
