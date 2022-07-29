@@ -21,7 +21,7 @@ public class CouponMemberDTO {
         couponMemberDTO.setCouponMemberId(couponMemberEntity.getCouponMemberId());
         couponMemberDTO.setCouponStatus(couponMemberEntity.getCouponStatus());
         couponMemberDTO.setCouponEntity(couponMemberEntity.getCouponEntity());
-        couponMemberDTO.setMemberEntity(couponMemberDTO.getMemberEntity());
+        couponMemberDTO.setMemberEntity(couponMemberEntity.getMemberEntity());
         return couponMemberDTO;
     }
 
