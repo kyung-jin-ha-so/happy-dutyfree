@@ -6,7 +6,13 @@
 </head>
 <body>
 <form action="/coupon/save" method="post" enctype="multipart/form-data">
-    쿠폰 이름<input type="text" name="couponName"><br>
+    쿠폰종류
+    <select name="couponName" id="couponName">
+    <option value=""> -- 선택 --</option>
+    <option value="조건없음">조건없음</option>
+    <option value="생일">생일</option>
+    <option value="띠">띠</option>
+    </select><br>
     쿠폰 금액 <input type="text" name="couponValue"><br>
     쿠폰 최소금액<input type="text" name="couponMinimumValue"><br>
     쿠폰 사진<input type="file" name="couponThumbnailFile"><br>

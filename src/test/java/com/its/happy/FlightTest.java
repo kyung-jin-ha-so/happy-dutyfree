@@ -23,7 +23,7 @@ public class FlightTest {
     @Transactional
     @Rollback(value = false)
     public void flightApiTest() throws IOException, JSONException {
-        FlightDTO flightDTO = new FlightDTO("20220726", "ICN", "KE");
+        FlightDTO flightDTO = new FlightDTO("20220729", "ICN", "KE");
         String result = ApiExplorer.getFlight(flightDTO);
 
         // 가장 큰 JSONObject를 가져옵니다.

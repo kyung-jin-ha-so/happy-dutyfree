@@ -2,9 +2,12 @@ package com.its.happy.controller;
 
 import com.its.happy.common.PagingConst;
 import com.its.happy.dto.CouponDTO;
+import com.its.happy.dto.CouponMemberDTO;
 import com.its.happy.dto.EventDTO;
+import com.its.happy.dto.MemberDTO;
 import com.its.happy.service.CouponService;
 import com.its.happy.service.EventService;
+import com.its.happy.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,6 +27,8 @@ import java.util.List;
 public class EventController {
     private final EventService eventService;
     private final CouponService couponService;
+    private final MemberService memberService;
+
     //이벤트 저장페이지 이동
     @GetMapping("/saveForm")
     public String saveForm(){
@@ -58,9 +64,14 @@ public class EventController {
 
     //이벤트 상세조회
     @GetMapping("/{eventId}")
-    public String findById(@PathVariable Long eventId, Model model){
+    public String findById(@PathVariable Long eventId, Model model, HttpSession session, @RequestParam String couponName, @RequestParam Long couponId){
+        Long memberId = (Long) session.getAttribute("loginId");
         EventDTO eventDTO = eventService.findById(eventId);
         model.addAttribute("event", eventDTO);
+        CouponMemberDTO couponMemberDTO = couponService.findById(memberId, couponName, couponId);
+        model.addAttribute("couponMember", couponMemberDTO);
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member", memberDTO);
         return "/boardPages/detail";
     }
     //이벤트 수정페이지 요청

@@ -30,9 +30,15 @@
             <input type="hidden" class="individual_totalPrice_input"
                    th:value="${cart.cartQty * cart.productPrice}"></div>
             <input type="checkbox" class="individual_cart_checkbox input_size_20" checked="checked">
-            <input type="hidden" class="individual_productId_input" th:value="${cart.productId}">
             <input type="hidden" class="individual_cartId_input" th:value="${cart.cartId}">
+            <input type="hidden" class="individual_productId_input" th:value="${cart.productId}">
             <input type="hidden" class="individual_cartQty_input" th:value="${cart.cartQty}">
+            <input type="hidden" class="individual_memberId_input" th:value="${cart.memberId}">
+            <input type="hidden" class="individual_productName_input" th:value="${cart.productName}">
+            <input type="hidden" class="individual_productOriginalPrice_input" th:value="${cart.productOriginalPrice}">
+            <input type="hidden" class="individual_productDiscount_input" th:value="${cart.productDiscount}">
+            <input type="hidden" class="individual_productPrice_input" th:value="${cart.productPrice}">
+            <input type="hidden" class="individual_productThumbnail_input" th:value="${cart.productThumbnail}">
         </td>
         <td><a th:href="@{|/product/detail/${cart.productId}|}" th:text="${cart.productName}"></a></td>
         <td><STRIKE th:text="${cart.productOriginalPrice}"></STRIKE></td>
@@ -46,16 +52,13 @@
 
         <td><img th:src="@{|/upload/${cart.productThumbnail}|}" width="100" height="100" alt=""></td>
         <td th:text="${cart.cartQty*cart.productPrice}"></td>
-        <td><input type="button" onclick="saveWish()" value="찜"></a></td>
-        <td><input type="button" th:onclick="deleteCart([[${cart.cartId}]])" value="삭제"></a></td>
     </tr>
 </table>
 
 <span class="total"></span>
 
 <div th:each="cart : ${cartList}">
-    <form th:action="@{|/order/${cart.memberId}|}" method="get" class="order_form"></form>
-    <form th:action="@{|/cart/delete/${cart.cartId}|}" method="get" class="delete_form"></form>
+    <form action="/order/save-form" method="get" class="order_form"></form>
 </div>
 <div class="content_btn_section">
     <button class="order_btn">주문하기</button>
@@ -149,14 +152,34 @@
         let orderNumber = 0;
         $(".cart_info_td").each(function (index, element) {
             if ($(element).find(".individual_cart_checkbox").is(":checked") === true) {	//체크여부
-                let productId = $(element).find(".individual_productId_input").val();
+                let cartId = $(element).find(".individual_cartId_input").val();
                 let cartQty = $(element).find(".individual_cartQty_input").val();
+                let productId = $(element).find(".individual_productId_input").val();
                 let productId_input = "<input name='carts[" + orderNumber + "].productId' type='hidden' value='" + productId + "'>";
-                form_contents += productId_input;
+                let memberId = $(element).find(".individual_memberId_input").val();
+                let productName = $(element).find(".individual_productName_input").val();
+                let productOriginalPrice = $(element).find(".individual_productOriginalPrice_input").val();
+                let productDiscount = $(element).find(".individual_productDiscount_input").val();
+                let productPrice = $(element).find(".individual_productPrice_input").val();
+                let productThumbnail = $(element).find(".individual_productThumbnail_input").val();
 
+                let cartId_input = "<input name='carts[" + orderNumber + "].cartId' type='hidden' value='" + cartId + "'>";
+                form_contents += cartId_input;
                 let cartQty_input = "<input name='carts[" + orderNumber + "].cartQty' type='hidden' value='" + cartQty + "'>";
                 form_contents += cartQty_input;
-
+                form_contents += productId_input;
+                let memberId_input = "<input name='carts[" + orderNumber + "].memberId' type='hidden' value='" + memberId + "'>";
+                form_contents += memberId_input;
+                let productName_input = "<input name='carts[" + orderNumber + "].productName' type='hidden' value='" + productName + "'>";
+                form_contents += productName_input;
+                let productOriginalPrice_input = "<input name='carts[" + orderNumber + "].productOriginalPrice' type='hidden' value='" + productOriginalPrice + "'>";
+                form_contents += productOriginalPrice_input;
+                let productDiscount_input = "<input name='carts[" + orderNumber + "].productDiscount' type='hidden' value='" + productDiscount + "'>";
+                form_contents += productDiscount_input;
+                let productPrice_input = "<input name='carts[" + orderNumber + "].productPrice' type='hidden' value='" + productPrice + "'>";
+                form_contents += productPrice_input;
+                let productThumbnail_input = "<input name='carts[" + orderNumber + "].productThumbnail' type='hidden' value='" + productThumbnail + "'>";
+                form_contents += productThumbnail_input;
                 orderNumber += 1;
             }
         });

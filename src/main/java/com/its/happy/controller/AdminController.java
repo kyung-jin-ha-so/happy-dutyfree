@@ -43,15 +43,14 @@ public class AdminController {
         model.addAttribute("sort", "all");
         return "/adminPages/productList";
     }
-    //쿠폰 리스트 조회
+    //쿠폰 리스트 조회(전달용)
     @GetMapping("/couponList")
     public String couponFindAll(Model model){
         List<CouponDTO> couponDTOList = couponService.findAll();
         model.addAttribute("couponList", couponDTOList);
-        System.out.println("CouponController.findAll");
-        System.out.println("couponDTOList = " + couponDTOList);
         return "/adminPages/couponList";
     }
+
     //이벤트 페이징목록
     @GetMapping("/eventList")
     public String paging(@PageableDefault(page = 1) Pageable pageable, Model model){

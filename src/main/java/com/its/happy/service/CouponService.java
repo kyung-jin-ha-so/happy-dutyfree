@@ -1,9 +1,6 @@
 package com.its.happy.service;
 
-import com.its.happy.dto.CouponDTO;
-import com.its.happy.dto.CouponMemberDTO;
-import com.its.happy.dto.EventDTO;
-import com.its.happy.dto.MemberDTO;
+import com.its.happy.dto.*;
 import com.its.happy.entity.*;
 import com.its.happy.repository.CouponMemberRepository;
 import com.its.happy.repository.CouponRepository;
@@ -13,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,5 +73,18 @@ public class CouponService {
             couponMemberDTOList.add(CouponMemberDTO.toSaveDTO(couponMemberEntity));
         }
         return couponMemberDTOList;
+    }
+
+    public CouponMemberDTO findById(Long memberId, String couponName, Long couponId) {
+        Optional<CouponMemberEntity> optionalCouponMemberEntity = couponMemberRepository.findByCouponEntity_CouponNameAndMemberEntity_MemberIdAndCouponEntity_CouponId(couponName, memberId, couponId);
+        if(optionalCouponMemberEntity.isPresent()){
+            return CouponMemberDTO.toCouponMemberDTO(optionalCouponMemberEntity.get());
+        } else {
+            return null;
+        }
+    }
+    @Transactional
+    public void deleteById(Long couponId) {
+        couponRepository.deleteById(couponId);
     }
 }
