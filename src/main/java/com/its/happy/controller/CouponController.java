@@ -6,9 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,8 +30,8 @@ public class CouponController {
     }
     //쿠폰발급
     @PostMapping("/issueCoupon")
-    public ResponseEntity issueCoupon(@RequestParam("memberId") Long memberId, @RequestParam("couponId") Long couponId, @RequestParam("today") String today){
-        String result = couponService.issueCoupon(couponId, memberId, today);
+    public ResponseEntity issueCoupon(@RequestParam("memberId") Long memberId, @RequestParam("couponId") Long couponId){
+        String result = couponService.issueCoupon(couponId, memberId);
         System.out.println("result = " + result);
         if(result.equals("ok")){
             return new ResponseEntity<>(HttpStatus.OK);
@@ -37,4 +39,18 @@ public class CouponController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+    //쿠폰 리스트 조회(조회 및 관리용)
+    @GetMapping("/couponList")
+    public String couponList(Model model){
+        List<CouponDTO> couponDTOList = couponService.findAll();
+        model.addAttribute("couponList", couponDTOList);
+        return "/couponPages/list";
+    }
+    //쿠폰 삭제
+    @GetMapping("/delete/{couponId}")
+    public String delete(@PathVariable Long couponId){
+        couponService.deleteById(couponId);
+        return "redirect:/coupon/couponList";
+    }
+
 }
