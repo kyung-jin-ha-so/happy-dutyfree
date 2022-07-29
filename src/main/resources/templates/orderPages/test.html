@@ -21,7 +21,6 @@
           rel="stylesheet">
 
     <script th:src="@{/js/datepicker.js}"></script>
-    <script th:src="@{/js/iamport.js}"></script>
 </head>
 <body>
 <h2>test.html</h2>
@@ -45,7 +44,7 @@
         <td th:src="@{|/upload/${cart.productThumbnail}|}" th:text="${cart.productName}"></td>
         <td th:text="'$ ' + ${cart.productOriginalPrice}"></td>
         <td th:text="${cart.cartQty}"></td>
-        <td th:text="${cart.productDiscount}"></td>
+        <td th:text="${cart.productDiscount} + '%'"></td>
         <td th:text="'$ ' + ${cart.productPrice}"></td>
     </tr>
 </table>
@@ -205,56 +204,56 @@
     <tr>
         <th>결제수단</th>
         <td>
-            <input type="radio" id="card" name="payMethod" value="신용카드" onchange="setDisplay()">신용카드
-            <input type="radio" name="payMethod" value="실시간계좌이체" onchange="setDisplay()">실시간계좌이체
-            <input type="radio" name="payMethod" value="카카오페이" onchange="setDisplay()" checked>카카오페이
-            <input type="radio" name="payMethod" value="네이버페이" onchange="setDisplay()">네이버페이
+            <input type="radio" id="card" name="payMethod" value="신용카드" onchange="payMethod()">신용카드
+            <input type="radio" id="kakao" name="payMethod" value="카카오페이" onchange="payMethod()" checked>카카오페이
+            <input type="radio" id="toss" name="payMethod" value="토스페이" onchange="payMethod()">토스페이
         </td>
     </tr>
 </table>
 <!--    신용카드 결제-->
-<div id="cardDiv" style="display: none">
-    <table>
-        <tr>
-            <th>카드종류</th>
-            <td>
-                <select>
-                    <option value=""></option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <th>할부선택</th>
-            <td>
-                <select>
-                    <option value=""></option>
-                </select>
-            </td>
-        </tr>
-    </table>
-</div>
+<!--<div id="cardDiv" style="display: none">-->
+<!--    <table>-->
+<!--        <tr>-->
+<!--            <th>카드종류</th>-->
+<!--            <td>-->
+<!--                <select>-->
+<!--                    <option value=""></option>-->
+<!--                </select>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <th>할부선택</th>-->
+<!--            <td>-->
+<!--                <select>-->
+<!--                    <option value=""></option>-->
+<!--                </select>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--    </table>-->
+<!--</div>-->
 
 <h2>최종 결제금액 내역</h2>
 <table>
     <tr>
         <td>총 주문 상품</td>
-        <td>1개
-            <button>상품 수정 ></button>
-        </td>
+        <td th:text="${cartList.size()} + '개'"></td>
+        <td><button onclick="location.href='/cart/cartList';">상품 수정</button></td>
     </tr>
     <tr>
         <td>총 주문금액</td>
-        <td></td>
+        <td th:text="'$ ' + ${#aggregates.sum(cartList.![productOriginalPrice * cartQty])}"></td>
+        <td th:text="'(' + ${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * 1300, 1, 'COMMA') } + '원)'"></td>
     </tr>
     <tr>
         <td>총 할인금액</td>
-        <td></td>
+        <td th:text="'$ ' + ${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}"></td>
+        <td th:text="'(' + ${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * 1300, 1, 'COMMA') } + '원)'"></td>
     </tr>
 </table>
 <table>
     <tr>
         <td>인터넷 회원 할인</td>
-        <td>-21,223원</td>
+        <td th:text="'-' + ${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * 1300, 1, 'COMMA') } + '원'"></td>
     </tr>
     <tr>
         <td>적립금 사용</td>
@@ -269,7 +268,7 @@
 <p>$ 252.45</p>
 <p>328.123원</p>
 <p><input type="checkbox">주문 정보를 확인하였으며, 구매에 동의합니다.</p>
-<button onclick="requestPay(this.name, this.value, this.accessKey)" name="kakaopay.TC0ONETIME">주문하기</button>
+<button id="requestPay" onclick="requestPay(this.name, this.value, this.accessKey)" name="kakaopay.TC0ONETIME">주문하기</button>
 
 <!--     modal-->
 <div class="modal fade modal-lg" id="exampleModalToggle" aria-hidden="true"
@@ -365,14 +364,52 @@
         }
     }
 
-    // 결제방법 선택에 따라 테이블 보이기/숨기기
-    function setDisplay() {
+    // 결제방법 선택
+    function payMethod() {
         if ($('input:radio[id=card]').is(':checked')) {
-            $('#cardDiv').show();
-        } else {
-            $('#cardDiv').hide();
+            // $('#cardDiv').show();
+            document.getElementById("requestPay").setAttribute("name", "html5_inicis.INIpayTest");
+        } else if($('input:radio[id=kakao]').is(':checked')) {
+            document.getElementById("requestPay").setAttribute("name", "kakaopay.TC0ONETIME");
+        }
+        else if($('input:radio[id=toss]').is(':checked')) {
+            document.getElementById("requestPay").setAttribute("name", "tosspay.tosstest");
         }
     }
 
+    // 아임포트
+    const IMP = window.IMP; // 생략 가능
+    IMP.init("imp66752664"); // 예: imp00000000
+    function requestPay(pgName, paymentWon) {
+        // IMP.request_pay(param, callback) 결제창 호출
+        IMP.request_pay({ // param
+            pg: pgName,
+            pay_method: "card",
+            merchant_uid: 'merchant_' + new Date().getTime(), // 중복되지 않는 값(임의의 값, 주문 고유번호)
+            name: "[[${cartList.get(0).productName}]] 외 [[${cartList.size()} - 1]]개",
+            amount: 1,
+            buyer_email: "[[${member.memberEmail}]]",
+            buyer_name: "[[${member.memberName}]]",
+            buyer_tel: "[[${member.memberMobile}]]",
+        }, function (rsp) { // callback
+            if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
+                // jQuery로 HTTP 요청
+                // jQuery.ajax({
+                //     url: "{서버의 결제 정보를 받는 endpoint}", // 예: https://www.myservice.com/payments/complete
+                //     method: "POST",
+                //     headers: { "Content-Type": "application/json" },
+                //     data: {
+                //         imp_uid: rsp.imp_uid,
+                //         merchant_uid: rsp.merchant_uid
+                //     }
+                // }).done(function (data) {
+                //     // 가맹점 서버 결제 API 성공시 로직
+                // })
+                alert("완료" + rsp.imp_uid + rsp.merchant_uid)
+            } else {
+                alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
+            }
+        });
+    }
 </script>
 </html>
