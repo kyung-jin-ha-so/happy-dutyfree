@@ -22,12 +22,16 @@
         <td th:text="${coupon.couponMinimumValue}"></td>
         <td><img th:src="@{|/upload/${coupon.couponThumbnail}|}" width="100" height="100" alt=""></td>
         <td><input type="button" th:onclick="toDelete([[${coupon.couponId}]])" value="삭제"></td>
+        <td><input type="button" th:onclick="toUpdate([[${coupon.couponId}]])" value="수정"></td>
     </tr>
 </table>
 <script th:inline="javascript" th:each="coupon: ${couponList}">
     const toDelete = (couponId) => {
         location.href = "/coupon/delete/" + couponId;
         alert("삭제성공")
+    }
+    const toUpdate = (couponId) => {
+        location.href = "/coupon/update-form/" + couponId;
     }
 </script>
 </body>
