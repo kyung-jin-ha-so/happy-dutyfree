@@ -2,7 +2,6 @@ package com.its.happy.controller;
 
 import com.its.happy.dto.CouponDTO;
 import com.its.happy.dto.CouponMemberDTO;
-import com.its.happy.dto.EventDTO;
 import com.its.happy.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
