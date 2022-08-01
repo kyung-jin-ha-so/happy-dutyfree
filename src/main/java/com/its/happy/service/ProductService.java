@@ -35,6 +35,7 @@ public class ProductService {
     private final LikeRepository likeRepository;
     private final MemberRepository memberRepository;
 
+    private final SearchRepository searchRepository;
 
     public Long save(ProductDTO productDTO, CategoryDTO categoryDTO) throws IOException {
         MultipartFile productThumbnailFile = productDTO.getProductThumbnailFile();
@@ -192,11 +193,25 @@ public class ProductService {
         return null;
     }
 
-    public Page<ProductDTO> findSearch(Pageable pageable, String q) {
+    public Page<ProductDTO> findSearch(Pageable pageable, String q, Long loginId) {
         int page = pageReturn(pageable);
         Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), q);
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(loginId);
+        if(optionalMemberEntity.isPresent()){
+            MemberEntity memberEntity = optionalMemberEntity.get();
+            searchRepository.save(SearchEntity.toSaveEntity(q ,memberEntity));
+        }
         return pageEntityToDTO(productEntities);
     }
+
+    public Page<ProductDTO> findSearchWithoutId(Pageable pageable, String q) {
+        int page = pageReturn(pageable);
+        Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), q);
+        searchRepository.save(SearchEntity.toSaveWithOutMember(q));
+        return pageEntityToDTO(productEntities);
+    }
+
+
 
     public String like(Long productId, Long memberId) {
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);

@@ -1,8 +1,10 @@
 package com.its.happy.controller;
 
 import com.its.happy.dto.CartDTO;
+import com.its.happy.dto.ExchangeRateDTO;
 import com.its.happy.dto.LikeDTO;
 import com.its.happy.service.CartService;
+import com.its.happy.service.ExchangeRateService;
 import com.its.happy.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import java.util.List;
 public class CartController {
     private final CartService cartService;
     private final ProductService productService;
+    private final ExchangeRateService exchangeRateService;
 
     @GetMapping("/save")
     public ResponseEntity save(@RequestParam("productId") Long productId, @RequestParam("memberId") Long memberId, @RequestParam("cartQty") int cartQty) {
@@ -39,10 +42,12 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/cartList")
-    public String cartList(HttpSession session, Model model, @ModelAttribute LikeDTO likeDTO){
+    public String cartList(HttpSession session, Model model){
         Long memberId = (Long) session.getAttribute("loginId");
         List<CartDTO> cartDTOList = cartService.findById(memberId);
         model.addAttribute("cartList", cartDTOList);
+        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
+        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "cartPages/list";
     }
     @PostMapping("/update/")

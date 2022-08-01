@@ -56,7 +56,7 @@ public class CouponService {
                 CouponEntity couponEntity = optionalCouponEntity.get();
                 Long save = couponMemberRepository.save(CouponMemberEntity.toCouponMember(memberEntity, couponEntity)).getCouponMemberId();
                 System.out.println("save = " + save);
-                if(save!=null){
+                if (save != null) {
                     return "ok";
                 } else {
                     return "no";
@@ -77,14 +77,36 @@ public class CouponService {
 
     public CouponMemberDTO findById(Long memberId, String couponName, Long couponId) {
         Optional<CouponMemberEntity> optionalCouponMemberEntity = couponMemberRepository.findByCouponEntity_CouponNameAndMemberEntity_MemberIdAndCouponEntity_CouponId(couponName, memberId, couponId);
-        if(optionalCouponMemberEntity.isPresent()){
+        if (optionalCouponMemberEntity.isPresent()) {
             return CouponMemberDTO.toCouponMemberDTO(optionalCouponMemberEntity.get());
         } else {
             return null;
         }
     }
+
     @Transactional
     public void deleteById(Long couponId) {
         couponRepository.deleteById(couponId);
+    }
+
+    public List<CouponMemberDTO> findByMyCoupon(Long memberId) {
+        List<CouponMemberEntity> couponMemberEntityList = couponMemberRepository.findByMemberEntity_MemberId(memberId);
+        List<CouponMemberDTO> couponMemberDTOList = new ArrayList<>();
+        for (CouponMemberEntity couponMemberEntity : couponMemberEntityList) {
+            couponMemberDTOList.add(CouponMemberDTO.toSaveDTO(couponMemberEntity));
+        }
+        return couponMemberDTOList;
+    }
+
+    public CouponDTO findByCouponId(Long couponId) {
+        Optional<CouponEntity> optionalCouponEntity = couponRepository.findById(couponId);
+        if (optionalCouponEntity.isPresent()) {
+            return CouponDTO.toCouponDTO(optionalCouponEntity.get());
+        } else {
+            return null;
+        }
+    }
+    public void update(CouponDTO couponDTO) {
+        couponRepository.save(CouponEntity.toUpdateCouponEntity(couponDTO));
     }
 }
