@@ -23,4 +23,17 @@ public class SearchEntity extends BaseEntity{
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
+
+    public static SearchEntity toSaveEntity(String q, MemberEntity memberEntity) {
+        SearchEntity searchEntity = new SearchEntity();
+        searchEntity.setSearchName(q);
+        searchEntity.setMemberEntity(memberEntity);
+        return searchEntity;
+    }
+
+    public static SearchEntity toSaveWithOutMember(String q) {
+        SearchEntity searchEntity = new SearchEntity();
+        searchEntity.setSearchName(q);
+        return searchEntity;
+    }
 }
