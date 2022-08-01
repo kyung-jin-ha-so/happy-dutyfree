@@ -1,10 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-
+<h2>쿠폰수정</h2>
+<form action="/coupon/update" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="couponId" th:value="${coupon.couponId}">
+    쿠폰종류
+    <select name="couponName" id="couponName">
+        <option value=""> -- 선택 --</option>
+        <option value="조건없음">조건없음</option>
+        <option value="생일">생일</option>
+        <option value="띠">띠</option>
+    </select><br>
+    쿠폰 금액<input type="text" name="couponValue" th:value="${coupon.couponValue}"><br>
+    쿠폰 최소금액<input type="text" name="couponMinimumValue" th:value="${coupon.couponMinimumValue}"><br>
+    쿠폰 사진<input type="file" name="couponThumbnail" th:value="${coupon.couponThumbnail}"><br>
+</form>
 </body>
 </html>

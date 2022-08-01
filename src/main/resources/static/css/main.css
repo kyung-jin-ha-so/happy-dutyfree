@@ -54,3 +54,46 @@
 .prod_list ul li .txt_box p.desc{font-size:22px; letter-spacing:-0.045em; color:#444; font-weight:400;}
 .prod_list ul li .txt_box p.txt{font-size:26px; letter-spacing:-0.045em; color:#f60; font-weight:400;}
 .prod_list ul li .txt_box p.text{font-size:18px; letter-spacing:-0.045em; color:#999; font-weight:300;}
+
+
+/* sub_visual */
+.sub_visual_tab{padding-top:50px;}
+.sub_visual_tab ul li{display:inline-block; vertical-align:middle; position:relative; padding-right:15px;}
+.sub_visual_tab ul li:before{content:'>'; position:Absolute; right:0; top:50%; transform:translateY(-50%); font-size:16px;}
+.sub_visual_tab ul li:last-of-type:before{display:none;}
+.sub_visual_tab ul li a{display:block; font-size:18px; letter-spacing:-0.04em; color:#000; font-weight:500;}
+.sub_visual_tab ul li p{font-size:18px; letter-spacing:-0.04em; color:#000; font-weight:500;}
+
+.sub_visual{height:500px; background:#ffd400; padding:100px; box-sizing:border-box;}
+/* 이미지 삽입후 삭제 */
+.sub_visual .top_box .img_box{display:inline-block; vertical-align:middle; width:100px; height:70px; background:#000; margin-right:30px;}
+/* 이미지 삽입후 삭제 */
+/* 이미지 삽입후 주석풀어주세요 */
+/*.sub_visual .top_box .img_box{display:inline-block; vertical-align:middle; width:200px;}*/
+/*.sub_visual .top_box .img_box img{max-width:100%;}*/
+.sub_visual .top_box .txt_box{display:inline-block; vertical-align:middle;}
+.sub_visual .top_box .txt_box p{font-size:24px; letter-spacing:-0.045em; color:#888; font-weight:400;}
+.sub_visual .top_box .txt_box p b{font-size:28px; color:#222;}
+.sub_visual .top_box .txt_box span{display:block; padding-top:10px; font-size:20px; letter-spacing:-0.045em; color:#444; font-weight:400;}
+.sub_visual .top_box .txt_box span b{color:#f00; font-weight:400;}
+.sub_visual .bot_box{text-align:center; padding-top:50px; font-size:0; letter-spacing:-4px;}
+.sub_visual .bot_box ul li{display:inline-block; vertical-align:top; padding:30px 20px 40px; box-sizing:border-box; border-right:2px solid #666; background:#fff; width:400px; height:200px;}
+.sub_visual .bot_box ul li:last-of-type{border-right:0;}
+.sub_visual .bot_box ul li p{font-size:24px; letter-spacing:-0.045em; color:#666; font-weight:300;}
+.sub_visual .bot_box ul li p b{font-size:32px; color:#222;}
+.sub_visual .bot_box ul li span{font-size:30px; letter-spacing:-0.045em; color:#222; font-weight:500; display:block; padding-top:10px;}
+
+.mypage_content .left_box{display:inline-block; vertical-align:top; width:300px; margin-right:50px;}
+.mypage_content .left_box .tit{width:100%; height:200px; background:#cfffe5; text-align:center;}
+.mypage_content .left_box .tit p{font-size:34px; letter-spacing:-0.045em; color:#fff; font-weight:bold; line-height:200px;}
+.mypage_content .left_box .box{padding:10px 0; min-height:100px;}
+.mypage_content .left_box .box + .box{border-top:1px solid #555;}
+.mypage_content .left_box .box p{font-size:18px; letter-spacing:-0.045em; color:#000; font-weight:bold; padding-bottom:5px;}
+.mypage_content .left_box .box a{font-size:16px; letter-spacing:-0.045em; color:#666; font-weight:400; padding-left:10px; position:relative; box-sizing:border-box; display:block;}
+.mypage_content .left_box .box a:after{content:'-'; position:absolute; left:0; top:0;}
+/* right_box 내용 삽입후 삭제 */
+.mypage_content .right_box{display:inline-block; vertical-align:top; background:#000; width:1045px; height:800px;}
+/* right_box 내용 삽입후 삭제 */
+/* right_box 내용 삽입후 주석풀어주세요 */
+/*.mypage_content .right_box{display:inline-block; vertical-align:top;  width:1045px; padding-top:30px;}*/
+

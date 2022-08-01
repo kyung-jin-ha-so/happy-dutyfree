@@ -55,6 +55,7 @@ const flightList = (cityCode, airline, departureDate) => {
     })
 }
 
+// 선택한 항공편을 input태그로 옮기기
 const flightUpdate = (internationalNum) => {
     console.log(internationalNum)
     document.getElementById("departureNumber").value = internationalNum;

@@ -1,6 +1,8 @@
 package com.its.happy.controller;
 
 import com.its.happy.dto.CouponDTO;
+import com.its.happy.dto.CouponMemberDTO;
+import com.its.happy.dto.EventDTO;
 import com.its.happy.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -52,5 +55,25 @@ public class CouponController {
         couponService.deleteById(couponId);
         return "redirect:/coupon/couponList";
     }
-
+    //회원별 쿠폰리스트 조회
+    @GetMapping("/myCouponList")
+    public String myCouponList(Model model, HttpSession session){
+        Long memberId = (Long) session.getAttribute("loginId");
+        List<CouponMemberDTO> couponMemberDTOList  = couponService.findByMyCoupon(memberId);
+        model.addAttribute("myCoupon", couponMemberDTOList);
+        return "/couponPages/myCoupon";
+    }
+    //쿠폰 수정 화면 요청
+    @GetMapping("/update-form/{couponId}")
+    public String update(@PathVariable Long couponId, Model model){
+        CouponDTO couponDTO = couponService.findByCouponId(couponId);
+        model.addAttribute("coupon", couponDTO);
+        return "/couponPages/update";
+    }
+    //쿠폰 수정
+//    @PostMapping("/update")
+//    public String update(@ModelAttribute CouponDTO couponDTO){
+//        couponService.update(couponDTO);
+//        return "redirect:/coupon/couponList";
+//    }
 }

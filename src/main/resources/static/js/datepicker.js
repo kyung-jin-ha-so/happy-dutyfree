@@ -22,23 +22,14 @@ $(function () {
 
     //input을 datepicker로 선언
     $("#datepicker").datepicker();
-    $("#datepicker2").datepicker();
 
     //From의 초기값을 오늘 날짜로 설정
     $('#datepicker').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
-    //To의 초기값을 내일로 설정
-    $('#datepicker2').datepicker('setDate', '+1D'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
 
     //return날짜를 depart날짜보다 앞으로 설정 못하게, depart날짜를 과거 선택 못하게
     $('#datepicker').datepicker();
     $('#datepicker').datepicker('option', 'minDate', '0');
     $('#datepicker').datepicker("option", "maxDate", $("#datepicker2").val());
     $('#datepicker').datepicker("option", "onClose", function (selectedDate) {
-        $("#datepicker2").datepicker("option", "minDate", selectedDate);
-    });
-    $('#datepicker2').datepicker();
-    $('#datepicker2').datepicker("option", "minDate", $("#datepicker").val());
-    $('#datepicker2').datepicker("option", "onClose", function (selectedDate) {
-        $("#datepicker").datepicker("option", "maxDate", selectedDate);
     });
 });
