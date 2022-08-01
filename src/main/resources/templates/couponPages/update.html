@@ -7,7 +7,8 @@
 <body>
 <h2>쿠폰수정</h2>
 <form action="/coupon/update" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="couponId" th:value="${coupon.couponId}">
+    <input type="text" name="couponId" th:value="${coupon.couponId}">
+    <input type="text" name="couponThumbnail" th:value="${coupon.couponThumbnail}"><br>
     쿠폰종류
     <select name="couponName" id="couponName">
         <option value=""> -- 선택 --</option>
@@ -17,7 +18,7 @@
     </select><br>
     쿠폰 금액<input type="text" name="couponValue" th:value="${coupon.couponValue}"><br>
     쿠폰 최소금액<input type="text" name="couponMinimumValue" th:value="${coupon.couponMinimumValue}"><br>
-    쿠폰 사진<input type="file" name="couponThumbnail" th:value="${coupon.couponThumbnail}"><br>
+    <input type="submit">
 </form>
 </body>
 </html>
