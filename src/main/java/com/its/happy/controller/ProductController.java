@@ -62,6 +62,7 @@ public class ProductController {
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1)     < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
+        System.out.println("exchangeRateDTO = " + exchangeRateDTO);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("sort", "all");
@@ -202,15 +203,26 @@ public class ProductController {
     }
 
     @GetMapping("/search/")
-    public String search(@RequestParam("q") String q, @PageableDefault(page = 1) Pageable pageable, Model model){
-        Page<ProductDTO> productList = productService.findSearch(pageable, q);
+    public String search(@RequestParam("q") String q, @PageableDefault(page = 1) Pageable pageable, Model model, HttpSession session){
+        Long loginId = (Long) session.getAttribute("loginId");
+        Page<ProductDTO> productList = null;
+        if(loginId != null){
+            productList = productService.findSearch(pageable, q, loginId);
+        } else {
+            productList = productService.findSearchWithoutId(pageable,q);
+        }
         model.addAttribute("productList", productList);
+        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
+        if(startPage == 0 || endPage == 0){
+            startPage = 1; endPage = 1;
+        }
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-//        model.addAttribute("q", q);
+        model.addAttribute("q", q);
         model.addAttribute("sort", "search");
+        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "/productPages/list";
     }
 
