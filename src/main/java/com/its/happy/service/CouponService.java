@@ -106,4 +106,7 @@ public class CouponService {
             return null;
         }
     }
+    public void update(CouponDTO couponDTO) {
+        couponRepository.save(CouponEntity.toUpdateCouponEntity(couponDTO));
+    }
 }

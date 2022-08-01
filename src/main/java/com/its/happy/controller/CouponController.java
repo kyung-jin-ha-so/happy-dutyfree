@@ -71,9 +71,9 @@ public class CouponController {
         return "/couponPages/update";
     }
     //쿠폰 수정
-//    @PostMapping("/update")
-//    public String update(@ModelAttribute CouponDTO couponDTO){
-//        couponService.update(couponDTO);
-//        return "redirect:/coupon/couponList";
-//    }
+    @PostMapping("/update")
+    public String update(@ModelAttribute CouponDTO couponDTO){
+        couponService.update(couponDTO);
+        return "redirect:/coupon/couponList";
+    }
 }
