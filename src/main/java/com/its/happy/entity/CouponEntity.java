@@ -52,4 +52,13 @@ public class CouponEntity {
         couponEntity.setCouponThumbnail(couponDTO.getCouponThumbnail());
         return couponEntity;
     }
+    public static CouponEntity toUpdateCouponEntity(CouponDTO couponDTO) {
+        CouponEntity couponEntity = new CouponEntity();
+        couponEntity.setCouponId(couponDTO.getCouponId());
+        couponEntity.setCouponName(couponDTO.getCouponName());
+        couponEntity.setCouponValue(couponDTO.getCouponValue());
+        couponEntity.setCouponMinimumValue(couponDTO.getCouponMinimumValue());
+        couponEntity.setCouponThumbnail(couponDTO.getCouponThumbnail());
+        return couponEntity;
+    }
 }

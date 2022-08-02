@@ -2,7 +2,6 @@ package com.its.happy.controller;
 
 import com.its.happy.dto.CouponDTO;
 import com.its.happy.dto.CouponMemberDTO;
-import com.its.happy.dto.EventDTO;
 import com.its.happy.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -71,9 +70,9 @@ public class CouponController {
         return "/couponPages/update";
     }
     //쿠폰 수정
-//    @PostMapping("/update")
-//    public String update(@ModelAttribute CouponDTO couponDTO){
-//        couponService.update(couponDTO);
-//        return "redirect:/coupon/couponList";
-//    }
+    @PostMapping("/update")
+    public String update(@ModelAttribute CouponDTO couponDTO){
+        couponService.update(couponDTO);
+        return "redirect:/coupon/couponList";
+    }
 }
