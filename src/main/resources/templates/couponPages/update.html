@@ -8,7 +8,7 @@
 <h2>쿠폰수정</h2>
 <form action="/coupon/update" method="post" enctype="multipart/form-data">
     <input type="text" name="couponId" th:value="${coupon.couponId}">
-    <input type="file" name="couponThumbnail" th:value="${coupon.couponThumbnail}"><br>
+    <input type="text" name="couponThumbnail" th:value="${coupon.couponThumbnail}"><br>
     쿠폰종류
     <select name="couponName" id="couponName">
         <option value=""> -- 선택 --</option>

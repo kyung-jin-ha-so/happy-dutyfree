@@ -19,6 +19,7 @@
     function passwordCk() {
         let memberPassword = document.getElementById("password").value;
         let memberId = document.getElementById("memberId").value;
+        let loginId = [[${session.loginId}]]
         console.log(memberPassword);
         $.ajax({
             type: 'post',
@@ -32,6 +33,7 @@
                 console.log(result)
                 if (result == "OK") {
                     alert("비밀번호 일치")
+                    location.href="/member/deleteMyselfForm"
                 } else {
                     alert("비밀번호 불일치")
                 }
@@ -41,7 +43,5 @@
             }
         });
     }
-
-
 </script>
 </html>
