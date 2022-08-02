@@ -5,6 +5,48 @@
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <style>
+        .nav-link {
+            color: #1a1e21;
+            --bs-nav-link-hover-color: darkgray;
+        }
+
+        .nav-bar {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            color: darkgrey;
+        }
+
+        .nav-select {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            padding-left: 16px;
+        }
+
+        .nav .count {
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+        .nav .count_color {
+            color: red;
+        }
+
+        .product_list_head {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .card .product_list_card {
+            text-decoration: none;
+            color: black;
+        }
+
+        .product_card {
+            max-width: 1200px;
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
 상품 목록
@@ -18,51 +60,93 @@
 
 <a href="/product/1/">스킨케어</a>
 <a href="/product/2/">메이크업</a>
-<div th:if="${categoryId}">
-    <a th:href="@{|/product/highPrice/${categoryId}/|}">높은 가격순</a>
-    <a th:href="@{|/product/lowPrice/${categoryId}/|}">낮은 가격순</a>
-    <a th:href="@{|/product/star/${categoryId}/|}">별점순</a>
+<div class="nav product_list_head" th:if="${categoryDTO}">
+    <span>홈</span> &nbsp
+    <span>></span> &nbsp
+    <span th:text="${categoryDTO.categoryName}"></span>
 </div>
+<div class="nav justify-content-around product_list_head" style="background-color: gray">
+    <div class="nav justify-content-start">
+        <span class="nav-item count">총</span>
+        <span class="nav-item count count_color" th:utext="${count}"></span>
+        <span class="nav-item count">개</span>
+    </div>
+    <ul class="nav justify-content-end" th:if="${categoryId}">
+        <li class="nav-item"><a class="nav-link active" th:href="@{|/product/${categoryId}/|}">최신순</a></li>
+        <li class="nav-item nav-bar">|</li>
+        <li class="nav-item"><a class="nav-link" th:href="@{|/product/highPrice/${categoryId}/|}">높은 가격순</a></li>
+        <li class="nav-item nav-bar">|</li>
+        <li class="nav-item"><a class="nav-link" th:href="@{|/product/lowPrice/${categoryId}/|}">낮은 가격순</a></li>
+        <li class="nav-item nav-bar">|</li>
+        <li class="nav-item"><a class="nav-link" th:href="@{|/product/star/${categoryId}/|}">별점순</a></li>
+        <li class="nav-item nav-bar">|</li>
+        <li class="nav-item nav-select">
+            <select name="pageLimit" id="pageLimit" th:onchange="pageChange()">
+                <option value="1">페이지당 개수</option>
+                <option value="2">2개 보기</option>
+                <option value="3">3개 보기</option>
+                <option value="4">4개 보기</option>
+                <option value="5">5개 보기</option>
+            </select>
+        </li>
+    </ul>
+</div>
+
+<!--<div th:if="${categoryId}">-->
+<!--    <a th:href="@{|/product/${categoryId}/|}">높은 가격순</a>-->
+<!--    <a th:href="@{|/product/highPrice/${categoryId}/|}">높은 가격순</a>-->
+<!--    <a th:href="@{|/product/lowPrice/${categoryId}/|}">낮은 가격순</a>-->
+<!--    <a th:href="@{|/product/star/${categoryId}/|}">별점순</a>-->
+<!--</div>-->
 
 <div>
-    <select name="pageLimit" id="pageLimit" th:onchange="pageChange()">
-        <option value="1">페이지당 개수</option>
-        <option value="2">2개 보기</option>
-        <option value="3">3개 보기</option>
-        <option value="4">4개 보기</option>
-        <option value="5">5개 보기</option>
-    </select>
 </div>
 
-<div class="container">
+<!--<div class="container">-->
+<!--    <table class="table table-hover">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th scope="col">상품번호</th>-->
+<!--            <th scope="col">상품썸네일</th>-->
+<!--            <th scope="col">상품이름</th>-->
+<!--            <th scope="col">상품별점</th>-->
+<!--            <th scope="col">상품원가</th>-->
+<!--            <th scope="col">상품인터넷가격</th>-->
+<!--            <th scope="col">원화</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr th:each="product: ${productList}">-->
+<!--            <td th:text="${product.productId}"></td>-->
+<!--            <td><img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""></td>-->
+<!--            <td><a th:href="@{|/product/detail/${product.productId}|}" th:text="${product.productName}">이름</a></td>-->
+<!--            <td th:text="${product.productStar}"></td>-->
+<!--            <td th:text="|$${product.productOriginalPrice}|"></td>-->
+<!--            <td th:text="|$${product.productPrice}|"></td>-->
+<!--            <td th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원'"></td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+<!--</div>-->
 
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col">상품번호</th>
-            <th scope="col">상품썸네일</th>
-            <th scope="col">상품이름</th>
-            <th scope="col">상품별점</th>
-            <th scope="col">상품원가</th>
-            <th scope="col">상품인터넷가격</th>
-            <th scope="col">원화</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="product: ${productList}">
-            <td th:text="${product.productId}"></td>
-            <td><img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""></td>
-            <td><a th:href="@{|/product/detail/${product.productId}|}" th:text="${product.productName}">이름</a></td>
-            <td th:text="${product.productStar}"></td>
-            <td th:text="|$${product.productOriginalPrice}|"></td>
-            <td th:text="|$${product.productPrice}|"></td>
-            <td th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원'"></td>
-        </tr>
-        </tbody>
-    </table>
+<div class="row row-cols-1 row-cols-md-5 g-4 product_card">
+    <div class="col" th:each="product: ${productList}">
+        <div class="card h-100 ">
+            <a class="product_list_card" th:href="@{|/product/detail/${product.productId}|}">
+                <img class="card-img-top" th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100"
+                     alt="...">
+                <div class="card-body">
+                    <h7 class="card-title" th:text="${product.productBrand}"></h7>
+                    <h5 class="card-title" th:text="${product.productName}"></h5>
+                    <span class="card-text" style="color: red" th:text="|$${product.productPrice}|"></span>
+                    <span class="card-text" style="color:dimgray;" th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></span>
+                </div>
+            </a>
+        </div>
+    </div>
 </div>
 
-<div th:if="${startPage}" class="container">
+<div th:if="${startPage}" class="container mt-3">
     <ul class="pagination justify-content-center" th:if="${sort.toString().equals('all')}">
         <li class="page-item">
             <a class="page-link" th:href="@{/product/(page=1)}">
@@ -270,7 +354,7 @@
                 location.href = "/product/highPrice/" + categoryId + "/?pageLimit=" + pageLimit;
             } else if (sort == "lowPrice") {
                 location.href = "/product/lowPrice/" + categoryId + "/?pageLimit=" + pageLimit;
-            }else if (sort == "star") {
+            } else if (sort == "star") {
                 location.href = "/product/star/" + categoryId + "/?pageLimit=" + pageLimit;
             }
         }
