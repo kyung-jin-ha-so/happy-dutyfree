@@ -1,22 +1,208 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="ko">
+<style>
+    .parent {
+        width: 10%;
+        box-sizing: border-box;
+        text-align: center;
+    }
+</style>
 <head>
+    <title>MyPageMain</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="/js/jquery.js"></script>
+
+    <!-- css 연결 -->
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
+
+    <!-- swiper 슬라이더 -->
+    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all"/>
+    <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
 </head>
 <body>
-<h2 th:text="${session.loginEmail}"></h2>
+<div id="wrap">
+    <!-- header -->
+    <div id="haeder">
+        <div class="gnb">
+            <ul>
+                <li><a href="javascript:;">로그인</a></li>
+                <li><a href="javascript:;">회원가입</a></li>
+                <li><a href="javascript:;">MY행복</a></li>
+                <li><a href="javascript:;">장바구니</a></li>
+                <li><a href="javascript:;">주문가능시간</a></li>
+                <li><a href="javascript:;">오늘의 환율 1$ = <b>1,299.3</b>원</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- header// -->
 
-<table>
-    <tr>
-        <th>상품</th>
-        <th>상품사진</th>
-    </tr>
-    <tr th:each="like: ${likeList}">
-        <td><a th:href="@{|/product/detail/${like.productEntity.productId}|}" th:text="${like.productEntity.productName}"></a></td>
-        <td><img th:src="@{|/upload/${like.productEntity.productThumbnail}|}" width="100" height="100" alt=""></td>
-    </tr>
-</table>
+    <div class="content">
+        <!-- header 아래 검색창 -->
+        <div class="search">
+            <div class="left_box">
+                <!-- logo img_size 133 * 57 -->
+                <div class="logo">
+                    <a href="/static">
+                        <!-- <img src="" alt=""> -->
+                    </a>
+                </div>
+                <div class="category">
+                    <a href="javascript:;">카테고리</a>
+                    <ul class="depth02">
+                        <li><a href="javscript:;">1번</a></li>
+                        <li><a href="javscript:;">2번</a></li>
+                        <li><a href="javscript:;">3번</a></li>
+                        <li><a href="javscript:;">4번</a></li>
+                        <li><a href="javscript:;">5번</a></li>
+                        <li><a href="javscript:;">6번</a></li>
+                        <li><a href="javscript:;">7번</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="center_box">
+                <div class="input_box">
+                    <input type="text" placeholder="검색">
+                    <a href="javascript"><img src="img/input_click.png" alt=""></a>
+                </div>
+            </div>
+            <!-- img_size 225 * 80 -->
+            <div class="right_box">
+                <a href="javascript:;">
+                    <!-- <img src="" alt=""> -->
+                </a>
+            </div>
+        </div>
+        <!-- header 아래 검색창 -->
+        <!-- sub_visual -->
+        <div class="sub_visual_tab">
+            <ul>
+                <li><a href="/static">홈</a></li>
+                <li><p>Mypage</p></li>
+            </ul>
+        </div>
+        <div class="sub_visual">
+            <div class="top_box">
+                <!-- img_size 100*70 -->
+                <div class="img_box">
+                    <!-- <img src="" alt=""> -->
+                </div>
+                <div class="txt_box">
+                    <p><b>OOO님 </b>브론즈</p>
+                    <span>온라인멤버십 <b>최대 10% </b>할인혜택을 받으실 수 있습니다.</span>
+                </div>
+            </div>
+            <div class="bot_box">
+                <ul>
+                    <li>
+                        <p><b>할인쿠폰 </b>(개)</p>
+                        <span>0</span>
+                    </li>
+                    <li>
+                        <p><b>적립금 </b>(원)</p>
+                        <span>0</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- sub_visual -->
 
+        <!-- mypage content -->
+        <div class="mypage_content">
+            <div class="left_box">
+                <div class="tit">
+                    <p>MY행복</p>
+                </div>
+                <div class="box">
+                    <p>나의 주문 내역</p>
+                    <a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
+                </div>
+                <div class="box">
+                    <p>나의 주문 내역</p>
+                    <a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
+                    <a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
+                    <a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
+                </div>
+                <div class="box">
+                    <p>나의 주문 내역</p>
+                    <a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
+                    <a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
+                </div>
+                <div class="box">
+                    <p>나의 주문 내역</p>
+                    <a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
+                    <a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
+                    <a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
+                </div>
+            </div>
+            <div class="right_box">
+                <ul>
+                    <h2>관심상품</h2>
+                    <li>관심 상품 등록 시점의 가격과 실제 주문 시의 가격이 상이할 수 있으므로 결제 전 장바구니에서 가격을 확인하여 주시기 바랍니다.
+                    </li>
+                </ul>
+                <br>
+                <div class="container text-center">
+                    <div class="row row-cols-4">
+                        <div class="col" th:each="like: ${likeList}">
+                            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"><img
+                                    th:src="@{|/upload/${like.productEntity.productThumbnail}|}" width="100"
+                                    height="100"
+                                    alt=""></a></div>
+                            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
+                                    th:text="${like.productEntity.productName}" style="font-size: large"></a></div>
+                            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"><strike
+                                    th:text="${like.productEntity.productOriginalPrice}"></strike></a></div>
+                            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
+                                    th:text="${like.productEntity.productPrice}"></a></div>
+                            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
+                                    th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*like.productEntity.productPrice, 3, 'COMMA')} + '원'"></a>
+                            </div>
+                            <input type="button" onclick="deleteWish()" value="찜 삭제">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- mypage content -->
+
+            <!-- footer -->
+
+            <!-- footer// -->
+        </div>
+        <!--html 인클루드시 사용 -->
+    </div>
+</div>
 </body>
+<script th:inline="javascript" th:each="like: ${likeList}">
+    function deleteWish() {
+        if ([[${session.loginEmail}]] == null) {
+            alert("로그인 후 찜하실 수 있습니다");
+            location.href = "/member/login";
+        } else {
+            let memberId = [[${session.loginId}]];
+            let productId = [[${like.productEntity.productId}]];
+            $.ajax({
+                type: "post",
+                url: "/product/dontLike",
+                data: {
+                    "memberId": memberId,
+                    "productId": productId
+                },
+                dataType: "text",
+                success: function (result) {
+                    alert("찜 삭제")
+                    location.reload();
+                }, error: function () {
+                    alert("찜 취소 실패");
+                    location.reload();
+                }
+            })
+        }
+    }
+</script>
 </html>
