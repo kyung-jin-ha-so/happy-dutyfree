@@ -265,6 +265,14 @@ public class ProductService {
             productDTOList.add(ProductDTO.toDTO(product));
         }return productDTOList;
     }
+
+    public long count() {
+        return productRepository.count();
+    }
+
+    public long countByCategoryId(Long categoryId) {
+        return productRepository.countByCategoryEntityCategoryId(categoryId);
+    }
 }
 
 

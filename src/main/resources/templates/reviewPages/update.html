@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <style>
         #rateForm fieldset {
             display: inline-block;
@@ -52,15 +52,16 @@
 </head>
 <body>
 
-<form action="/review/save" class="mb-3" name="rateForm" id="rateForm" method="post">
-    <h2>후기 작성/수정하기</h2>
+<form action="/review/update" class="mb-3" name="rateForm" id="rateForm" method="post">
+    <h2>후기 수정하기</h2>
 
-    <!--    <input type="hidden" name="productId" th:text="${productId}">-->
-<!--        <input type="hidden" name="memberId" th:text="${session.loginId}">-->
-<!--        <input type="hidden" name="orderId" th:text="${orderId}">-->
+<!--        <input type="hidden" name="reviewId" th:text="${review.reviewId}">-->
+<!--        <input type="hidden" name="productId" th:text="${review}">-->
+    <!--    <input type="hidden" name="memberId" th:text="${orderId}">-->
+    <!--    <input type="hidden" name="orderId" th:text="${memberId}">-->
 
     <!--    <span class="fw-bold">상품명:</span>-->
-    <!--    <p th:text="${productName}"></p>-->
+<!--        <p th:text="${product}"></p>-->
     <div class="mb-3">
         <span class="fw-bold">상품명:</span> <span>캉골모자</span>
     </div>
@@ -89,5 +90,4 @@
 
 </form>
 </body>
-
 </html>
