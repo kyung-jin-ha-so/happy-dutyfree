@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내쿠폰 조회</title>
+    <h2>내 쿠폰 조회</h2>
+</head>
+<body>
+<table>
+    <tr>
+        <th>쿠폰명</th>
+        <th>할인액</th>
+        <th>최소금액</th>
+        <th>쿠폰상태</th>
+    </tr>
+    <tr th:each="coupon: ${myCoupon}">
+        <td th:text="${coupon.couponEntity.couponName}"></td>
+        <td th:text="${coupon.couponEntity.couponValue}"></td>
+        <td th:text="${coupon.couponEntity.couponMinimumValue}"></td>
+        <td th:text="${coupon.couponStatus}"></td>
+    </tr>
+</table>
+</body>
+</html>
