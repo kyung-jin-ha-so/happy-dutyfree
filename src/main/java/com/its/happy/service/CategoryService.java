@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,5 +31,13 @@ public class CategoryService {
             categoryDTOList.add(CategoryDTO.toDTO(category));
         }
         return categoryDTOList;
+    }
+
+    public CategoryDTO findById(Long categoryId) {
+        Optional<CategoryEntity> optionalCategoryEntity = categoryRepository.findById(categoryId);
+        if(optionalCategoryEntity.isPresent()){
+            CategoryEntity categoryEntity = optionalCategoryEntity.get();
+            return CategoryDTO.toDTO(categoryEntity);
+        }return null;
     }
 }
