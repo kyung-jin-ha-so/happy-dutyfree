@@ -124,14 +124,33 @@ public class MemberController {
     }
 
 
-    // 비밀번호 확인 화면 이동
+    // 비밀번호변경을 위한 비밀번호 확인 화면 이동
     @GetMapping("/passwordCheck")
     public String passwordCheckForm(HttpSession session,Model model){
         Long memberId = (long) session.getAttribute("loginId");
         MemberDTO memberDTO = memberService.findById(memberId);
         model.addAttribute("member",memberDTO);
-        return "/memberPages/passwordCheck";
+        return "/memberPages/pwCkPwUpdate";
     }
+
+    // 회원정보 수정을 위한 비밀번호 확인 화면 이동
+    @GetMapping("/passwordCheckDetail")
+    public String passwordCheckDetailForm(HttpSession session,Model model){
+        Long memberId = (long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
+        return "/memberPages/pwCkDetail";
+    }
+
+    // 회원탈퇴를 위한 비밀번호 확인 화면 이동
+    @GetMapping("/passwordCheckDelete")
+    public String passwordCheckDeleteForm(HttpSession session,Model model){
+        Long memberId = (long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
+        return "/memberPages/pwCkDelete";
+    }
+
 
     // 비밀번호 일치여부 확인
     @PostMapping("/passwordCheck")
