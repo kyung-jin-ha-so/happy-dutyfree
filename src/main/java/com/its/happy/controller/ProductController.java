@@ -243,8 +243,6 @@ public class ProductController {
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "/productPages/list";
     }
-
-
     //상품 찜하기
     @PostMapping("/like")
     public ResponseEntity like(@RequestParam("productId") Long productId,
@@ -263,12 +261,14 @@ public class ProductController {
         productService.deleteById(memberId, productId);
         return true;
     }
-    //회원별 상품 리스트 보기
+    //회원별 찜 리스트 보기
     @GetMapping("/likeList")
     public String likeList(HttpSession session, Model model){
         Long memberId = (Long) session.getAttribute("loginId");
         List<LikeDTO> likeDTOList = productService.findByLikeList(memberId);
         model.addAttribute("likeList", likeDTOList);
+        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
+        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "/productPages/likeList";
     }
 }
