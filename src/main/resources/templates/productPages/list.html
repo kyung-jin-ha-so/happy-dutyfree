@@ -49,6 +49,7 @@
     </style>
 </head>
 <body>
+
 상품 목록
 
 <div class="container text-sm-end">
@@ -65,13 +66,13 @@
     <span>></span> &nbsp
     <span th:text="${categoryDTO.categoryName}"></span>
 </div>
-<div class="nav justify-content-around product_list_head" style="background-color: gray">
+<div class="nav product_list_head align-self-start" style="background-color: gray">
     <div class="nav justify-content-start">
         <span class="nav-item count">총</span>
         <span class="nav-item count count_color" th:utext="${count}"></span>
         <span class="nav-item count">개</span>
     </div>
-    <ul class="nav justify-content-end" th:if="${categoryId}">
+    <ul class="nav" th:if="${categoryId}">
         <li class="nav-item"><a class="nav-link active" th:href="@{|/product/${categoryId}/|}">최신순</a></li>
         <li class="nav-item nav-bar">|</li>
         <li class="nav-item"><a class="nav-link" th:href="@{|/product/highPrice/${categoryId}/|}">높은 가격순</a></li>
@@ -138,8 +139,9 @@
                 <div class="card-body">
                     <h7 class="card-title" th:text="${product.productBrand}"></h7>
                     <h5 class="card-title" th:text="${product.productName}"></h5>
+                    <span class="card-text"><STRIKE th:text="|$${product.productOriginalPrice}|"></STRIKE></span>
                     <span class="card-text" style="color: red" th:text="|$${product.productPrice}|"></span>
-                    <span class="card-text" style="color:dimgray;" th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></span>
+                    <p class="card-text" style="color:dimgray;" th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></p>
                 </div>
             </a>
         </div>
