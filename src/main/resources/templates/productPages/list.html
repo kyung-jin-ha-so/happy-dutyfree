@@ -60,18 +60,20 @@
 
 <a href="/product/1/">스킨케어</a>
 <a href="/product/2/">메이크업</a>
+
 <div class="nav product_list_head" th:if="${categoryDTO}">
     <span>홈</span> &nbsp
     <span>></span> &nbsp
     <span th:text="${categoryDTO.categoryName}"></span>
 </div>
+
 <div class="nav product_list_head align-self-start" style="background-color: gray">
     <div class="nav justify-content-start">
         <span class="nav-item count">총</span>
         <span class="nav-item count count_color" th:utext="${count}"></span>
         <span class="nav-item count">개</span>
     </div>
-    <ul class="nav" th:if="${categoryId}">
+    <ul class="nav" style="margin-left: auto;" th:if="${categoryId}">
         <li class="nav-item"><a class="nav-link active" th:href="@{|/product/${categoryId}/|}">최신순</a></li>
         <li class="nav-item nav-bar">|</li>
         <li class="nav-item"><a class="nav-link" th:href="@{|/product/highPrice/${categoryId}/|}">높은 가격순</a></li>

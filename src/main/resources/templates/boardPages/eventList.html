@@ -3,6 +3,41 @@
 <head>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <style>
+        * {
+            box-size: border-box;
+            border-collapse: collapse;
+        }
+        .container-01 {
+            width: 100%;
+            height: 350px;
+            display: flex;
+            margin: 0;
+            padding: 2rem 10rem;
+        }
+        .nav-container {
+            display: flex;
+            flex-direction: column;
+            width: 25%;
+            height: 100%;
+            text-align: center;
+        }
+        .nav-container .item {
+            justify-content: space-between;
+            height: 25%;
+            position: relative;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .img-container {
+            width: 75%;
+            background-color: lightcoral;
+        }
+        .img-container img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
 <h2>이벤트 목록</h2>
@@ -10,6 +45,17 @@
     <input type="text" name="q" placeholder="검색">
     <input type="submit" value="검색">
 </form>
+<div class="container-01">
+    <div class="nav-container">
+        <div class="item item-01" style="background-color: lightgray; font-weight: bold; font-size: 20px">행복면세 쿠폰 혜택</div>
+        <div class="item item-02" onclick="changeImg02()">행복 회원분들! 쿠폰 챙겨가세요!</div>
+        <div class="item item-03" onclick="changeImg03()">행복이가 생일을 챙겨드려요!</div>
+        <div class="item item-04" onclick="changeImg04()">임진년을 맞아 호랑이띠 회원을 챙겨드려요!</div>
+    </div>
+    <div class="img-container">
+        <img th:src="@{/img/event_banner.jpg}" class="img" alt="">
+    </div>
+</div>
 <table class="table table-hover">
     <tr>
         <th>이벤트 번호</th>
@@ -21,7 +67,9 @@
     </tr>
     <tr th:each="event: ${eventList}">
         <td th:text="${event.eventId}"></td>
-        <td><a th:href="@{|/event/${event.eventId}(couponName=${event.couponEntity.couponName},couponId=${event.couponEntity.couponId})}" th:text="${event.eventTitle}"></a></td>
+        <td>
+            <a th:href="@{|/event/${event.eventId}(couponName=${event.couponEntity.couponName},couponId=${event.couponEntity.couponId})}"
+               th:text="${event.eventTitle}"></a></td>
         <td th:text="${event.eventCreatedDate}"></td>
         <td th:text="${event.couponEntity.couponName}"></td>
         <td th:text="${event.couponEntity.couponValue}"></td>
@@ -72,4 +120,39 @@
     </ul>
 </div>
 </body>
+<script th:inline="javascript">
+    const changeImg02 = () => {
+        const img = document.querySelector('.img');
+        const item02 = document.querySelector('.item-02');
+        const item03 = document.querySelector('.item-03');
+        const item04 = document.querySelector('.item-04');
+
+        item02.style.backgroundColor = 'lightgreen';
+        item03.style.backgroundColor = '#fff';
+        item04.style.backgroundColor = '#fff';
+        img.src = '/img/event_banner01.jpg';
+    }
+    const changeImg03 = () => {
+        const img = document.querySelector('.img');
+        const item02 = document.querySelector('.item-02');
+        const item03 = document.querySelector('.item-03');
+        const item04 = document.querySelector('.item-04');
+
+        item03.style.backgroundColor = 'lightgreen';
+        item02.style.backgroundColor = '#fff';
+        item04.style.backgroundColor = '#fff';
+        img.src = '/img/event_banner02.jpg';
+    }
+    const changeImg04 = () => {
+        const img = document.querySelector('.img');
+        const item02 = document.querySelector('.item-02');
+        const item03 = document.querySelector('.item-03');
+        const item04 = document.querySelector('.item-04');
+
+        item04.style.backgroundColor = 'lightgreen';
+        item02.style.backgroundColor = '#fff';
+        item03.style.backgroundColor = '#fff';
+        img.src = '/img/event_banner03.jpg';
+    }
+</script>
 </html>

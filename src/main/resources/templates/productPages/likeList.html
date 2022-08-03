@@ -1,22 +1,37 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>나의 찜목록</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 </head>
 <body>
-<h2 th:text="${session.loginEmail}"></h2>
-
-<table>
-    <tr>
-        <th>상품</th>
-        <th>상품사진</th>
-    </tr>
-    <tr th:each="like: ${likeList}">
-        <td><a th:href="@{|/product/detail/${like.productEntity.productId}|}" th:text="${like.productEntity.productName}"></a></td>
-        <td><img th:src="@{|/upload/${like.productEntity.productThumbnail}|}" width="100" height="100" alt=""></td>
-    </tr>
-</table>
-
+<div class="right_box">
+    <ul>
+        <h2>관심상품</h2>
+        <li>관심 상품 등록 시점의 가격과 실제 주문 시의 가격이 상이할 수 있으므로 결제 전 장바구니에서 가격을 확인하여 주시기 바랍니다.
+        </li>
+    </ul>
+    <br>
+    <div class="row row-cols-4">
+        <div class="col" th:each="like: ${likeList}">
+            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"><img
+                    th:src="@{|/upload/${like.productEntity.productThumbnail}|}" width="100"
+                    height="100"
+                    alt=""></a></div>
+            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
+                    th:text="${like.productEntity.productName}" style="font-size: large"></a></div>
+            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"><strike
+                    th:text="${like.productEntity.productOriginalPrice}"></strike></a></div>
+            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
+                    th:text="${like.productEntity.productPrice}"></a></div>
+            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
+                    th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*like.productEntity.productPrice, 3, 'COMMA')} + '원'"></a>
+            </div>
+            <input type="button" onclick="deleteWish()" value="찜 삭제">
+        </div>
+    </div>
+</div>
 </body>
 </html>
