@@ -24,11 +24,11 @@ public class ReviewService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
-    public ReviewEntity findById(Long orderProductId) {
-        Optional<ReviewEntity> optionalReviewEntity = reviewRepository.findById(orderProductId);
+    public ReviewDTO findById(Long reviewId) {
+        Optional<ReviewEntity> optionalReviewEntity = reviewRepository.findById(reviewId);
         if (optionalReviewEntity.isPresent()) {
             ReviewEntity reviewEntity = optionalReviewEntity.get();
-            return reviewEntity;
+            return ReviewDTO.toDTO(reviewEntity);
         }
         return null;
     }
