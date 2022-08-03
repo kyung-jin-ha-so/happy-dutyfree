@@ -36,6 +36,14 @@ public class PointService {
 
 
     //적립금 사용 save
+    public void update(Long savedId, PointDTO pointDTO) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(savedId);
+        if (optionalMemberEntity.isPresent()) {
+            MemberEntity memberEntity = optionalMemberEntity.get();
+            PointEntity pointEntity = PointEntity.toSave(memberEntity,pointDTO);
+            pointRepository.save(pointEntity);
+        }
+    }
 
 
     // 포인트 전체조회 (로그인한 회원 기준)
