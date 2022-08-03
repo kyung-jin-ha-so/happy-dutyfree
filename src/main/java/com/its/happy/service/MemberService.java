@@ -158,6 +158,17 @@ public class MemberService {
     }
 
 
+    public void passwordUpdate(MemberDTO memberDTO) {
+        String password = memberDTO.getMemberPassword();
+        String encodedPassword = passwordEncoder.encode(password);
+        memberDTO.setMemberPassword(encodedPassword);
+        memberRepository.save(MemberEntity.toUpdate(memberDTO));
+    }
+
+
+
+
+
 }
 
 

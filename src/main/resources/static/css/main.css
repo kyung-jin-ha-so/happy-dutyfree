@@ -110,7 +110,7 @@
 .manage_content .left_box .slide_box .box + .box{margin-top:30px;}
 .manage_content .left_box .slide_box .box > ul > li > a{display:block; font-size:20px; letter-spacing:-0.04em; color:#fff; font-weight:bold; padding:10px 0; background:#00498c; }
 .manage_content .left_box .slide_box .box .depth02 li a{display:block; font-size:16px; letter-spacing:-0.04em; color:#666; font-weight:400; padding:5px 0 5px 10px;}
-/*.manage_content .left_box .slide_box .box .depth02{display:none;}*/
+.manage_content .left_box .slide_box .box .depth02{display:none;}
 .manage_content .right_box{display:inline-block; vertical-align:top; width:895px; margin-left:-4px;}
 .manage_content .right_box .logout_box{text-align:right; width:100%; height:30px; background:#aaa;}
 .manage_content .right_box .logout_box a{display:inline-block; font-size:18px; letter-spacing:-0.045em; color:#fff; font-weight:bold; line-height:30px;}
