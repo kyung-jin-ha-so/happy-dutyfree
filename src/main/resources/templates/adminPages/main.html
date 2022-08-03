@@ -4,9 +4,7 @@
 	<title>경진하소</title>
 	<meta charset="UTF-8">
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
-	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	<script src="/js/jquery.js"></script>
 
 	<!-- css 연결 -->
 	<link rel="stylesheet" href="/css/layout.css" type="text/css" media="all" />
@@ -91,6 +89,11 @@
 					</div>
 				</div>
 			</div>
+			<script>
+				$('.slide_box .box > ul > li > a').on('click', function(){
+					$(this).next().slideToggle();
+				})
+			</script>
 			<div class="right_box">
 				<div class="logout_box">
 					<a href="javscript:;">로그아웃</a>

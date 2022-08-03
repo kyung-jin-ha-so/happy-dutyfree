@@ -1,6 +1,7 @@
 package com.its.happy.controller;
 
 import com.its.happy.dto.MemberDTO;
+import com.its.happy.entity.MemberEntity;
 import com.its.happy.service.MemberService;
 import com.its.happy.service.PointService;
 import lombok.RequiredArgsConstructor;
@@ -103,18 +104,25 @@ public class MemberController {
     // 핸드폰 인증 완료시 해당 전화번호를 가지고 있는 이메일 보여주기
     @GetMapping("/findEmailResult")
     public String findEmail(@RequestParam String memberMobile, Model model){
-        System.out.println("MemberController.findEmail");
-        System.out.println(memberMobile);
         MemberDTO memberDTO = memberService.findEmail(memberMobile);
-        System.out.println(memberDTO);
         model.addAttribute("member",memberDTO);
         return "memberPages/findEmailResult";
     }
 
     // 비밀번호 변경 화면 요청
     @GetMapping("/passwordUpdate")
-    public String passwordUpdateForm(){
+    public String passwordUpdateForm(Model model,HttpSession session){
+        Long memberId = (long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
         return "/memberPages/passwordUpdate";
+    }
+
+    // 비밀번호 변경 처리
+    @PostMapping("/passwordUpdate")
+    public String passwordUpdate(@ModelAttribute MemberDTO memberDTO){
+        memberService.passwordUpdate(memberDTO);
+        return "redirect:/myPageMain";
     }
 
     //비밀번호찾기 화면 이동
