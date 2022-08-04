@@ -13,6 +13,8 @@
         .product_list_head {
             max-width: 1200px;
             margin: auto;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
 
         .product_detail_head {
@@ -149,6 +151,9 @@
             text-decoration: none;
             border-radius: 10px;
         }
+        .product_detail .product_detail_thumb{
+            margin-right: 50px;
+        }
 
     </style>
 </head>
@@ -170,7 +175,7 @@
     <h5 th:text="${product.productName}"></h5>
 </div>
 <div class="row product_detail mb-4">
-    <div class="col-4">
+    <div class="col-4 product_detail_thumb">
         <div><img th:src="@{|/upload/${product.productThumbnail}|}" width="400" height="300" alt=""></div>
         <div><span th:text="'상품 만족도 ' + ${product.productStar}"></span></div>
         <div style="font-size: small" class="text-sm-end">
