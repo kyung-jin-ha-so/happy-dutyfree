@@ -123,7 +123,8 @@
 </head>
 
 <body>
-상품 상세 정보
+
+<!--<th:block th:replace="include/header :: header"></th:block>-->
 
 <div class="nav product_list_head">
     <span>홈</span> &nbsp
@@ -133,7 +134,6 @@
     <span>></span> &nbsp
     <span th:text="${product.productBrand}"></span>
 </div>
-
 <div class="product_detail_head">
     <h3 th:text="${product.productBrand}"></h3>
     <h5 th:text="${product.productName}"></h5>
@@ -208,8 +208,6 @@
 <!--    <div th:each="${session.loginEmail == 'admin'}">-->
 <a th:href="@{|/product/update/${product.productId}|}">수정</a>
 <!--    </div>-->
-
-<img src="/upload/" width="1000px" alt="">
 
 </body>
 <script th:inline="javascript">
