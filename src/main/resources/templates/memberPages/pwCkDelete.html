@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>passwordUpdate</title>
+</head>
+<body>
+<h2>비밀번호 변경</h2>
+안전한 개인정보 보호를 위해 <br>
+비밀번호를 다시한번 확인해주시기 바랍니다<br>
+<form action="/member/passwordCheck" method="post" name="passwordUpdate">
+    <input type="hidden" name="memberId" id="memberId" th:value="${session.loginId}">
+    <input type="password" name="memberPassword" id="password" placeholder="비밀번호">
+    <input type="button" th:onclick="passwordCk()" value="확인">
+</form>
+</body>
+<script th:inline="javascript">
+    function passwordCk() {
+        let memberPassword = document.getElementById("password").value;
+        let memberId = document.getElementById("memberId").value;
+        let loginId = [[${session.loginId}]]
+        console.log(memberPassword);
+        $.ajax({
+            type: 'post',
+            url: '/member/passwordCheck',
+            data: {
+                "memberPassword": memberPassword,
+                "memberId" : memberId
+            },
+            dataType: 'text',
+            success: function (result) {
+                console.log(result)
+                if (result == "OK") {
+                    location.href="/member/deleteMyselfForm"
+                } else {
+                    alert("비밀번호가 일치하지 않습니다")
+                }
+            },
+            error: function () {
+                alert("ajax 실패");
+            }
+        });
+    }
+</script>
+</html>

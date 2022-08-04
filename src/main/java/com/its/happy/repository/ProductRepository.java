@@ -16,4 +16,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     Page<ProductEntity> findByProductNameContaining(PageRequest pageRequest, String q);
 
     List<ProductEntity> findByProductDiscountGreaterThanEqual(Long discount);
+
+    long countByCategoryEntityCategoryId(Long categoryId);
 }

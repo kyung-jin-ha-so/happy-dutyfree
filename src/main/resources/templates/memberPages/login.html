@@ -1,28 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>memberLogin</title>
+    <style>
+        a{outline:0px;}
+        a:link{font-size:12px; color:#a9a9a9; text-decoration:none;}
+        a:hover{font-size:12px; color:#a9a9a9; text-decoration:none;}
+        a:visited{font-size:12px; color:#a9a9a9;  text-decoration:none;}
+        input{width:100%; padding:10px 20px; box-sizing:border-box; border-radius:5px;}
+        input + input{margin-top:10px;}
+        input.login{background:#222; color:#fff; height:50px; padding:0; font-size:16px;}
+
+        #wrap{width:350px; margin:50px auto 150px;}
+        .tit{ text-align:center;}
+        .tit a{display:block;}
+        .tit a img{max-width:100%;}
+        .tit p{font-size:32px; letter-spacing:-0,045em; color:#222; font-weight:bold; padding-top:20px;}
+        .btn_box{ padding-top:20px; text-align:center; padding-bottom:20px;}
+        .btn_box a{display:inline-block; vertical-align:middle; font-size:16px; letter-spacing:-0.04em; color:#222; font-weight:500}
+        .btn_box a + a{margin-left:20px;}
+        .sns_box{padding:30px 0; border-top:1px solid #000; border-bottom:1px solid #000;}
+        .sns_box:after{content:''; display:block; clear:both;}
+        .sns_box span{float:left; font-size:20px; letter-spacing:-0.04em; color:#222; font-weight:bold}
+        .sns_box a{float:right;}
+        .join_box{text-align:center;}
+        .join_box p{font-size:20px; letter-spacing:-0.04em; color:#222; font-weight:bold;}
+        .join_box a{display:block; font-size:16px; letter-spacing:-0.04em; color:#fff; font-weight:400; height:50px; line-height:50px; background:#222; border-radius:5px;}
+    </style>
 </head>
 <body>
-<div>
-    <form action="/member/login" method="post">
-        <input type="text" name="memberEmail"><br>
-        <input type="password" name="memberPassword"><br>
-        <input type="submit" value="로그인"><br><br>
-    </form>
-</div>
-<div>
-    <a href="/member/findEmail">아이디찾기</a>
-    <a href="/member/findPassword">비밀번호찾기</a><br>
-</div>
-<div>
-    <span>sns 로그인</span>
-    <a href="#">카카오톡로그인</a><br>
-</div>
-<div>
-    <p>계정이 없으신가요?</p>
-    <a href="/member/save">회원가입</a>
+<!--<th:block th:replace="include/header :: header"></th:block>-->
+<div id="wrap">
+    <div class="tit">
+        <a href="/">
+            <img src="" alt="">
+        </a>
+        <p>로그인</p>
+    </div>
+    <div class="login_box">
+        <form action="/member/login" method="post">
+            <input type="text" name="memberEmail">
+            <input type="password" name="memberPassword">
+            <input type="submit" value="로그인" class="login">
+        </form>
+    </div>
+    <div class="btn_box">
+        <a href="/member/findEmail">아이디찾기</a>
+        <a href="/member/findPassword">비밀번호찾기</a>
+    </div>
+    <div class="sns_box">
+        <span>sns 로그인</span>
+        <a href="https://kauth.kakao.com/oauth/authorize?client_id=a88489884189e052d191c60987e50cab&redirect_uri=http://localhost:8080/member/kakaoLogin&response_type=code">카카오톡로그인</a>
+    </div>
+    <div class="join_box">
+        <p>계정이 없으신가요?</p>
+        <a href="/member/save">회원가입</a>
+    </div>
 </div>
 </body>
 </html>

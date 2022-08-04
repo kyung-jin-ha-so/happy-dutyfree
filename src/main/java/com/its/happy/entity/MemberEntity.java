@@ -81,6 +81,7 @@ public class MemberEntity extends BaseEntity{
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DepartureEntity> departureEntityList = new ArrayList<>();
 
+
     @PreRemove
     private void preRemove() {
         reviewEntityList.forEach(review -> review.setMemberEntity(null));

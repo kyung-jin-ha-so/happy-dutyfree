@@ -56,12 +56,15 @@ public class ProductController {
 
     @GetMapping("/")
     public String findAll(@PageableDefault(page = 1) Pageable pageable,
-                          @RequestParam(defaultValue = "2", required = false) int pageLimit, Model model) {
+                          @RequestParam(defaultValue = "5", required = false) int pageLimit, Model model) {
         Page<ProductDTO> productList = productService.findAll(pageable, pageLimit);
+        long count = productService.count();
         model.addAttribute("productList", productList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1)     < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
+        System.out.println("exchangeRateDTO = " + exchangeRateDTO);
+        model.addAttribute("count", count);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("sort", "all");
@@ -74,15 +77,19 @@ public class ProductController {
                                  @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByCategory(pageable, categoryId, pageLimit);
         model.addAttribute("productList", productList);
+        long count = productService.countByCategoryId(categoryId);
+        CategoryDTO categoryDTO = categoryService.findById(categoryId);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
         if(startPage == 0 || endPage == 0){
             startPage = 1; endPage = 1;
         }
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
+        model.addAttribute("count", count);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("categoryId", categoryId);
+        model.addAttribute("categoryDTO", categoryDTO);
         model.addAttribute("sort", "basic");
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "/productPages/list";
@@ -93,16 +100,20 @@ public class ProductController {
                                   @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByHighPrice(pageable, categoryId, pageLimit);
         model.addAttribute("productList", productList);
+        long count = productService.countByCategoryId(categoryId);
+        CategoryDTO categoryDTO = categoryService.findById(categoryId);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
         if(startPage == 0 || endPage == 0){
             startPage = 1; endPage = 1;
         }
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
+        model.addAttribute("count", count);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("sort", "highPrice");
+        model.addAttribute("categoryDTO", categoryDTO);
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "/productPages/list";
     }
@@ -112,15 +123,19 @@ public class ProductController {
                                  @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByLowPrice(pageable, categoryId, pageLimit);
         model.addAttribute("productList", productList);
+        long count = productService.countByCategoryId(categoryId);
+        CategoryDTO categoryDTO = categoryService.findById(categoryId);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
         if(startPage == 0 || endPage == 0){
             startPage = 1; endPage = 1;
         }
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
+        model.addAttribute("count", count);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("categoryId", categoryId);
+        model.addAttribute("categoryDTO", categoryDTO);
         model.addAttribute("sort", "lowPrice");
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "/productPages/list";
@@ -131,17 +146,21 @@ public class ProductController {
                              @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByStar(pageable, categoryId, pageLimit);
         model.addAttribute("productList", productList);
+        long count = productService.countByCategoryId(categoryId);
+        CategoryDTO categoryDTO = categoryService.findById(categoryId);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
         if(startPage == 0 || endPage == 0){
             startPage = 1; endPage = 1;
         }
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
+        model.addAttribute("count", count);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("sort", "star");
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
+        model.addAttribute("categoryDTO", categoryDTO);
         return "/productPages/list";
     }
 
@@ -202,19 +221,28 @@ public class ProductController {
     }
 
     @GetMapping("/search/")
-    public String search(@RequestParam("q") String q, @PageableDefault(page = 1) Pageable pageable, Model model){
-        Page<ProductDTO> productList = productService.findSearch(pageable, q);
+    public String search(@RequestParam("q") String q, @PageableDefault(page = 1) Pageable pageable, Model model, HttpSession session){
+        Long loginId = (Long) session.getAttribute("loginId");
+        Page<ProductDTO> productList = null;
+        if(loginId != null){
+            productList = productService.findSearch(pageable, q, loginId);
+        } else {
+            productList = productService.findSearchWithoutId(pageable,q);
+        }
         model.addAttribute("productList", productList);
+        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
+        if(startPage == 0 || endPage == 0){
+            startPage = 1; endPage = 1;
+        }
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-//        model.addAttribute("q", q);
+        model.addAttribute("q", q);
         model.addAttribute("sort", "search");
+        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "/productPages/list";
     }
-
-
     //상품 찜하기
     @PostMapping("/like")
     public ResponseEntity like(@RequestParam("productId") Long productId,
@@ -233,13 +261,22 @@ public class ProductController {
         productService.deleteById(memberId, productId);
         return true;
     }
-    //회원별 상품 리스트 보기
+    //회원별 찜 리스트 보기
     @GetMapping("/likeList")
     public String likeList(HttpSession session, Model model){
         Long memberId = (Long) session.getAttribute("loginId");
         List<LikeDTO> likeDTOList = productService.findByLikeList(memberId);
         model.addAttribute("likeList", likeDTOList);
+        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
+        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "/productPages/likeList";
+    }
+
+    @PostMapping("/detailAjax")
+    public @ResponseBody ProductDTO findByIdAjax(@RequestParam Long productId){
+        System.out.println("productId = " + productId);
+        ProductDTO productDTO = productService.findById(productId);
+        return productDTO;
     }
 }
 

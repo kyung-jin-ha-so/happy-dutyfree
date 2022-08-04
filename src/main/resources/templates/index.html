@@ -9,6 +9,8 @@
 <div th:text="${session.loginEmail}"></div>
 <a href="/adminMain">관리자페이지 메인</a>
 <a href="/myPageMain">마이페이지 메인</a>
+<a href="/main">메인</a>
+
 <br>
 <h2>KT</h2>
 <a href="/passport/save-form">여권 정보 관리</a>
@@ -19,18 +21,21 @@
 <a href="/member/save">회원가입</a>
 <a href="/member/login">로그인</a>
 <a href="/member/logout">로그아웃</a>
-<a href="/member/passwordCheck">비밀번호 확인</a>
-<a th:href="@{|/member/${session.loginId}|}">상세조회</a>
+<a href="/member/passwordCheck">비밀번호 변경</a>
+<a href="/member/passwordCheckDetail">상세조회</a>
 <a href="/admin/memberList">회원목록조회(관리자버전)</a>
-<a href="/member/deleteMyselfForm">회원삭제(회원버전)</a>
+<a href="/member/passwordCheckDelete">회원삭제(회원버전)</a>
+<a href="/point/findByMemberId">포인트 조회(회원)</a>
+
 
 <h2>MH</h2>
 <a href="/product/save">상품등록</a><br>
 <a href="/category/save">카테고리등록</a><br>
 <a href="/product/">상품목록보기</a><br>
 <a href="/admin/productList/">관리자 상품보기</a><br>
-<a href="review/saveFormTest">상품후기 작성</a><br>
-<a href="exchange/find">환율찾기</a><br>
+<a href="/review/saveFormTest">상품후기 작성</a><br>
+<a href="/exchange/find">환율찾기</a><br>
+<a href="/search/find">검색했던 목록보기(로그인시)</a><br>
 
 <h2>SH</h2>
 <a href="/event/saveForm">이벤트 저장(admin ver.)</a><br>
@@ -42,6 +47,6 @@
 <a href="/event">이벤트목록(member ver.)</a><br>
 <a href="/product/likeList/">나의 찜목록(member ver.)</a><br>
 <a href="/cart/cartList">나의 장바구니 목록(member ver.)</a><br>
-
+<a href="/coupon/myCouponList">나의 쿠폰목록(member ver.)</a>
 </body>
 </html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>PointList</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>포인트아이디</th>
+        <th>사용금액</th>
+        <th>사용시간</th>
+    </tr>
+    <tr th:each="point: ${pointList}">
+        <td th:text="${point.pointId}"></td>
+        <td th:text="${point.pointValue}"></td>
+        <td th:text="${point.pointCreatedTime}"></td>
+    </tr>
+</table>
+</body>
+</html>

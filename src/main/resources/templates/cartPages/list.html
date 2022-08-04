@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 </head>
 <body>
 <h2>장바구니</h2>
+
 <!-- 체크박스 전체 여부 -->
 <div class="all_check_input_div">
     <input type="checkbox" class="all_check_input input_size_20" checked="checked"><span
@@ -17,18 +21,17 @@
         <th>선택</th>
         <th>상품</th>
         <th>원가</th>
-        <th>할인율</th>
         <th>인터넷할인가</th>
         <th>수량</th>
         <th>썸네일</th>
-        <th>상품별 총 금액</th>
-        <th>관심상품</th>
+        <th>총 금액</th>
+        <th>원화</th>
         <th>삭제</th>
     </tr>
     <tr>
         <td class="cart_info_td">
             <input type="hidden" class="individual_totalPrice_input"
-                   th:value="${cart.cartQty * cart.productPrice}"></div>
+                   th:value="${exchangeRateDTO.exchangeRate*cart.productPrice*cart.cartQty}"></div>
             <input type="checkbox" class="individual_cart_checkbox input_size_20" checked="checked">
             <input type="hidden" class="individual_cartId_input" th:value="${cart.cartId}">
             <input type="hidden" class="individual_productId_input" th:value="${cart.productId}">
@@ -41,17 +44,17 @@
             <input type="hidden" class="individual_productThumbnail_input" th:value="${cart.productThumbnail}">
         </td>
         <td><a th:href="@{|/product/detail/${cart.productId}|}" th:text="${cart.productName}"></a></td>
-        <td><STRIKE th:text="${cart.productOriginalPrice}"></STRIKE></td>
-        <td th:text="${cart.productDiscount}"></td>
-        <td th:text="${cart.productPrice}" id="productPrice" th:value="${cart.productPrice}"></td>
+        <td><STRIKE th:text="|$${cart.productOriginalPrice}|"></STRIKE></td>
+        <td th:text="|$${cart.productPrice}|" id="productPrice" th:value="${cart.productPrice}"></td>
         <td>
             <button th:onclick="'minusBtn(' + ${cart.cartId} + ')'" class="minus_btn"> -</button>
             <input type="text" class="quantity_input" th:id="${cart.cartId}" th:value="${cart.cartQty}">
             <button th:onclick="'plusBtn(' + ${cart.cartId} + ')'" class="plus_btn"> +</button>
         </td>
-
         <td><img th:src="@{|/upload/${cart.productThumbnail}|}" width="100" height="100" alt=""></td>
-        <td th:text="${cart.cartQty*cart.productPrice}"></td>
+        <td th:text="|$${cart.cartQty*cart.productPrice}|"></td>
+        <td th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*cart.productPrice*cart.cartQty, 3, 'COMMA')} + '원'"></td>
+        <td><input type="button" th:onclick="deleteCart([[${cart.cartId}]])" value="삭제"></a></td>
     </tr>
 </table>
 
@@ -133,7 +136,7 @@
                 totalPrice += parseFloat($(element).find(".individual_totalPrice_input").val());
             }
         });
-        $(".total").text("총금액: " + totalPrice.toLocaleString());
+        $(".total").text("총금액: " + totalPrice.toLocaleString() + "원");
     }
 
     //체크박스 전체 선택
@@ -186,33 +189,6 @@
         $(".order_form").html(form_contents);
         $(".order_form").submit();
     });
-
-    //장바구니에 담겨있는 상품 찜하기
-    function saveWish() {
-        if ([[${session.loginEmail}]] == null) {
-            alert("로그인 후 찜하실 수 있습니다");
-            location.href = "/member/login";
-        } else {
-            let memberId = [[${session.loginId}]];
-            let productId = [[${cart.productId}]];
-            $.ajax({
-                type: "post",
-                url: "/product/like",
-                data: {
-                    "memberId": memberId,
-                    "productId": productId
-                },
-                dataType: "text",
-                success: function (result) {
-                    alert("찜하기 성공")
-                    location.reload();
-                }, error: function () {
-                    alert("찜하기 실패")
-                    location.reload();
-                }
-            })
-        }
-    }
     //장바구니 개별삭제
     const deleteCart = (cartId) => {
         location.href = "/cart/delete/" + cartId;

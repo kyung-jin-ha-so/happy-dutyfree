@@ -1,10 +1,113 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>AdminMain</title>
+	<title>경진하소</title>
+	<meta charset="UTF-8">
+
+	<script src="/js/jquery.js"></script>
+
+	<!-- css 연결 -->
+	<link rel="stylesheet" href="/css/layout.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/basic.css" type="text/css" media="all" />
+
+	<!-- swiper 슬라이더 -->
+	<link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all" />
+	<script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-어드민 메인임다
+	<div id="wrap">
+		<div class="manage_content">
+			<div class="left_box">
+				<div class="logo_box">
+					<!-- img_size 150*50 -->
+					<a href="/">
+<!-- 						<img src="" alt=""> -->
+					</a>
+					<p>ADMIN PAGE</p>
+				</div>
+				<div class="slide_box">
+					<div class="box">
+						<ul>
+							<li>
+								<a href="javscript:;">회원 관리</a>
+								<ul class="depth02">
+									<li><a href="javscript:;">회원목록조회</a></li>
+									<li><a href="javscript:;">회원목록조회</a></li>
+									<li><a href="javscript:;">회원목록조회</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div class="box">
+						<ul>
+							<li>
+								<a href="javscript:;">회원 관리</a>
+								<ul class="depth02">
+									<li><a href="javscript:;">회원목록조회</a></li>
+									<li><a href="javscript:;">회원목록조회</a></li>
+									<li><a href="javscript:;">회원목록조회</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div class="box">
+						<ul>
+							<li>
+								<a href="javscript:;">회원 관리</a>
+								<ul class="depth02">
+									<li><a href="javscript:;">회원목록조회</a></li>
+									<li><a href="javscript:;">회원목록조회</a></li>
+									<li><a href="javscript:;">회원목록조회</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div class="box">
+						<ul>
+							<li>
+								<a href="javscript:;">회원 관리</a>
+								<ul class="depth02">
+									<li><a href="javscript:;">회원목록조회</a></li>
+									<li><a href="javscript:;">회원목록조회</a></li>
+									<li><a href="javscript:;">회원목록조회</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div class="box">
+						<ul>
+							<li>
+								<a href="javscript:;">회원 관리</a>
+								<ul class="depth02">
+									<li><a href="javscript:;">회원목록조회</a></li>
+									<li><a href="javscript:;">회원목록조회</a></li>
+									<li><a href="javscript:;">회원목록조회</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<script>
+				$('.slide_box .box > ul > li > a').on('click', function(){
+					$(this).next().slideToggle();
+				})
+			</script>
+			<div class="right_box">
+				<div class="logout_box">
+					<a href="javscript:;">로그아웃</a>
+				</div>
+				<div class="path_box">
+					<ul>
+						<li>상품관리</li>
+						<li>상품등록</li>
+					</ul>
+				</div>
+				<div class="content_box">
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
