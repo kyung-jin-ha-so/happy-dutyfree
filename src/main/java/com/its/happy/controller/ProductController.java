@@ -271,5 +271,12 @@ public class ProductController {
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "/productPages/likeList";
     }
+
+    @PostMapping("/detailAjax")
+    public @ResponseBody ProductDTO findByIdAjax(@RequestParam Long productId){
+        System.out.println("productId = " + productId);
+        ProductDTO productDTO = productService.findById(productId);
+        return productDTO;
+    }
 }
 
