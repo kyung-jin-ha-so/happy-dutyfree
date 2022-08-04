@@ -6,6 +6,7 @@ import com.its.happy.service.MemberService;
 import com.its.happy.service.PointService;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,6 +81,15 @@ public class MemberController {
             return "/memberPages/login";
         }
     }
+
+    //카카오 간편로그인
+    @GetMapping("/kakaoLogin")
+    public @ResponseBody String kakaoLogin(@RequestParam("code") String code){
+        String access_Token = memberService.getAccessToken(code);
+        System.out.println("controller access_token : " + access_Token);
+        return "index";
+    }
+
 
     // 로그아웃 구현
     @GetMapping("/logout")
