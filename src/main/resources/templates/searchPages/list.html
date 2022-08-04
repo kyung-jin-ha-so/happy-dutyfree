@@ -35,10 +35,11 @@
     </style>
 </head>
 <body>
+
 <div class="frame">
     <div class="center">
         <form action="/product/search/" method="get">
-            <input type="text" name="q" id="q" placeholder="상품명 검색">
+            <input type="text" name="q" id="q" placeholder="상품명 검색" th:onblur="searchFind()">
             <div id="recommend" class="invisible">
                 <div>최근 검색어</div>
                 <div id="recommend_item" class="item" th:each="search: ${searchList}">
@@ -87,18 +88,20 @@
     }
 
     const searchDelete = (searchId) => {
-      $.ajax({
-          method: "post",
-          url: "/search/delete",
-          data: { "searchId" : searchId},
-          dataType:"text",
-          success: function (res){
-              console.log(res);
-              location.reload();
-          }, error: function (){
-              alert("ajax 오류")
-          }
-      });
+        $.ajax({
+            method: "post",
+            url: "/search/delete",
+            data: {"searchId": searchId},
+            dataType: "text",
+            success: function (res) {
+                console.log(res);
+                location.reload();
+            }, error: function () {
+                alert("ajax 오류")
+            }
+        });
     };
+
+
 </script>
 </html>

@@ -13,6 +13,8 @@
         .product_list_head {
             max-width: 1200px;
             margin: auto;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
 
         .product_detail_head {
@@ -120,6 +122,38 @@
             padding-top: 20px;
         }
 
+        .qty_btn .minus_btn {
+            display: inline-block;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            width: 30px;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            letter-spacing: -0.04em;
+            font-weight: 400;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .qty_btn .plus_btn {
+            display: inline-block;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            width: 30px;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            letter-spacing: -0.04em;
+            font-weight: 400;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+        .product_detail .product_detail_thumb{
+            margin-right: 50px;
+        }
 
     </style>
 </head>
@@ -129,7 +163,7 @@
 <th:block th:replace="include/header :: header"></th:block>
 
 <div class="nav product_list_head">
-    <span>홈</span> &nbsp
+    <span><a href="/">홈</a></span> &nbsp
     <span>></span> &nbsp
     <a th:href="@{|/product/${product.categoryEntity.categoryId}/|}"
        th:text="${product.categoryEntity.categoryName}"></a> &nbsp
@@ -141,7 +175,7 @@
     <h5 th:text="${product.productName}"></h5>
 </div>
 <div class="row product_detail mb-4">
-    <div class="col-4">
+    <div class="col-4 product_detail_thumb">
         <div><img th:src="@{|/upload/${product.productThumbnail}|}" width="400" height="300" alt=""></div>
         <div><span th:text="'상품 만족도 ' + ${product.productStar}"></span></div>
         <div style="font-size: small" class="text-sm-end">
@@ -152,7 +186,7 @@
             <span> 상품 찜하기</span>
         </div>
     </div>
-    <div class="col-3 fw-bold text-lg-start fs-5 mt-5 ">
+    <div class="col-3 fw-bold text-lg-start fs-5 mt-5">
         <p>정상가</p>
         <p>회원가</p>
         <p>수량</p>
@@ -160,22 +194,24 @@
             <input type="button" class="btn btn-secondary" onclick="addToCart()" value="장바구니" style="width: 250px">
         </div>
     </div>
-    <div class="col">
-        <div class="fw-bold text-lg-start fs-5 mt-5">
+    <div class="col fw-bold text-lg-start fs-5 mt-5">
+        <p>
             <STRIKE th:text="|$${product.productOriginalPrice} |"></STRIKE>
             <STRIKE th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productOriginalPrice, 3, 'COMMA')} + '원)'"></STRIKE>
-        </div>
-        <div style="color: red" class="fw-bold text-lg-start fs-5 mt-3">
+        </p>
+
+        <p style="color: red">
             <span th:text="|$${product.productPrice}| "></span>
             <span th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></span>
             <span th:text="${product.productDiscount} + '%↓'" style="font-size: small; align-content: end"></span>
+        </p>
+
+        <div class="qty_btn">
+            <a href="javascript:void(0)" class="minus_btn" onclick="qtyCount('minus')">-</a>
+            <input type="text" id="productQty" value="1" readonly="readonly" style="text-align:center; width: 100px"/>
+            <a href="javascript:void(0)" class="plus_btn" onclick="qtyCount('plus')">+</a>
         </div>
-        <div class="fw-bold text-lg-start mt-3">
-            <button type="button" class="minus_btn" onclick="qtyCount('minus')">-</button>
-            <input type="text" id="productQty" value="1" readonly="readonly" style="text-align:center;"/>
-            <button type="button" class="plus_btn" onclick="qtyCount('plus')">+</button>
-        </div>
-        <div class="fw-bold text-lg-start fs-5 mt-3">
+        <div class="fw-bold text-lg-start fs-5 mt-2">
             <input type="button" class="btn btn-danger d-grid gap-2" onclick="addToOrder()" value="주문하기"
                    style="width: 250px">
         </div>
@@ -380,7 +416,7 @@
 
         tabCont.innerHTML = "<div class=\"tab_cont tap2\" id=\"tap2\" style=\"display: block; padding-top: 30px\">\n" +
             "            <div id=\"average\">\n" +
-            "                <p>이 상품의 평균 만족도는 <span style=\"color:red; font-size: 40px\">" + productStar +"</span> 점 입니다.</p>\n" +
+            "                <p>이 상품의 평균 만족도는 <span style=\"color:red; font-size: 40px\">" + productStar + "</span> 점 입니다.</p>\n" +
             "            </div>\n" +
             "\n" +
             "            <div class=\"review_head\">\n" +
