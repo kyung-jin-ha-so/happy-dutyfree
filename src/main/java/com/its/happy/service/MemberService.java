@@ -42,6 +42,16 @@ public class MemberService {
         }
     }
 
+    // 비밀번호 찾기 시 이메일 확인
+    public MemberDTO emailCheck(String memberEmail) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberEmail);
+        if(optionalMemberEntity.isPresent()){
+            return MemberDTO.toMemberDTO(optionalMemberEntity.get());
+        }else {
+            return null;
+        }
+    }
+
     //핸드폰번호 중복체크
     public String mobileDuplicateCheck(String memberMobile) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberMobile(memberMobile);
@@ -164,8 +174,6 @@ public class MemberService {
         memberDTO.setMemberPassword(encodedPassword);
         memberRepository.save(MemberEntity.toUpdate(memberDTO));
     }
-
-
 
 
 

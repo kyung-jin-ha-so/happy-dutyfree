@@ -40,11 +40,18 @@ public class MemberController {
         return "/memberPages/login";
     }
 
-    // 이메일 중복체크
+     //이메일 중복체크
     @PostMapping("/email-duplicate-check")
     public @ResponseBody String emailDuplicateCheck(@RequestParam String memberEmail){
         String emailResult = memberService.emailDuplicateCheck(memberEmail);
         return emailResult;
+    }
+
+    // 비밀번호찾기시 이메일 확인 후 DTO 넘겨주기
+    @PostMapping("/email-check")
+    public @ResponseBody MemberDTO emailCheck(@RequestParam String memberEmail){
+        MemberDTO memberDTO= memberService.emailCheck(memberEmail);
+        return memberDTO;
     }
 
     // 핸드폰번호 중복체크
@@ -101,6 +108,7 @@ public class MemberController {
         return mobileResult;
     }
 
+
     // 핸드폰 인증 완료시 해당 전화번호를 가지고 있는 이메일 보여주기
     @GetMapping("/findEmailResult")
     public String findEmail(@RequestParam String memberMobile, Model model){
@@ -129,6 +137,15 @@ public class MemberController {
     @GetMapping("/findPassword")
     public String findPasswordForm(){
         return "/memberPages/findPassword";
+    }
+
+
+    // 비밀번호 찾기 인증완료 후 비밀번호 재설정 페이지 이동
+    @PostMapping("/passwordReset")
+    public String passwordResetForm(@RequestParam Long memberId, Model model){
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
+        return "/memberPages/passwordReset";
     }
 
 
