@@ -5,17 +5,49 @@
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <style>
+
+        table , th, td{
+            border: solid 1px  black;
+        }
+
+        th{
+            background-color: gray;
+        }
+
+        .review_head{
+            width: 700px;
+            height: 100px;
+            align: center;
+            margin: auto auto 2.5rem;
+        }
+
+        .review_footer{
+            background-color: #bfbfbf;
+            margin:auto;
+            padding-top: 15px;
+            width: 700px;
+        }
+
+        .review_title{
+            width: 700px;
+            font-weight: bold;
+            margin: auto auto 2.5rem;
+        }
+    </style>
 </head>
 <body>
-나의 후기
-<table class="table">
-    <tr>
+<div >
+<h2 class="review_title" >나의 후기</h2>
+</div>
+<table border="1" class="review_head">
+    <tr align="center">
         <th>상품명</th>
         <th>평점</th>
         <th>상품평</th>
         <th>구매여부</th>
         <th>작성일</th>
-        <th>수정/삭제</th>
+        <th>수정 / 삭제</th>
     </tr>
     <tr>
         <td>상품</td>
@@ -23,18 +55,18 @@
         <td>상품</td>
         <td>상품</td>
         <td>상품</td>
-        <td><a href="#">수정</a> / <a href="#">삭제</a> </td>
+        <td align="center"><a href="#">수정</a> / <a href="#">삭제</a> </td>
     </tr>
     <tr th:each="review: ${reviewList}">
         <td th:text="${review.productEntity.productName}"></td>
         <td th:text="${review.reviewStar}"></td>
         <td th:text="${review.orderEntity.orderStatus}"></td>
         <td th:text="${review.getReviewCreatedTime()}"></td>
-        <td><a th:href="@{|/review/update/${review.reviewId}|}">수정</a> / <a th:href="@{|/review/delete/${review.reviewId}|}">삭제</a></td>
+        <td align="center"><a th:href="@{|/review/update/${review.reviewId}|}">수정</a> / <a th:href="@{|/review/delete/${review.reviewId}|}">삭제</a></td>
     </tr>
 </table>
 
-<div>
+<div class="review_footer">
     <p class="fw-bold">고객님이 작성해 주시는 상품평은 다른 분들께 소중한 정보가 됩니다.</p>
     <p class="small">상품에 무관한 내용이나 미풍양속에 위배되는 상품후기는 관리자의 판단하에 삭제될 수 있습니다.</p>
 </div>
