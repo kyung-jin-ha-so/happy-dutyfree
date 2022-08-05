@@ -7,11 +7,14 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
     <style>
 
         .product_list_head {
             max-width: 1200px;
             margin: auto;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
 
         .product_detail_head {
@@ -24,41 +27,155 @@
             max-width: 1200px;
             margin: auto;
         }
-        .product_detail_detail{
+
+        .tab_area ul {
+            padding-left: 0;
+        }
+
+        .tab_area {
             width: 1200px;
             margin: auto;
             text-align: center;
         }
-        .row .product_detail_checked{
-            font-size: 20px;
-            font-weight: bolder;
+
+        .tab_area .tab_cont {
             border: solid 1px black;
+            border-top: solid 0px;
+        }
+
+        .tab_area ul li a {
+            text-decoration: none;
+        }
+
+        .tab_area .tab3_ul {
+            border-bottom: black 1px;
+        }
+
+        #tab3 {
+            text-align: start;
+            margin: auto;
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+
+        #tab3 ul {
+            padding-left: 30px;
+            padding-bottom: 15px;
+            border-bottom: solid 1px;
+            font-size: 12px;
+        }
+
+        #tab3 .tab3_box {
+            background-color: #bfbfbf;
+            padding-left: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        #tab3 ol {
+            font-size: 12px;
+        }
+
+        #tab3 ol li {
+            margin-top: 10px
+        }
+
+        .tab_area_head {
+            display: flex;
+            width: 100%;
+            margin: 20px 0 0 0;
+            background-color: red;
+        }
+
+        .tab_area_head .checked {
+            border: solid 1px black;
+            border-bottom: solid 0px;
+            background-color: white;
+        }
+
+        .tab_area_head .unchecked {
+            border: solid 1px black;
+            background-color: #bfbfbf;
+            color: darkgrey;
+        }
+
+        .tab_area_head_list {
+            justify-content: space-between;
+            width: 400px;
             height: 50px;
+            padding-top: 10px;
+            font-weight: bolder;
         }
-        .row .product_detail_unchecked{
-            font-size: 20px;
+
+        .tab_area_head_list a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .tab_cont #average {
+            max-width: 1000px;
+            font-size: 25px;
             border: solid 1px black;
+            margin: auto;
+            background-color: gray;
+            height: 100px;
+            padding-top: 20px;
         }
+
+        .qty_btn .minus_btn {
+            display: inline-block;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            width: 30px;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            letter-spacing: -0.04em;
+            font-weight: 400;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .qty_btn .plus_btn {
+            display: inline-block;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            width: 30px;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            letter-spacing: -0.04em;
+            font-weight: 400;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+        .product_detail .product_detail_thumb{
+            margin-right: 50px;
+        }
+
     </style>
 </head>
 
 <body>
-상품 상세 정보
+
+<th:block th:replace="include/header :: header"></th:block>
 
 <div class="nav product_list_head">
-    <span>홈</span> &nbsp
+    <span><a href="/">홈</a></span> &nbsp
     <span>></span> &nbsp
-    <span th:text="${product.categoryEntity.categoryName}"></span> &nbsp
+    <a th:href="@{|/product/${product.categoryEntity.categoryId}/|}"
+       th:text="${product.categoryEntity.categoryName}"></a> &nbsp
     <span>></span> &nbsp
     <span th:text="${product.productBrand}"></span>
 </div>
-
 <div class="product_detail_head">
     <h3 th:text="${product.productBrand}"></h3>
     <h5 th:text="${product.productName}"></h5>
 </div>
 <div class="row product_detail mb-4">
-    <div class="col-4">
+    <div class="col-4 product_detail_thumb">
         <div><img th:src="@{|/upload/${product.productThumbnail}|}" width="400" height="300" alt=""></div>
         <div><span th:text="'상품 만족도 ' + ${product.productStar}"></span></div>
         <div style="font-size: small" class="text-sm-end">
@@ -66,7 +183,7 @@
                 <i class="bi bi-heart" onclick="saveWish()"></i></span>
             <span th:if="${like != null}">
                 <i class="bi bi-heart-fill" onclick="deleteWish()"></i></span>
-            <span>&nbsp상품 찜하기</span>
+            <span> 상품 찜하기</span>
         </div>
     </div>
     <div class="col-3 fw-bold text-lg-start fs-5 mt-5">
@@ -77,106 +194,59 @@
             <input type="button" class="btn btn-secondary" onclick="addToCart()" value="장바구니" style="width: 250px">
         </div>
     </div>
-    <div class="col">
-        <div class="fw-bold text-lg-start fs-5 mt-5">
+    <div class="col fw-bold text-lg-start fs-5 mt-5">
+        <p>
             <STRIKE th:text="|$${product.productOriginalPrice} |"></STRIKE>
             <STRIKE th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productOriginalPrice, 3, 'COMMA')} + '원)'"></STRIKE>
-        </div>
-        <div style="color: red" class="fw-bold text-lg-start fs-5 mt-3">
+        </p>
+
+        <p style="color: red">
             <span th:text="|$${product.productPrice}| "></span>
             <span th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></span>
+            <span th:text="${product.productDiscount} + '%↓'" style="font-size: small; align-content: end"></span>
+        </p>
+
+        <div class="qty_btn">
+            <a href="javascript:void(0)" class="minus_btn" onclick="qtyCount('minus')">-</a>
+            <input type="text" id="productQty" value="1" readonly="readonly" style="text-align:center; width: 100px"/>
+            <a href="javascript:void(0)" class="plus_btn" onclick="qtyCount('plus')">+</a>
         </div>
-        <div class="fw-bold text-lg-start mt-3">
-            <button type="button" class="minus_btn" onclick="qtyCount('minus')">-</button>
-            <input type="text" id="productQty" value="1" readonly="readonly" style="text-align:center;"/>
-            <button type="button" class="plus_btn" onclick="qtyCount('plus')">+</button>
-        </div>
-        <div class="fw-bold text-lg-start fs-5 mt-3">
+        <div class="fw-bold text-lg-start fs-5 mt-2">
             <input type="button" class="btn btn-danger d-grid gap-2" onclick="addToOrder()" value="주문하기"
                    style="width: 250px">
         </div>
     </div>
 </div>
 
-<div class="product_detail_detail">
-    <div class="row">
-        <div class="col product_detail_checked" style="background-color: red" >
-            <span class="">상품정보</span>
+<div class="tab_area">
+
+    <div class="tab_area_head">
+        <div class="tab_area_head_list checked" id="tab1_area">
+            <a href="javascript:void(0)" th:onclick="tap1Info()">상품정보</a>
         </div>
-        <div class="col product_detail_unchecked" style="background-color: blue">상품평</div>
-        <div class="col product_detail_unchecked" style="background-color: purple">교환/환불/AS안내</div>
+        <div class="tab_area_head_list unchecked" id="tab2_area">
+            <a href="javascript:void(0)" th:onclick="tap2Info()">상품평</a>
+        </div>
+        <div class="tab_area_head_list unchecked" id="tab3_area">
+            <a href="javascript:void(0)" th:onclick="tap3Info()">교환/환불/AS안내</a>
+        </div>
+    </div>
+    <div id="tab_cont">
+        <div class="tab_cont tap1" id="tap1" style="display: block; padding-top: 30px">
+            <h2 style="font-weight: bolder">상세 정보</h2>
+            <p th:text="${product.productDesc}"></p>
+            <div th:each="productFile: ${product.productFilesEntityList}">
+                <img th:src="@{|/upload/${productFile.productFileName}|}" width="1000px" alt="">
+            </div>
+        </div>
+
     </div>
 </div>
 
-<div class="container">
-    <table class="table">
-        <tr>
-            <th>상품번호</th>
-            <th>이름</th>
-            <th>상세설명</th>
-            <th>원가</th>
-            <th>할인율</th>
-            <th>인터넷할인가</th>
-            <th>인터넷원화</th>
-            <th>썸네일</th>
-            <th>수량</th>
-            <th>찜하기</th>
-            <th>장바구니 담기</th>
-            <th>바로구매</th>
-        </tr>
-        <tr>
-            <td th:text="${product.productId}"></td>
-            <td th:text="${product.productName}"></td>
-            <td th:text="${product.productDesc}"></td>
-            <td><STRIKE th:text="${product.productOriginalPrice}"></STRIKE></td>
-            <td th:text="${product.productDiscount}"></td>
-            <td th:text="${product.productPrice}"></td>
-            <td th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원'"></td>
-            <td><img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""></td>
-            <td>
-                <button type="button" class="minus_btn" onclick="qtyCount('minus')">-</button>
-                <!--                <input type="text" id="productQty" value="1" readonly="readonly" style="text-align:center;"/>-->
-                <button type="button" class="plus_btn" onclick="qtyCount('plus')">+</button>
-            </td>
-            <td th:if="${like == null}">
-                <i class="bi bi-heart" onclick="saveWish()"></i></td>
-            <td th:if="${like != null}">
-                <i class="bi bi-heart-fill" onclick="deleteWish()"></i></td>
-            <td><input type="button" onclick="addToCart()" value="장바구니 담기"></a></td>
-            <td><input type="button" onclick="addToOrder()" value="주문하기"></a></td>
-        </tr>
-    </table>
+<!--    <div th:each="${session.loginEmail == 'admin'}">-->
+<a th:href="@{|/product/update/${product.productId}|}">수정</a>
+<!--    </div>-->
 
-    <!--    <div th:each="${session.loginEmail == 'admin'}">-->
-    <a th:href="@{|/product/update/${product.productId}|}">수정</a>
-    <!--    </div>-->
-
-    상세 설명이미지
-    <div th:each="productFile: ${product.productFilesEntityList}">
-        <img th:src="@{|/upload/${productFile.productFileName}|}" alt="">
-    </div>
-</div>
-
-<div>
-    상품 후기
-    <table class="table">
-        <tr>
-            <th>상품후기 번호</th>
-            <th>상품후기 작성자</th>
-            <th>상품후기 작성내용</th>
-            <th>상품후기 별점</th>
-            <th>상품후기 작성시간</th>
-        </tr>
-        <tr th:each="productReview: ${product.reviewEntityList}">
-            <td th:text="${productReview.reviewId}"></td>
-            <td th:text="${productReview.memberEntity.memberId}"></td>
-            <td th:text="${productReview.reviewContents}"></td>
-            <td th:text="${productReview.reviewStar}"></td>
-            <td th:text="${productReview.getCreatedTime()}"></td>
-        </tr>
-    </table>
-
-</div>
 </body>
 <script th:inline="javascript">
     function saveWish() {
@@ -299,5 +369,131 @@
         const orderQty = document.getElementById("productQty").value;
         location.href = "/order/save-form&?orderQty=" + orderQty + "&?productId=" + productId;
     }
+
+    const tap1Info = () => {
+        let tabCont = document.getElementById("tab_cont");
+        let productDesc = [[${product.productDesc}]];
+        let productFileArray = new Array();
+        let productFile = "";
+
+        /*[# th:each="productFile : ${product.productFilesEntityList}"]*/
+        productFile = /*[[${productFile.productFileName}]]*/;
+        productFileArray.push(productFile);
+        /*[/]*/
+
+        $("#tab1_area").removeClass('unchecked');
+        $("#tab1_area").addClass('checked');
+
+        $("#tab2_area").removeClass('checked');
+        $("#tab3_area").removeClass('checked');
+        $("#tab2_area").addClass('unchecked');
+        $("#tab3_area").addClass('unchecked');
+
+        let output = "       <div class=\"tab_cont tap1\" id=\"tap1\" style=\"display: block; padding-top: 30px\">\n" +
+            "            <h2 style=\"font-weight: bolder\">상세 정보</h2>\n" +
+            "            <p>" + productDesc + "</p>\n"
+
+        for (let i = 0; i < productFileArray.length; i++) {
+            output += "<img src=\"/upload/" + productFileArray[i] + "\" width=\"1000px\" alt=\"\">\n"
+        }
+        output += "</div>"
+
+        tabCont.innerHTML = output;
+
+    }
+
+    const tap2Info = () => {
+        let tabCont = document.getElementById("tab_cont");
+        let productStar = [[${product.productStar}]];
+
+        $("#tab2_area").removeClass('unchecked');
+        $("#tab2_area").addClass('checked');
+
+        $("#tab1_area").removeClass('checked');
+        $("#tab3_area").removeClass('checked');
+        $("#tab1_area").addClass('unchecked');
+        $("#tab3_area").addClass('unchecked');
+
+        tabCont.innerHTML = "<div class=\"tab_cont tap2\" id=\"tap2\" style=\"display: block; padding-top: 30px\">\n" +
+            "            <div id=\"average\">\n" +
+            "                <p>이 상품의 평균 만족도는 <span style=\"color:red; font-size: 40px\">" + productStar + "</span> 점 입니다.</p>\n" +
+            "            </div>\n" +
+            "\n" +
+            "            <div class=\"review_head\">\n" +
+            "                <p style=\"font-weight: bolder; align-self: start\">상품 후기</p>\n" +
+            "                <table class=\"table\">\n" +
+            "                    <tr>\n" +
+            "                        <th>번호</th>\n" +
+            "                        <th>작성자</th>\n" +
+            "                        <th>작성내용</th>\n" +
+            "                        <th>별점</th>\n" +
+            "                        <th>작성시간</th>\n" +
+            "                    </tr>\n" +
+            "                    <tr th:each=\"productReview: ${product.reviewEntityList}\">\n" +
+            "                        <td th:text=\"${productReview.reviewId}\"></td>\n" +
+            "                        <td th:text=\"${productReview.memberEntity.memberId}\"></td>\n" +
+            "                        <td th:text=\"${productReview.reviewContents}\"></td>\n" +
+            "                        <td th:text=\"${productReview.reviewStar}\"></td>\n" +
+            "                        <td th:text=\"${productReview.getCreatedTime()}\"></td>\n" +
+            "                    </tr>\n" +
+            "                </table>\n" +
+            "            </div>\n" +
+            "        </div>\n"
+    }
+
+    const tap3Info = () => {
+        let tabCont = document.getElementById("tab_cont");
+
+        $("#tab3_area").removeClass('unchecked');
+        $("#tab3_area").addClass('checked');
+
+        $("#tab1_area").removeClass('checked');
+        $("#tab2_area").removeClass('checked');
+        $("#tab1_area").addClass('unchecked');
+        $("#tab2_area").addClass('unchecked');
+
+
+        tabCont.innerHTML = "    <div class=\"tab_cont tap2\" id=\"tab3\" style=\"display: block; padding-top: 30px\">\n" +
+            "        <h4 style=\"font-weight: bolder\">면세점 유의사항</h4>\n" +
+            "        <div class=\"tab3_box\">\n" +
+            "            <p style=\"font-weight: bolder\">내국인/외국인 입국시 면세한도</p>\n" +
+            "            <p>입국시 면세품 허용한도 금액(면세한도)은 US $600 이며 해외에서 구매한 물품도 한도금액에 포함됩니다.</p>\n" +
+            "            <p style=\"font-size: small; color: grey\"> * 면세품 허용한도($600)를 초과하는 물품은 입국시 반드시 세관에 신고하셔야 하며, 미신고 물품에 대해서는 세금외\n" +
+            "                추가로 가산세가 부과될 수 있습니다.</p>\n" +
+            "        </div>\n" +
+            "        <ul class=\"tab3_ul\">\n" +
+            "            <li>제주도 여행시는 면세품을 구매하실 수 없습니다.</li>\n" +
+            "            <li>해외 출국시 면세품 구매한도 없이 구매가능합니다.</li>\n" +
+            "            <li>각 공항, 항만별 인도장 위치를 확인하시면, 상품 인도시 편리합니다.</li>\n" +
+            "            <li>면세품의 교환/취소 규정을 확인해 주시기 바랍니다.</li>\n" +
+            "        </ul>\n" +
+            "        <h4 style=\"font-weight: bolder\">교환/환불 신청안내</h4>\n" +
+            "        <div class=\"tab3_box\">\n" +
+            "            <p style=\"font-weight: bolder\">웹사이트에서 신청 하기</p>\n" +
+            "            <p>고객센터에서 교환/환불/AS 신청을 해 주세요</p>\n" +
+            "            <input type=\"button\" value=\"고객센터 바로가기\">\n" +
+            // 1대 1 채팅 주소값 넣어주기
+            "        </div>\n" +
+            "        <p style=\"text-underline: black\">기억해주세요</p>\n" +
+            "        <ol>\n" +
+            "            <li> 상품을 수령하신 날로부터 30일 이내에 교환/환불이 가능합니다. (일부 브랜드의 경우 상이할 수 있음) 단, 다음에 해당하는 경우에는 교환 및 환불이 불가합니다. <br>\n" +
+            "                - 이용자에게 책임 있는 사유로 재화 등이 멸실 또는 훼손된 경우 (단, 재화의 내용을 확인하기 위하여 포장 등을 훼손한 경우는 제외) <br>\n" +
+            "                - 사은품 누락, 상품 TAG, 보증서, 상품 부자재가 제거 혹은 분실된 경우 <br>\n" +
+            "                - 이용자의 사용 또는 일부 소비에 의하여 재화 등의 가치가 현저히 감소한 경우 <br>\n" +
+            "                - 시간의 경과에 의해 재판매가 곤란할 정도로 재화 등의 가치가 현저히 감소한 경우 <br>\n" +
+            "                - 복제가 가능한 재화 등의 포장을 훼손한 경우 <br>\n" +
+            "            </li>\n" +
+            "            <li>상품이 표시 광고 또는 계약 내용과 다를 경우, 상품 수령일로부터 3개월 이내에 (그 사실을 안 날 또는 알 수 있었던 날부터 30일 이내에) 교환 및 환불이 가능합니다.</li>\n" +
+            "            <li>출국 시 상품을 수령받지 못한 경우 구매 취소 신청 또는 출국정보변경하여 재출국 시 상품을 수령할 수 있습니다. <br>\n" +
+            "                - 미수령 상품에 대해 주문취소 또는 출국정보변경 의사를 밝히지 않을 경우, 원 출국일로부터 10일 경과 시 자동으로 구매 취소 처리됩니다. <br>\n" +
+            "                - 상품 수령을 위해 출국정보변경을 희망하시는 경우, 원 주문일로부터 2개월 이내의 날짜로 출국일 지정이 가능합니다. <br>\n" +
+            "                - 구매 취소를 희망하시는 경우, 행복면세점 홈페이지 > MY행복 > 주문내역에서 직접 취소 가능하오니 참고해 주시기 바랍니다. <br>\n" +
+            "                자세한 문의사항은 고객센터로 연락해 주시기 바랍니다. <br>\n" +
+            "                (행복면세점 고객센터 1234-1234)\n" +
+            "            </li>\n" +
+            "        </ol>\n" +
+            "    </div>"
+    }
+
 </script>
 </html>
