@@ -6,43 +6,263 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .save-container {
+            max-width: 800px;
+            text-align: center;
+            min-width: 800px;
+            border: 1px solid #e5e5e5;
+            background-color: mediumseagreen
+        }
+
+        .save-container .head-title-wrap {
+            margin-bottom: 3rem;
+        }
+
+        .save-container > div:not(:last-child) {
+            margin-bottom: 1rem;
+        }
+
+        .save-container .head-title-wrap .head-title {
+            font-size: 1.5rem;
+            font-family: inherit;
+            color: #212529;
+            position: relative;
+            width: 700px;
+            font-weight: 600;
+        }
+
+        .save-container .save-item {
+            display: flex;
+            flex-direction: row;
+            padding: 0 2rem;
+        }
+
+        .save-container .save-item .title-wrap {
+            padding-top: 8px;
+            width: 200px;
+        }
+
+        .save-container .save-item span {
+            font-size: 1.125rem;
+            position: relative;
+            font-family: inherit;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+            font-weight: 600;
+        }
+
+        .save-container .save-item input {
+            border: 1px solid #ccc;
+            outline: none;
+            background-color: #fff;
+            color: #666;
+            width: 25rem;
+            height: 40px;
+            padding: 2px 10px;
+            font-size: 0.833rem;
+        }
+
+        .save-container .save-item input[type=file] {
+            padding: 6px 10px;
+        }
+
+        .save-container .save-item .select-input {
+            border: 1px solid #ccc;
+            outline: none;
+            background-color: #fff;
+            color: #666;
+            width: 25rem;
+            height: 40px;
+            padding: 2px 10px;
+            font-size: 0.833rem;
+        }
+
+        .save-container .save-item .textarea-input {
+            border: 1px solid #ccc;
+            outline: none;
+            background-color: #fff;
+            color: #666;
+            width: 25rem;
+            height: 150px;
+            padding: 10px;
+            font-size: 0.833rem;
+            resize: none;
+            word-break: keep-all;
+        }
+
+        .save-container .save-item .title-wrap {
+            padding-right: 5rem;
+        }
+
+        .save-container .btn-wrap {
+            width: 700px;
+            margin-bottom: 20px
+        }
+
+        .save-container .btn-wrap .save-btn {
+            border: 1px solid #20c997;
+            outline: none;
+            background-color: #fff;
+            color: #20c997;
+            font-size: 1.125rem;
+            width: 10rem;
+            padding: 8px 20px;
+            height: 50px;
+        }
+
+        .save-container .btn-wrap .save-btn:hover {
+            border: none;
+            background-color: #20c997;
+            color: #fff;
+            transition: 0.3s ease;
+        }
+        .save-title{font-weight: 600; font-size: 1.3rem}
+    </style>
 </head>
 <body>
-<form action="/product/save" method="post" enctype="multipart/form-data">
-    상품 등록 <br>
-    상품 이름 <input type="text" name="productName"> <br>
-    상품 카테고리
-    <select id="categoryId" name="categoryId">
-        <option value=""> -- 선택 --</option>
-        <option th:each="category: ${categoryDTOList}" th:value="${category.categoryId}" th:utext="${category.categoryName}"></option>
-    </select><br>
-    상품 설명
-    <textarea name="productDesc"> </textarea> <br>
-    <input multiple type="file" name="productFile"><br>
+<div class="save-title">
+    <span>상품관리</span>
+    <span> > </span>
+    <span>상품등록</span>
+</div>
 
-    상품 브랜드
-    <input type="text" name="productBrand"><br>
-    상품 정가
-    <input type="text" name="productOriginalPrice" id="productOriginalPrice" th:onblur="calPrice()"><br>
-    할인율
-    <input type="text" name="productDiscount" id="productDiscount" th:onblur="calPrice()"><br>
-    상품 회원가
-    <input type="text" id="productPrice" name="productPrice"><br>
-    상품 수량
-    <input type="text" name="productQuantity"><br>
-    상품 썸네일
-    <input type="file" name="productThumbnailFile"><br>
-    <input type="submit" value="제출">
+<form action="/product/save" method="post"
+      enctype="multipart/form-data">
+    <div class="save-container">
+        <div class="head-title-wrap">
+            <h2 class="head-title">상품 등록</h2>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">상품 이름</span>
+            </div>
+            <div class="input-wrap">
+                <input type="text" name="productName">
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">카테고리</span>
+            </div>
+            <div class="input-wrap">
+                <select name="categoryId" class="select-input">
+                    <option value=""> -- 선택 --</option>
+                    <option th:each="category: ${categoryDTOList}" th:value="${category.categoryId}"
+                            th:utext="${category.categoryName}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">상품 설명</span>
+            </div>
+            <div class="input-wrap">
+                <textarea class="textarea-input" name="productDesc"></textarea>
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title"></span>
+            </div>
+            <div class="input-wrap">
+                <input multiple type="file" name="productFile">
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">상품 브랜드</span>
+            </div>
+            <div class="input-wrap">
+                <input type="text" name="productBrand">
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">상품 정가</span>
+            </div>
+            <div class="input-wrap">
+                <input type="text" name="productOriginalPrice" id="productOriginalPrice" th:onblur="calPrice()">
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">상품 할인율</span>
+            </div>
+            <div class="input-wrap">
+                <input type="text" name="productDiscount" id="productDiscount" th:onblur="calPrice()">
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">상품 회원가</span>
+            </div>
+            <div class="input-wrap">
+                <input type="text" id="productPrice" name="productPrice">
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">상품 수량</span>
+            </div>
+            <div class="input-wrap">
+                <input type="text" name="productQuantity">
+            </div>
+        </div>
+        <div class="btn-wrap">
+            <button type="submit" class="save-btn">등록</button>
+        </div>
+    </div>
+
+
+    <div style="display:none">
+        <h2>상품 등록</h2>
+        <div class="">
+            <div>상품 이름</div>
+            <div><input type="text" name="productName"></div>
+        </div>
+        <div>상품 카테고리</div>
+        <div>
+            <select id="categoryId" name="categoryId">
+                <option value=""> -- 선택 --</option>
+                <option th:each="category: ${categoryDTOList}" th:value="${category.categoryId}"
+                        th:utext="${category.categoryName}"></option>
+            </select>
+        </div>
+        상품 설명
+        <textarea name="productDesc"> </textarea> <br>
+        <input multiple type="file" name="productFile"><br>
+
+        상품 브랜드
+        <input type="text" name="productBrand"><br>
+        상품 정가
+        <!--        <input type="text" name="productOriginalPrice" id="productOriginalPrice" th:onblur="calPrice()"><br>-->
+        할인율
+        <!--        <input type="text" name="productDiscount" id="productDiscount" th:onblur="calPrice()"><br>-->
+        상품 회원가
+        <!--        <input type="text" id="productPrice" name="productPrice"><br>-->
+        상품 수량
+        <input type="text" name="productQuantity"><br>
+        상품 썸네일
+        <input type="file" name="productThumbnailFile"><br>
+        <input type="submit" value="제출">
+    </div>
 </form>
 
 </body>
 <script th:inline="javascript">
     const calPrice = () => {
-      const productOriginalPrice = document.getElementById("productOriginalPrice").value;
-      const productDiscount = document.getElementById("productDiscount").value;
-      const price = (productOriginalPrice * ((100-productDiscount)/100)).toFixed(2);
+        const productOriginalPrice = document.getElementById("productOriginalPrice").value;
+        const productDiscount = document.getElementById("productDiscount").value;
+        const price = (productOriginalPrice * ((100 - productDiscount) / 100)).toFixed(2);
 
-      $('input[name=productPrice]').attr('value',price);
+        $('input[name=productPrice]').attr('value', price);
 
     }
 
