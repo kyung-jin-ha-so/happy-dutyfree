@@ -5,6 +5,8 @@
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+
     <style>
         .nav-link {
             color: #1a1e21;
@@ -35,6 +37,8 @@
         .product_list_head {
             max-width: 1200px;
             margin: auto;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
 
         .card .product_list_card {
@@ -49,20 +53,11 @@
     </style>
 </head>
 <body>
-상품 목록
 
-<div class="container text-sm-end">
-    <form action="/product/search/" method="get">
-        <input type="text" name="q" id="q" placeholder="상품명 검색">
-        <input type="submit" value="검색">
-    </form>
-</div>
-
-<a href="/product/1/">스킨케어</a>
-<a href="/product/2/">메이크업</a>
+<th:block th:replace="include/header :: header"></th:block>
 
 <div class="nav product_list_head" th:if="${categoryDTO}">
-    <span>홈</span> &nbsp
+    <span><a href="/">홈</a></span> &nbsp
     <span>></span> &nbsp
     <span th:text="${categoryDTO.categoryName}"></span>
 </div>

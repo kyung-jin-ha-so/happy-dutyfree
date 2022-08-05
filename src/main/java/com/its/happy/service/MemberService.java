@@ -46,6 +46,7 @@ public class MemberService {
     }
 
 
+
     // 이메일 중복체크
     public String emailDuplicateCheck(String memberEmail) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberEmail);
@@ -167,14 +168,14 @@ public class MemberService {
         memberRepository.deleteById(memberId);
     }
 
-    public String passwordCk(String memberPassword, Long memberId) {
+    public String passwordCk(String memberPassword,Long memberId) {
         System.out.println("멤버서비스 실행");
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
-        if (optionalMemberEntity.isPresent()) {
+        if(optionalMemberEntity.isPresent()){
             MemberEntity memberEntity = optionalMemberEntity.get();
-            if (passwordEncoder.matches(memberPassword, memberEntity.getMemberPassword())) {
+            if(passwordEncoder.matches(memberPassword,memberEntity.getMemberPassword())){
                 return "OK";
-            } else {
+            }else{
                 return "NO";
             }
         }
