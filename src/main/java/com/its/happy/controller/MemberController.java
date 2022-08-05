@@ -83,7 +83,7 @@ public class MemberController {
     }
 
     //카카오 간편로그인
-    @GetMapping("/kakaoLogin")
+    @RequestMapping(value="/kakaoLogin",produces="application/json",method= {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String kakaoLogin(@RequestParam("code") String code){
         String access_Token = memberService.getAccessToken(code);
         System.out.println("controller access_token : " + access_Token);
