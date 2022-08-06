@@ -1,10 +1,12 @@
 package com.its.happy.controller;
 
 import com.its.happy.dto.MemberDTO;
+import com.its.happy.entity.MemberEntity;
 import com.its.happy.service.MemberService;
 import com.its.happy.service.PointService;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,11 +41,18 @@ public class MemberController {
         return "/memberPages/login";
     }
 
-    // 이메일 중복체크
+     //이메일 중복체크
     @PostMapping("/email-duplicate-check")
     public @ResponseBody String emailDuplicateCheck(@RequestParam String memberEmail){
         String emailResult = memberService.emailDuplicateCheck(memberEmail);
         return emailResult;
+    }
+
+    // 비밀번호찾기시 이메일 확인 후 DTO 넘겨주기
+    @PostMapping("/email-check")
+    public @ResponseBody MemberDTO emailCheck(@RequestParam String memberEmail){
+        MemberDTO memberDTO= memberService.emailCheck(memberEmail);
+        return memberDTO;
     }
 
     // 핸드폰번호 중복체크
@@ -73,6 +82,15 @@ public class MemberController {
         }
     }
 
+    //카카오 간편로그인
+    @RequestMapping(value="/kakaoLogin",produces="application/json",method= {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody String kakaoLogin(@RequestParam("code") String code){
+        String access_Token = memberService.getAccessToken(code);
+        System.out.println("controller access_token : " + access_Token);
+        return "index";
+    }
+
+
     // 로그아웃 구현
     @GetMapping("/logout")
     public String logout(HttpSession session){
@@ -100,27 +118,44 @@ public class MemberController {
         return mobileResult;
     }
 
+
     // 핸드폰 인증 완료시 해당 전화번호를 가지고 있는 이메일 보여주기
     @GetMapping("/findEmailResult")
     public String findEmail(@RequestParam String memberMobile, Model model){
-        System.out.println("MemberController.findEmail");
-        System.out.println(memberMobile);
         MemberDTO memberDTO = memberService.findEmail(memberMobile);
-        System.out.println(memberDTO);
         model.addAttribute("member",memberDTO);
         return "memberPages/findEmailResult";
     }
 
     // 비밀번호 변경 화면 요청
     @GetMapping("/passwordUpdate")
-    public String passwordUpdateForm(){
+    public String passwordUpdateForm(Model model,HttpSession session){
+        Long memberId = (long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
         return "/memberPages/passwordUpdate";
+    }
+
+    // 비밀번호 변경 처리
+    @PostMapping("/passwordUpdate")
+    public String passwordUpdate(@ModelAttribute MemberDTO memberDTO){
+        memberService.passwordUpdate(memberDTO);
+        return "redirect:/myPageMain";
     }
 
     //비밀번호찾기 화면 이동
     @GetMapping("/findPassword")
     public String findPasswordForm(){
         return "/memberPages/findPassword";
+    }
+
+
+    // 비밀번호 찾기 인증완료 후 비밀번호 재설정 페이지 이동
+    @PostMapping("/passwordReset")
+    public String passwordResetForm(@RequestParam Long memberId, Model model){
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
+        return "/memberPages/passwordReset";
     }
 
 

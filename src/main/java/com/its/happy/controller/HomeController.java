@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -34,13 +35,14 @@ public class HomeController {
     }
 
     @GetMapping("/main")
-    public String main(Model model){
+    public String main(Model model, HttpSession session){
         List<CategoryDTO> categoryDTOList = categoryService.findAll();
         List<ProductDTO> productDTOList = productService.findMainAll();
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         model.addAttribute("categoryList", categoryDTOList);
         model.addAttribute("productList", productDTOList);
-        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
+//        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
+        session.setAttribute("exchangeRate", exchangeRateDTO.getExchangeRate());
         return "main";
     }
 

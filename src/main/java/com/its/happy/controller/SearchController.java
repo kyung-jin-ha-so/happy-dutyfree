@@ -20,16 +20,17 @@ public class SearchController {
     @GetMapping("/find")
     public String searchFind(HttpSession session, Model model) {
         Long loginId = (Long) session.getAttribute("loginId");
-        if(loginId == null){
+        if (loginId == null) {
             return "redirect:/member/login";
         }
-        List<SearchDTO> searchList =  searchService.findByMemberId(loginId);
+        List<SearchDTO> searchList = searchService.findByMemberId(loginId);
         model.addAttribute("searchList", searchList);
         return "/searchPages/list";
     }
 
+
     @PostMapping("/delete")
-    public @ResponseBody String searchDeleteById(@RequestParam("searchId") Long searchId){
+    public @ResponseBody String searchDeleteById(@RequestParam("searchId") Long searchId) {
         searchService.deleteById(searchId);
         return "삭제 완료";
     }

@@ -5,6 +5,8 @@
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+
     <style>
         .nav-link {
             color: #1a1e21;
@@ -35,6 +37,8 @@
         .product_list_head {
             max-width: 1200px;
             margin: auto;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
 
         .card .product_list_card {
@@ -49,29 +53,22 @@
     </style>
 </head>
 <body>
-상품 목록
 
-<div class="container text-sm-end">
-    <form action="/product/search/" method="get">
-        <input type="text" name="q" id="q" placeholder="상품명 검색">
-        <input type="submit" value="검색">
-    </form>
-</div>
+<th:block th:replace="include/header :: header"></th:block>
 
-<a href="/product/1/">스킨케어</a>
-<a href="/product/2/">메이크업</a>
 <div class="nav product_list_head" th:if="${categoryDTO}">
-    <span>홈</span> &nbsp
+    <span><a href="/">홈</a></span> &nbsp
     <span>></span> &nbsp
     <span th:text="${categoryDTO.categoryName}"></span>
 </div>
-<div class="nav justify-content-around product_list_head" style="background-color: gray">
+
+<div class="nav product_list_head align-self-start" style="background-color: gray">
     <div class="nav justify-content-start">
         <span class="nav-item count">총</span>
         <span class="nav-item count count_color" th:utext="${count}"></span>
         <span class="nav-item count">개</span>
     </div>
-    <ul class="nav justify-content-end" th:if="${categoryId}">
+    <ul class="nav" style="margin-left: auto;" th:if="${categoryId}">
         <li class="nav-item"><a class="nav-link active" th:href="@{|/product/${categoryId}/|}">최신순</a></li>
         <li class="nav-item nav-bar">|</li>
         <li class="nav-item"><a class="nav-link" th:href="@{|/product/highPrice/${categoryId}/|}">높은 가격순</a></li>
@@ -138,8 +135,9 @@
                 <div class="card-body">
                     <h7 class="card-title" th:text="${product.productBrand}"></h7>
                     <h5 class="card-title" th:text="${product.productName}"></h5>
+                    <span class="card-text"><STRIKE th:text="|$${product.productOriginalPrice}|"></STRIKE></span>
                     <span class="card-text" style="color: red" th:text="|$${product.productPrice}|"></span>
-                    <span class="card-text" style="color:dimgray;" th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></span>
+                    <p class="card-text" style="color:dimgray;" th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></p>
                 </div>
             </a>
         </div>
