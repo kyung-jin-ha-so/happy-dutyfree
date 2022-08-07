@@ -1,5 +1,7 @@
 package com.its.happy.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.its.happy.dto.MemberDTO;
@@ -8,6 +10,14 @@ import com.its.happy.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +44,7 @@ public class MemberService {
         MemberEntity memberEntity = MemberEntity.toSave(memberDTO);
         return memberRepository.save(memberEntity).getMemberId();
     }
+
 
 
     // 이메일 중복체크
@@ -157,14 +168,14 @@ public class MemberService {
         memberRepository.deleteById(memberId);
     }
 
-    public String passwordCk(String memberPassword, Long memberId) {
+    public String passwordCk(String memberPassword,Long memberId) {
         System.out.println("멤버서비스 실행");
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
-        if (optionalMemberEntity.isPresent()) {
+        if(optionalMemberEntity.isPresent()){
             MemberEntity memberEntity = optionalMemberEntity.get();
-            if (passwordEncoder.matches(memberPassword, memberEntity.getMemberPassword())) {
+            if(passwordEncoder.matches(memberPassword,memberEntity.getMemberPassword())){
                 return "OK";
-            } else {
+            }else{
                 return "NO";
             }
         }
@@ -194,11 +205,11 @@ public class MemberService {
             conn.setDoOutput(true);
 
             //    POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
-            
+
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=a88489884189e052d191c60987e50cab");
+            sb.append("&client_id="+"a88489884189e052d191c60987e50cab");
             sb.append("&redirect_uri=http://localhost:8080/memeber/kakaoLogin");
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
