@@ -1,14 +1,13 @@
 package com.its.happy.controller;
 
-import com.its.happy.dto.CartArrayDTO;
-import com.its.happy.dto.CartDTO;
-import com.its.happy.dto.ExchangeRateDTO;
-import com.its.happy.dto.MemberDTO;
+import com.its.happy.dto.*;
 import com.its.happy.entity.CartEntity;
 import com.its.happy.repository.CartRepository;
 import com.its.happy.service.ExchangeRateService;
 import com.its.happy.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +49,26 @@ public class OrderController {
         return "/orderPages/save";
     }
 
+    @PostMapping("/save")
+    public ResponseEntity save(@ModelAttribute OrderDTO orderDTO, @ModelAttribute OrderDepartureDTO orderDepartureDTO, @RequestParam("couponMemberId") Long couponMemberId, HttpSession session) {
+        System.out.println("OrderController.save");
+        System.out.println("orderDTO = " + orderDTO + ", orderDepartureDTO = " + orderDepartureDTO + ", couponMemberId = " + couponMemberId + ", session = " + session);
+        List<CartDTO> cartDTOList = (List<CartDTO>) session.getAttribute("cartDTOList");
+        System.out.println("cartDTOList = " + cartDTOList);
+        session.removeAttribute("cartDTOList");
+        List<OrderProductDTO> orderProductDTOList = new ArrayList<>();
+        for (int i = 0; i < cartDTOList.size(); i++) {
+            OrderProductDTO orderProductDTO = new OrderProductDTO();
+            orderProductDTO.setOrderQty(cartDTOList.get(i).getCartQty());
+            orderProductDTO.setProductDiscount(cartDTOList.get(i).getProductDiscount());
+            orderProductDTO.setProductOriginalPrice(cartDTOList.get(i).getProductOriginalPrice());
+            orderProductDTOList.add(orderProductDTO);
+        }
+        System.out.println("orderProductDTOList = " + orderProductDTOList);
+//    orderService.save(orderDTO, orderProductDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 //    @GetMapping("/save-form2")
 //    public String saveForm(Model model, HttpSession session, @RequestParam("productId") Long productId, @RequestParam("orderQty") int orderQty) {
 //        System.out.println("OrderController.saveForm");
@@ -76,10 +95,13 @@ public class OrderController {
         CartEntity cartEntity = optionalCartEntity.get();
         CartDTO cartDTO = CartDTO.toCartDTO(cartEntity);
         cartDTOList.add(cartDTO);
+
         Optional<CartEntity> optionalCartEntity2 = cartRepository.findById(2L);
         CartEntity cartEntity2 = optionalCartEntity2.get();
         CartDTO cartDTO2 = CartDTO.toCartDTO(cartEntity2);
         cartDTOList.add(cartDTO2);
+
+        session.setAttribute("cartDTOList", cartDTOList);
         model.addAttribute("cartList", cartDTOList);
 
         // loginId(member) model
@@ -88,7 +110,7 @@ public class OrderController {
         model.addAttribute("member", memberDTO);
 
         //
-        ExchangeRateDTO exchangeRateDTO = new ExchangeRateDTO(2L, 1298.91, "2022-07-29");
+        ExchangeRateDTO exchangeRateDTO = new ExchangeRateDTO(1L, 1298.91, "2022-07-29");
         model.addAttribute("exRate", exchangeRateDTO);
         return "/orderPages/test";
     }
