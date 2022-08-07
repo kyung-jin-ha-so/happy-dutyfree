@@ -86,13 +86,13 @@ public class EventController {
     public String update(@ModelAttribute EventDTO eventDTO, @ModelAttribute CouponDTO couponDTO){
         eventService.update(eventDTO, couponDTO);
         System.out.println("eventDTO = " + eventDTO);
-        return "redirect:/event/"+eventDTO.getEventId();
+        return "redirect:/admin/eventList";
     }
     //이벤트 삭제
     @GetMapping("/delete/{eventId}")
     public String delete(@PathVariable Long eventId){
         eventService.deleteById(eventId);
-        return "redirect:/event";
+        return "redirect:/admin/eventList";
     }
     //이벤트 검색
     @GetMapping("/search")

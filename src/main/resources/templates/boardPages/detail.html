@@ -61,16 +61,6 @@
 </div>
 </div>
 </body>
-<script>
-    const eventDelete = () => {
-        const eventId = [[${event.eventId}]]
-        location.href = "/event/delete/" + eventId;
-    }
-    const eventUpdate = () => {
-        const eventId = [[${event.eventId}]]
-        location.href = "/event/update/" + eventId;
-    }
-</script>
 <script th:inline="javascript">
     function issueCoupon() {
         console.log("함수 들어옴")
