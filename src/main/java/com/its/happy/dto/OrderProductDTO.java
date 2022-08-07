@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrderProductDTO {
     private Long orderProductId;
+    private double productOriginalPrice;
+    private Long productDiscount;
     private int orderQty;
-    private double orderWon;
-    private double orderDollar;
 }
