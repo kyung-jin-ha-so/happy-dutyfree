@@ -11,29 +11,213 @@
             // window.name = "부모창 이름";
             window.name = "parentForm";
             // window.open("open할 window", "자식창 이름", "팝업창 옵션");
-            openWin = window.open("/admin/couponList",
-                "childForm", "width=700, height=350, resizable = no, scrollbars = no");
+            openWin = window.open("/coupon/couponList",
+                "childForm", "width=1000, height=350, resizable = no, scrollbars = no");
         }
     </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .save-container {
+            max-width: 800px;
+            text-align: center;
+            min-width: 800px;
+            border: 1px solid #e5e5e5;
+            background-color: rgba(107, 201, 170, 0.3);
+        }
+
+        .save-container .head-title-wrap {
+            margin-bottom: 3rem;
+        }
+
+        .save-container > div:not(:last-child) {
+            margin-bottom: 1rem;
+        }
+
+        .save-container .head-title-wrap .head-title {
+            font-size: 1.5rem;
+            font-family: inherit;
+            color: #212529;
+            position: relative;
+            width: 700px;
+            font-weight: 600;
+        }
+
+        .save-container .save-item {
+            display: flex;
+            flex-direction: row;
+            padding: 0 2rem;
+        }
+
+        .save-container .save-item .title-wrap {
+            padding-top: 8px;
+            width: 200px;
+        }
+
+        .save-container .save-item span {
+            font-size: 1.125rem;
+            position: relative;
+            font-family: inherit;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+            font-weight: 600;
+        }
+
+        .save-container .save-item input {
+            border: 1px solid #ccc;
+            outline: none;
+            background-color: #fff;
+            color: #666;
+            width: 25rem;
+            height: 40px;
+            padding: 2px 10px;
+            font-size: 0.833rem;
+        }
+
+        .save-container .save-item input[type=file] {
+            padding: 6px 10px;
+        }
+
+        .save-container .save-item .select-input {
+            border: 1px solid #ccc;
+            outline: none;
+            background-color: #fff;
+            color: #666;
+            width: 25rem;
+            height: 40px;
+            padding: 2px 10px;
+            font-size: 0.833rem;
+        }
+
+        .save-container .save-item .textarea-input {
+            border: 1px solid #ccc;
+            outline: none;
+            background-color: #fff;
+            color: #666;
+            width: 25rem;
+            height: 150px;
+            padding: 10px;
+            font-size: 0.833rem;
+            resize: none;
+            word-break: keep-all;
+        }
+
+        .save-container .save-item .title-wrap {
+            padding-right: 5rem;
+        }
+
+        .save-container .btn-wrap {
+            width: 700px;
+            margin-bottom: 20px
+        }
+
+        .save-container .btn-wrap .save-btn {
+            border: 1px solid #20c997;
+            outline: none;
+            background-color: #fff;
+            color: #20c997;
+            font-size: 1.125rem;
+            width: 10rem;
+            padding: 8px 20px;
+            height: 50px;
+        }
+
+        .save-container .btn-wrap .save-btn:hover {
+            border: none;
+            background-color: #20c997;
+            color: #fff;
+            transition: 0.3s ease;
+        }
+
+        .save-title {
+            font-weight: 600;
+            font-size: 1.3rem
+        }
+    </style>
 </head>
 <body>
-이벤트 등록
+<div class="save-title">
+    <span>이벤트 게시판 관리</span>
+    <span> > </span>
+    <span>이벤트 등록</span>
+</div>
+
 <form action="/event/save" method="post" enctype="multipart/form-data">
-    <div class="container text-center">
-
-    이벤트 제목<input type="text" name="eventTitle"><br>
-    이벤트 썸네일<input type="file" name="eventThumbnail"><br>
-    이벤트 내용<input type="text" name="eventContents"><br>
-    첨부파일 등록<input multiple="multiple" type="file" name="eventFile"><br>
-
-    <input type="button" value="쿠폰 불러오기" onclick="openChild()"><br>
-    쿠폰이름 <input type="text" id="couponName" name="couponName" readonly><br>
-    쿠폰사진 <input type="text" id="couponThumbnail" name="couponThumbnail" readonly><br>
-
-    <input type="hidden" id="couponId" name="couponId"><br>
-    <input type="hidden" id="couponValue" name="couponValue"><br>
-    <input type="hidden" id="couponMinimumValue" name="couponMinimumValue"><br>
-    <input type="submit" value="등록">
+    <div class="save-container">
+        <div class="head-title-wrap">
+            <h2 class="head-title">이벤트 등록</h2>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">이벤트 제목</span>
+            </div>
+            <div class="input-wrap">
+                <input type="text" name="eventTitle">
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">이벤트 썸네일</span>
+            </div>
+            <div class="input-wrap">
+                <div class="input-wrap">
+                    <input type="file" name="eventThumbnail"><br>
+                </div>
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">이벤트 내용</span>
+            </div>
+            <div class="input-wrap">
+                <textarea class="textarea-input" name="eventContents"></textarea>
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">첨부파일 등록</span>
+            </div>
+            <div class="input-wrap">
+                <input multiple="multiple" type="file" name="eventFile">
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">쿠폰 불러오기</span>
+            </div>
+            <div class="couponButton">
+                <input type="button" onclick="openChild()"
+                       style="width: 65px; background-color: lightgray; border-radius: 5px;" value="선택">
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">쿠폰이름</span>
+            </div>
+            <div class="input-wrap">
+                <input type="text" id="couponName" name="couponName" readonly>
+            </div>
+        </div>
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">쿠폰사진</span>
+            </div>
+            <div class="input-wrap">
+                <input type="text" id="couponThumbnail" name="couponThumbnail" readonly>
+            </div>
+        </div>
+        <input type="hidden" id="couponId" name="couponId"><br>
+        <input type="hidden" id="couponValue" name="couponValue"><br>
+        <input type="hidden" id="couponMinimumValue" name="couponMinimumValue"><br>
+        <input type="submit" style="width: 150px; background-color: lightgray; border-radius: 5px; margin-bottom: 30px;"
+               value="제출">
+        <br>
+    </div>
+    </div>
 </form>
 </body>
 </html>

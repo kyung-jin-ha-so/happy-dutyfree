@@ -52,7 +52,7 @@ public class CouponController {
     @GetMapping("/delete/{couponId}")
     public String delete(@PathVariable Long couponId){
         couponService.deleteById(couponId);
-        return "redirect:/coupon/couponList";
+        return "redirect:/admin/couponList";
     }
     //회원별 쿠폰리스트 조회
     @GetMapping("/myCouponList")
