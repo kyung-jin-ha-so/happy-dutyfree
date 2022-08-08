@@ -49,7 +49,7 @@
             <li>결제 시 쿠폰을 적용하지 않으면 할인이 적용되지 않습니다.</li>
             <br>
             <div th:each="coupon: ${myCoupon}">
-                <div class="cart_info_td">
+                <div class="coupon_info_td">
                     <input type="hidden" class="individual_totalCoupon_input"
                            th:value="${#lists.size('coupon')}">
                 </div>
@@ -76,11 +76,11 @@
 <script th:inline="javascript" th:each="coupon: ${myCoupon}">
     const loginId =[[${session.loginId}]];
     $(document).ready(function () {
-        setTotalInfo();
+        totalInfo();
     });
-    function setTotalInfo() {
+    function totalInfo() {
         let totalPrice = 0;
-        $(".cart_info_td").each(function (index, element) {
+        $(".coupon_info_td").each(function (index, element) {
             totalPrice += parseFloat($(element).find(".individual_totalCoupon_input").val());
         });
         $(".total").text(loginId+"님께서 보유하신 할인 쿠폰은 총 " + totalPrice.toLocaleString() +"개 입니다.");

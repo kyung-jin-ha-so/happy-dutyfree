@@ -11,8 +11,8 @@
             // window.name = "부모창 이름";
             window.name = "parentForm";
             // window.open("open할 window", "자식창 이름", "팝업창 옵션");
-            openWin = window.open("/admin/couponList",
-                "childForm", "width=700, height=350, resizable = no, scrollbars = no");
+            openWin = window.open("/coupon/couponList",
+                "childForm", "width=1000, height=350, resizable = no, scrollbars = no");
         }
     </script>
 
@@ -190,7 +190,7 @@
                 <span class="title">쿠폰 불러오기</span>
             </div>
             <div class="couponButton">
-                <input type="submit" onclick="openChild()"
+                <input type="button" onclick="openChild()"
                        style="width: 65px; background-color: lightgray; border-radius: 5px;" value="선택">
             </div>
         </div>

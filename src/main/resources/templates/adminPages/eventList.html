@@ -61,7 +61,7 @@
                        th:text="${event.eventTitle}"></a></td>
                 <td th:text="*{#temporals.format(event.eventCreatedDate, 'yy-MM-dd HH:mm')}"></td>
                 <td th:text="${event.couponEntity.couponName}" id="birth"></td>
-                <td th:text="${event.couponEntity.couponValue}"></td>
+                <td th:text="${#numbers.formatInteger(event.couponEntity.couponValue, 3, 'COMMA')}"></td>
                 <td><button type="button" th:onclick="eventUpdate([[${event.eventId}]])">수정</button></td>
                 <td><button type="button" th:onclick="eventDelete([[${event.eventId}]])">삭제</button></td>
             </tr>
