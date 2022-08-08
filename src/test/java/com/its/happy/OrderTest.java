@@ -30,7 +30,7 @@ public class OrderTest {
     private CartService cartService;
 
     public ProductDTO newProduct(int i) {
-        ProductDTO productDTO = new ProductDTO("임시상품" + i, 10, 5);
+        ProductDTO productDTO = new ProductDTO("임시상품" + i, 10, 50L, 5);
         return productDTO;
     }
 

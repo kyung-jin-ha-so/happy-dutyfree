@@ -1,5 +1,6 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.OrderDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,7 +37,7 @@ public class OrderEntity extends BaseEntity{
 
     // 적립금 사용금액
     @Column
-    private Long pointUseValue;
+    private int pointUseValue;
 
     // 쿠폰 사용금액
     @Column
@@ -51,6 +52,11 @@ public class OrderEntity extends BaseEntity{
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
+    // OrderEntity(1)가 CouponMemberEntity(1)을 참조함
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_member_id")
+    private CouponMemberEntity couponMemberEntity;
+
     // OrderEntity(1)가 ReviewEntity(N)한테 참조당함
     @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<ReviewEntity> reviewEntityList = new ArrayList<>();
@@ -62,6 +68,20 @@ public class OrderEntity extends BaseEntity{
     // OrderEntity(1)가 OrderDepartureEntity(1)한테 참조당함
     @OneToOne(mappedBy = "orderEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private OrderDepartureEntity orderDepartureEntity;
+
+    public static OrderEntity toEntity(OrderDTO orderDTO, CouponMemberEntity couponMemberEntity, MemberEntity memberEntity) {
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setCouponUseValue(orderDTO.getCouponUseValue());
+        orderEntity.setExchangeRate(orderDTO.getExchangeRate());
+        orderEntity.setNetDcWon(orderDTO.getNetDcWon());
+        orderEntity.setOrderStatus(orderDTO.getOrderStatus());
+        orderEntity.setOrderUsd(orderDTO.getOrderUsd());
+        orderEntity.setOrderWon(orderDTO.getOrderWon());
+        orderEntity.setPointUseValue(orderDTO.getPointUseValue());
+        orderEntity.setCouponMemberEntity(couponMemberEntity);
+        orderEntity.setMemberEntity(memberEntity);
+        return orderEntity;
+    }
 
     @PreRemove
     private void preRemove() {
