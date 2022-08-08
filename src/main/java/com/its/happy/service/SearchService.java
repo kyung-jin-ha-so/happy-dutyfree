@@ -1,7 +1,9 @@
 package com.its.happy.service;
 
+import com.its.happy.dto.MemberDTO;
 import com.its.happy.dto.SearchDTO;
 import com.its.happy.entity.SearchEntity;
+import com.its.happy.repository.MemberRepository;
 import com.its.happy.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -27,4 +29,6 @@ public class SearchService {
     public void deleteById(Long searchId) {
         searchRepository.deleteById(searchId);
     }
+
+
 }
