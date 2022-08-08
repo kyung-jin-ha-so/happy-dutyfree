@@ -47,6 +47,7 @@ public class CouponMemberEntity {
 
     public static CouponMemberEntity toUpdateCouponMember(CouponMemberDTO couponMemberDTO, MemberEntity memberEntity) {
         CouponMemberEntity couponMemberEntity = new CouponMemberEntity();
+        couponMemberEntity.setCouponMemberId(couponMemberDTO.getCouponMemberId());
         couponMemberEntity.setCouponStatus(couponMemberDTO.getCouponStatus());
         couponMemberEntity.setCouponEntity(couponMemberDTO.getCouponEntity());
         couponMemberEntity.setMemberEntity(memberEntity);
