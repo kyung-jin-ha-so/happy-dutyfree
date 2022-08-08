@@ -26,9 +26,9 @@ public class ProductEntity {
     private double productOriginalPrice;
     @Column(name = "product_discount")
     private Long productDiscount;
-    @Column(name = "productPrice" , nullable = false)
+    @Column(name = "product_price" , nullable = false)
     private double productPrice;
-    @Column(name = "productStar")
+    @Column(name = "product_star")
     private double productStar;
     @Column(name = "product_thumbnail")
     private String productThumbnail;
