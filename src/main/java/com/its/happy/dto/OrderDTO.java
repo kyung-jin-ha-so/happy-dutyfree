@@ -19,7 +19,9 @@ public class OrderDTO {
     private Long netDcWon;
     private double orderUsd;
     private double orderWon;
-    private Long pointUseValue;
+    private int pointUseValue;
     private Long couponUseValue;
     private double exchangeRate;
+    private Long couponMemberId;
+    private Long memberId;
 }

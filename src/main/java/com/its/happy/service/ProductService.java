@@ -273,6 +273,13 @@ public class ProductService {
     public long countByCategoryId(Long categoryId) {
         return productRepository.countByCategoryEntityCategoryId(categoryId);
     }
+
+    public void updateQty(ProductDTO productDTO) {
+
+        ProductEntity productEntity = productRepository.save(ProductEntity.toUpdateEntity(productDTO, productDTO.getCategoryEntity()));
+        productRepository.save(productEntity);
+
+    }
 }
 
 

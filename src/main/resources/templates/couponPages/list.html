@@ -2,6 +2,45 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:inline="javascript" th:each="coupon: ${couponList}">
+
+        function setParentText(id) {
+            if (!window.opener) {
+                window.opener = window.open("", "parentForm");
+            } else {
+                window.opener = window.opener;
+            }
+            // const couponId = document.getElementById([[${coupon.couponId}]]).value
+            opener.document.getElementById("couponId").value = document.getElementById("couponId" + id).value
+            opener.document.getElementById("couponName").value = document.getElementById("couponName" + id).value
+            opener.document.getElementById("couponValue").value = document.getElementById("couponValue" + id).value
+            opener.document.getElementById("couponMinimumValue").value = document.getElementById("couponMinimumValue" + id).value
+            opener.document.getElementById("couponThumbnail").value = document.getElementById("couponThumbnail" + id).value
+            window.close()
+        }
+    </script>
+    <style>
+        table {
+            width: 700px;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+        }
+
+        th {
+            border-bottom: 1px solid #444444;
+            padding: 10px;
+            text-align: center;
+            background-color: lightgray;
+        }
+
+        td {
+            border-bottom: 1px solid #444444;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <h2>쿠폰 목록</h2>
@@ -12,27 +51,22 @@
         <th>금액</th>
         <th>최소금액</th>
         <th>사진</th>
-        <th>수정</th>
-        <th>삭제</th>
+        <th>가져오기</th>
     </tr>
     <tr th:each="coupon: ${couponList}">
-        <td th:text="${coupon.couponId}"></td>
-        <td th:text="${coupon.couponName}"></td>
-        <td th:text="${coupon.couponValue}"></td>
-        <td th:text="${coupon.couponMinimumValue}"></td>
-        <td><img th:src="@{|/upload/${coupon.couponThumbnail}|}" width="100" height="100" alt=""></td>
-        <td><input type="button" th:onclick="toDelete([[${coupon.couponId}]])" value="삭제"></td>
-        <td><input type="button" th:onclick="toUpdate([[${coupon.couponId}]])" value="수정"></td>
+        <td><input type="text" th:id="${'couponId' + coupon.couponId}" th:value="${coupon.couponId}"
+                   style="border:none;"></td>
+        <td><input type="text" th:id="${'couponName' + coupon.couponId}" th:value="${coupon.couponName}"
+                   style="border:none;"></td>
+        <td><input type="text" th:id="${'couponValue' + coupon.couponId}" th:value="${coupon.couponValue}"
+                   style="border:none;"></td>
+        <td><input type="text" th:id="${'couponMinimumValue' + coupon.couponId}" th:value="${coupon.couponMinimumValue}"
+                   style="border:none;"></td>
+        <td><input type="text" th:id="${'couponThumbnail' + coupon.couponId}" th:value="${coupon.couponThumbnail}"
+                   style="border:none;"></td>
+        <!--        <td><img th:src="@{|/upload/${coupon.couponThumbnail}|}" width="100" height="100" alt=""></td>-->
+        <td><input type="button" value="전달" th:id="${coupon.couponId}" onclick="setParentText(this.id)"></td>
     </tr>
 </table>
-<script th:inline="javascript" th:each="coupon: ${couponList}">
-    const toDelete = (couponId) => {
-        location.href = "/coupon/delete/" + couponId;
-        alert("삭제성공")
-    }
-    const toUpdate = (couponId) => {
-        location.href = "/coupon/update-form/" + couponId;
-    }
-</script>
 </body>
 </html>
