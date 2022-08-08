@@ -590,55 +590,6 @@
             console.log("function 진입")
             if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
                 console.log("rsp.success" + rsp.success)
-                // jQuery로 HTTP 요청
-                // jQuery.ajax({
-                //     url: "/order/save",
-                //     method: "POST",
-                //     headers: { "Content-Type": "application/json" },
-                //     data: {
-                //         "imp_uid": rsp.imp_uid,
-                //         "merchant_uid": rsp.merchant_uid,
-                //         "couponMemberId": couponMemberId,
-                //         "netDcWon": netDcWon,
-                //         "orderUsd": finalUsd,
-                //         "orderWon": finalWon,
-                //         "pointUseValue": inputPoint,
-                //         "couponUseValue": couponValueWon,
-                //         "exchangeRate": exchangeRate,
-                //         "orderDepartureAirport": departureAirport,
-                //         "orderDepartureDate": departureDate,
-                //         "orderDepartureNumber": departureNumber,
-                //     },
-                //     dataType: "json",
-                // }).done(function (data) {
-                //     // 가맹점 서버 결제 API 성공시 로직
-                //     alert("성공");
-                // })
-                // $.ajax({
-                //     url: "/order/save",
-                //     type: "post",
-                //     data: {
-                //         "imp_uid": rsp.imp_uid,
-                //         "merchant_uid": rsp.merchant_uid,
-                //         "couponMemberId": couponMemberId,
-                //         "netDcWon": netDcWon,
-                //         "orderUsd": finalUsd,
-                //         "orderWon": finalWon,
-                //         "pointUseValue": inputPoint,
-                //         "couponUseValue": couponValueWon,
-                //         "exchangeRate": exchangeRate,
-                //         "orderDepartureAirport": departureAirport,
-                //         "orderDepartureDate": departureDate,
-                //         "orderDepartureNumber": departureNumber
-                //     },
-                //     dataType: "json",
-                //     success: function (result) {
-                //         alert("성공")
-                //     },
-                //     error: function () {
-                //         alert("어디가 틀렸을까");
-                //     }
-                // })
                 alert("완료" + rsp.imp_uid + rsp.merchant_uid)
                 save();
             } else {
@@ -675,11 +626,13 @@
                 "orderDepartureNumber": departureNumber,
             },
             dataType: "json",
-            success: function (result) {
+            success: function () {
                 alert("성공")
+                location.href = "/order/";
             },
             error: function () {
                 alert("어디가 틀렸을까");
+                location.href = "/order/";
             }
         });
     }

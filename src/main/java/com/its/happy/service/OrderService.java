@@ -1,8 +1,10 @@
 package com.its.happy.service;
 
+import com.its.happy.dto.DepartureDTO;
 import com.its.happy.dto.MemberDTO;
 import com.its.happy.dto.OrderDTO;
 import com.its.happy.entity.CouponMemberEntity;
+import com.its.happy.entity.DepartureEntity;
 import com.its.happy.entity.MemberEntity;
 import com.its.happy.entity.OrderEntity;
 import com.its.happy.repository.CouponMemberRepository;
@@ -11,6 +13,8 @@ import com.its.happy.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,16 +23,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
     private final CouponMemberRepository couponMemberRepository;
-
-
-    public MemberDTO findByMemberId(Long memberId) {
-        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
-        if (optionalMemberEntity.isPresent()) {
-            MemberEntity memberEntity = optionalMemberEntity.get();
-            return MemberDTO.toMemberDTO(memberEntity);
-        }
-        return null;
-    }
 
     public Long save(OrderDTO orderDTO) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(orderDTO.getMemberId());
@@ -41,5 +35,15 @@ public class OrderService {
             }
         }
         return null;
+    }
+
+    public List<OrderDTO> findByMemberId(Long memberId) {
+        List<OrderEntity> orderEntityList = orderRepository.findByMemberEntity_MemberId(memberId);
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        for (OrderEntity o :
+                orderEntityList) {
+            orderDTOList.add(OrderDTO.toDTO(o));
+        }
+        return orderDTOList;
     }
 }

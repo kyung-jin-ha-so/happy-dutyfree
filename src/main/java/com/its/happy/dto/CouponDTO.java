@@ -21,6 +21,12 @@ public class CouponDTO {
 
     private CouponMemberEntity couponMemberEntity;
 
+    public CouponDTO(String couponName, Long couponValue, Long couponMinimumValue, String couponThumbnail) {
+        this.couponName = couponName;
+        this.couponValue = couponValue;
+        this.couponMinimumValue = couponMinimumValue;
+        this.couponThumbnail = couponThumbnail;
+    }
 
     public static CouponDTO toCouponDTO(CouponEntity couponEntity) {
         CouponDTO couponDTO = new CouponDTO();
