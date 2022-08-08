@@ -85,7 +85,7 @@
         <!-- 상품창 -->
         <div class="prod_list">
             <div class="main_tit">
-                <p>상품목록</p>
+                <p>오늘의 상품</p>
             </div>
             <ul>
                 <li th:each="product: ${productList}">
@@ -99,7 +99,7 @@
                             <p class="desc" th:text="${product.productName}"></p>
                             <p class="tit"><STRIKE th:text="|$${product.productOriginalPrice}|"></STRIKE></p>
                             <p class="txt" th:text="|$${product.productPrice}|"></p>
-                            <p class="text">(49,844원)</p>
+                            <p class="text" th:text="'(' + ${#numbers.formatInteger(session.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></p>
                         </div>
                     </a>
                 </li>
