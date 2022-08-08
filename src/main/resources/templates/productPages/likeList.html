@@ -14,22 +14,27 @@
         </li>
     </ul>
     <br>
-    <div class="row row-cols-4">
-        <div class="col" th:each="like: ${likeList}">
-            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"><img
-                    th:src="@{|/upload/${like.productEntity.productThumbnail}|}" width="100"
-                    height="100"
-                    alt=""></a></div>
-            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
-                    th:text="${like.productEntity.productName}" style="font-size: large"></a></div>
-            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"><strike
-                    th:text="${like.productEntity.productOriginalPrice}"></strike></a></div>
-            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
-                    th:text="${like.productEntity.productPrice}"></a></div>
-            <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
-                    th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*like.productEntity.productPrice, 3, 'COMMA')} + '원'"></a>
+    <div class="container">
+        <div class="row" style="border: 1px solid black;">
+            <div class="col-12" align="center" style="background-color: lightgray; padding: 10px 10px; margin-bottom: 20px">
+                <h4>관심상품 리스트</h4>
             </div>
-            <input type="button" onclick="deleteWish()" value="찜 삭제">
+            <div class="col-3" th:each="like: ${likeList}">
+                <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"><img
+                        th:src="@{|/upload/${like.productEntity.productThumbnail}|}" width="100"
+                        height="100"
+                        alt=""></a></div>
+                <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
+                        th:text="${like.productEntity.productName}" style="font-size: large"></a></div>
+                <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"><strike
+                        th:text="${like.productEntity.productOriginalPrice}"></strike></a></div>
+                <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
+                        th:text="${like.productEntity.productPrice}"></a></div>
+                <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
+                        th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*like.productEntity.productPrice, 3, 'COMMA')} + '원'"></a>
+                </div>
+                <input type="button" onclick="deleteWish()" value="찜 삭제" style="margin-bottom: 20px;">
+            </div>
         </div>
     </div>
 </div>

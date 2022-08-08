@@ -4,9 +4,11 @@ import com.its.happy.common.PagingConst;
 import com.its.happy.dto.CouponDTO;
 import com.its.happy.dto.EventDTO;
 import com.its.happy.dto.EventFilesDTO;
+import com.its.happy.dto.MemberDTO;
 import com.its.happy.entity.CouponEntity;
 import com.its.happy.entity.EventEntity;
 import com.its.happy.entity.EventFilesEntity;
+import com.its.happy.entity.MemberEntity;
 import com.its.happy.repository.CouponRepository;
 import com.its.happy.repository.EventFilesRepository;
 import com.its.happy.repository.EventRepository;
@@ -31,27 +33,27 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventFilesRepository eventFilesRepository;
 
-    public Long save(EventDTO eventDTO, CouponDTO couponDTO) throws IOException{
+    public Long save(EventDTO eventDTO, CouponDTO couponDTO) throws IOException {
         MultipartFile eventThumbnail = eventDTO.getEventThumbnail();
         String eventThumbnailName = eventThumbnail.getOriginalFilename();
-        eventThumbnailName = System.currentTimeMillis()+"-"+eventThumbnailName;
-        String savePath = "C:\\happy_img\\"+eventThumbnailName;
-        if(!eventThumbnail.isEmpty()){
+        eventThumbnailName = System.currentTimeMillis() + "-" + eventThumbnailName;
+        String savePath = "C:\\happy_img\\" + eventThumbnailName;
+        if (!eventThumbnail.isEmpty()) {
             eventThumbnail.transferTo(new File(savePath));
         }
         eventDTO.setEventThumbnailName(eventThumbnailName);
         Optional<CouponEntity> optionalCouponEntity = couponRepository.findById(couponDTO.getCouponId());
-        if(optionalCouponEntity.isPresent()){
-         CouponEntity couponEntity = optionalCouponEntity.get();
-         Long savedId = eventRepository.save(EventEntity.toEvent(eventDTO, couponEntity)).getEventId();
-         return savedId;
+        if (optionalCouponEntity.isPresent()) {
+            CouponEntity couponEntity = optionalCouponEntity.get();
+            Long savedId = eventRepository.save(EventEntity.toEvent(eventDTO, couponEntity)).getEventId();
+            return savedId;
         }
         return null;
     }
 
     public Long update(EventDTO eventDTO, CouponDTO couponDTO) {
         Optional<CouponEntity> optionalCouponEntity = couponRepository.findById(couponDTO.getCouponId());
-        if(optionalCouponEntity.isPresent()){
+        if (optionalCouponEntity.isPresent()) {
             CouponEntity couponEntity = optionalCouponEntity.get();
             Long savedId = eventRepository.save(EventEntity.toUpdateEntity(eventDTO, couponEntity)).getEventId();
             return savedId;
@@ -59,17 +61,17 @@ public class EventService {
         return null;
     }
 
-    public void fileSave(Long savedId, List<MultipartFile> multipartFileList) throws IOException{
+    public void fileSave(Long savedId, List<MultipartFile> multipartFileList) throws IOException {
         Optional<EventEntity> optionalEventEntity = eventRepository.findById(savedId);
         System.out.println("optionalEventEntity = " + optionalEventEntity);
-        if(optionalEventEntity.isPresent()){
+        if (optionalEventEntity.isPresent()) {
             EventEntity eventEntity = optionalEventEntity.get();
             EventFilesDTO eventFilesDTO = new EventFilesDTO();
-            for(MultipartFile file: multipartFileList){
+            for (MultipartFile file : multipartFileList) {
                 String eventFileName = file.getOriginalFilename();
-                eventFileName = System.currentTimeMillis()+"-"+ eventFileName;
-                String savePath = "C:\\happy_img\\"+eventFileName;
-                if(!file.isEmpty()){
+                eventFileName = System.currentTimeMillis() + "-" + eventFileName;
+                String savePath = "C:\\happy_img\\" + eventFileName;
+                if (!file.isEmpty()) {
                     file.transferTo(new File(savePath));
                     eventFilesDTO.setEventFileName(eventFileName);
                     eventFilesRepository.save(EventFilesEntity.toEventFile(eventFilesDTO, eventEntity));
@@ -81,7 +83,7 @@ public class EventService {
 
     public Page<EventDTO> paging(Pageable pageable) {
         int page = pageable.getPageNumber();
-        page = (page == 1)? 0: (page-1);
+        page = (page == 1) ? 0 : (page - 1);
         Page<EventEntity> boardEntities = eventRepository.findAll(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "eventId")));
         Page<EventDTO> eventList = boardEntities.map(
                 event -> new EventDTO(event.getEventId(),
@@ -96,8 +98,8 @@ public class EventService {
     }
 
     public EventDTO findById(Long eventId) {
-        Optional<EventEntity>optionalEventEntity = eventRepository.findById(eventId);
-        if(optionalEventEntity.isPresent()){
+        Optional<EventEntity> optionalEventEntity = eventRepository.findById(eventId);
+        if (optionalEventEntity.isPresent()) {
             return EventDTO.toEventDTO(optionalEventEntity.get());
         } else {
             return null;
@@ -111,7 +113,16 @@ public class EventService {
     public List<EventDTO> search(String q) {
         List<EventEntity> eventEntityList = eventRepository.findByEventTitleContainingOrEventContentsContaining(q, q);
         List<EventDTO> eventDTOList = new ArrayList<>();
-        for(EventEntity eventEntity: eventEntityList){
+        for (EventEntity eventEntity : eventEntityList) {
+            eventDTOList.add(EventDTO.toEventDTO(eventEntity));
+        }
+        return eventDTOList;
+    }
+
+    public List<EventDTO> findAll() {
+        List<EventEntity> eventEntityList = eventRepository.findAll();
+        List<EventDTO> eventDTOList = new ArrayList<>();
+        for (EventEntity eventEntity : eventEntityList) {
             eventDTOList.add(EventDTO.toEventDTO(eventEntity));
         }
         return eventDTOList;

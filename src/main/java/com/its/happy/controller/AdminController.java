@@ -51,20 +51,11 @@ public class AdminController {
         return "/adminPages/couponList";
     }
 
-    //이벤트 페이징목록
+    //이벤트 전체조회
     @GetMapping("/eventList")
-    public String paging(@PageableDefault(page = 1) Pageable pageable, Model model){
-        Page<EventDTO> eventList = eventService.paging(pageable);
-        model.addAttribute("eventList", eventList);
-        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT)))-1) * PagingConst.BLOCK_LIMIT+1;
-        int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < eventList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : eventList.getTotalPages();
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-
-        for (EventDTO e : eventList) {
-            System.out.println("for문 동작");
-            System.out.println(e);
-        }
+    public String eventFindAll(Model  model){
+        List<EventDTO> eventDTOList = eventService.findAll();
+        model.addAttribute("eventList", eventDTOList);
         return "/adminPages/eventList";
     }
 
