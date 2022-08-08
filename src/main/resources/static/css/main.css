@@ -64,7 +64,7 @@
 .sub_visual_tab ul li a{display:block; font-size:18px; letter-spacing:-0.04em; color:#000; font-weight:500;}
 .sub_visual_tab ul li p{font-size:18px; letter-spacing:-0.04em; color:#000; font-weight:500;}
 
-.sub_visual{height:500px; background:#ffd400; padding:100px; box-sizing:border-box;}
+.sub_visual{height:500px; background: #fdeaae; padding:100px; box-sizing:border-box;}
 /* 이미지 삽입후 삭제 */
 .sub_visual .top_box .img_box{display:inline-block; vertical-align:middle; width:100px; height:70px; background:#000; margin-right:30px;}
 /* 이미지 삽입후 삭제 */
@@ -97,7 +97,8 @@
 /* right_box 내용 삽입후 주석풀어주세요 */
 /*.mypage_content .right_box{display:inline-block; vertical-align:top;  width:845px; padding-top:30px;}*/
 
-.manage_content .left_box{display:inline-block; vertical-align:top; width:300px; background:#00ffff}
+.manage_content .left_box{display:inline-block; vertical-align:top; width:300px; background: #b8f8f8
+}
 /* logo img삽입후 삭제 */
 .manage_content .left_box .logo_box{width:150px; margin:50px auto; text-align:Center;}
 .manage_content .left_box .logo_box a{display:block; width:150px; height:50px; background:#000;}
@@ -108,7 +109,7 @@
 .manage_content .left_box .logo_box p{font-size:24px; letter-spacing:-0.045em; color:#222; font-weight:bold; padding-top:20px;}
 .manage_content .left_box .slide_box .box{width:200px; margin:0 auto; background:#fff;}
 .manage_content .left_box .slide_box .box + .box{margin-top:30px;}
-.manage_content .left_box .slide_box .box > ul > li > a{display:block; font-size:20px; letter-spacing:-0.04em; color:#fff; font-weight:bold; padding:10px 0; background:#00498c; }
+.manage_content .left_box .slide_box .box > ul > li > a{display:block; font-size:20px; letter-spacing:-0.04em; color:#fff; font-weight:bold; padding:10px 0; background: #83c5c0; }
 .manage_content .left_box .slide_box .box .depth02 li a{display:block; font-size:16px; letter-spacing:-0.04em; color:#666; font-weight:400; padding:5px 0 5px 10px;}
 .manage_content .left_box .slide_box .box .depth02{display:none;}
 .manage_content .right_box{display:inline-block; vertical-align:top; width:895px; margin-left:-4px;}

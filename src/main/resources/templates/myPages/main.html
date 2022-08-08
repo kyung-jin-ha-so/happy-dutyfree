@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title>경진하소</title>
 	<meta charset="UTF-8">
@@ -17,64 +17,8 @@
 
 </head>
 <body>
+<th:block th:replace="include/header :: header"></th:block>
 	<div id="wrap">
-		<!-- header -->
-			<div id="haeder">
-				<div class="gnb">
-					<ul>
-						<li><a href="javascript:;">로그인</a></li>
-						<li><a href="javascript:;">회원가입</a></li>
-						<li><a href="javascript:;">MY행복</a></li>
-						<li><a href="javascript:;">장바구니</a></li>
-						<li><a href="javascript:;">주문가능시간</a></li>
-						<li><a href="javascript:;">오늘의 환율 1$ = <b>1,299.3</b>원</a></li>
-					</ul>
-				</div>
-			</div>
-		<!-- header// -->
-
-		<div class="content">
-			<!-- header 아래 검색창 -->
-			<div class="search">
-				<div class="left_box">
-					<!-- logo img_size 133 * 57 -->
-					<div class="logo">
-						<a href="/">
-							<!-- <img src="" alt=""> -->
-						</a>
-					</div>
-					<div class="category">
-						<a href="javascript:;">카테고리</a>
-						<li>
-							<a href="/product/1/">스킨케어</a>
-							<a href="/product/2/">메이크업</a>
-							<a href="/product/3/">향수/바디/헤어</a>
-							<a href="/product/4/">가방/신발/잡화</a>
-							<a href="/product/5/">시계/쥬얼리</a>
-							<a href="/product/6/">의류/아이웨어</a>
-							<a href="/product/7/">스포츠/레저</a>
-							<a href="/product/8/">디지털/리빙</a>
-							<a href="/product/9/">식품</a>
-							<a href="/product/10/">유아동</a>
-							<a href="/product/11/">남성관</a>
-						</li>
-					</div>
-				</div>
-				<div class="center_box">
-					<div class="input_box">
-						<input type="text" placeholder="검색">
-						<a href="javascript"><img src="/img/input_click.png" alt=""></a>
-					</div>	
-				</div>
-				<!-- img_size 225 * 80 -->
-				<div class="right_box">
-					<a href="javascript:;">
-						<!-- <img src="" alt=""> -->
-					</a>
-				</div>
-			</div>
-			<!-- header 아래 검색창 -->
-			<!-- sub_visual -->
 			<div class="sub_visual_tab">
 				<ul>
 					<li><a href="/">홈</a></li>
@@ -115,13 +59,12 @@
 					</div>
 					<div class="box">
 						<p>나의 주문 내역</p>
-						<a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
+						<a href="javascript:;">주문내역</a>
 					</div>
 					<div class="box">
 						<p>나의 쇼핑 혜택</p>
-						<a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
-						<a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
-						<a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
+						<a href="javascript:;">할인쿠폰</a>
+						<a href="javascript:;">적립금</a>
 					</div>
 					<div class="box">
 						<p>나의 쇼핑 컨텐츠</p>
@@ -131,9 +74,11 @@
 					</div>
 					<div class="box">
 						<p>나의 회원 정보</p>
-						<a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
-						<a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
-						<a href="javascript:;">주문내역 / ㅁㄴㅇㅁㄴㅇ</a>
+						<a href="javascript:;">기본 정보 관리</a>
+						<a href="javascript:;">여권 정보 관리</a>
+						<a href="javascript:;">출국 정보 관리</a>
+						<a href="javascript:;">비밀번호 변경</a>
+						<a href="javascript:;">회원 탈퇴</a>
 					</div>
 				</div>
 				<div class="right_box">
@@ -147,6 +92,5 @@
 		<!-- footer// -->
 	</div>
 	<!--html 인클루드시 사용 -->
-
 </body>
 </html>
