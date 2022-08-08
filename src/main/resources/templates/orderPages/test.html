@@ -186,7 +186,7 @@
         <th>쿠폰</th>
         <td>
             <select id="selectCoupon" onchange="selectCoupon()">
-                <option value="">선택</option>
+                <option value="0">선택</option>
                 <option th:each="coupon : ${member.couponMemberEntityList}"
                         th:value="${coupon.couponEntity.couponValue}"
                         th:text="${coupon.couponEntity.couponName}"
@@ -204,10 +204,11 @@
     <tr>
         <th>적립금</th>
         <td>
-            사용 가능한 적립금: <span
-                th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span>
-            <input type="hidden" id="point" th:value="${#aggregates.sum(member.pointEntityList.![pointValue])}"><br>
-            <input id="inputPoint" type="text" onchange="inputPoint(this.value)">원
+            보유 적립금: <span
+                th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span><br>
+            사용 가능한 적립금(총 주문 금액의 10%): <span
+                th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * exRate.exchangeRate * 0.1, 1, 'COMMA')} + '원'"></span><br>
+            <input id="inputPoint" type="text" onchange="inputPoint()" value="0">원
             <input type="checkbox" id="useAll" onclick="useAll()">전액사용
         </td>
     </tr>
@@ -267,18 +268,9 @@
             th:text="'$ ' + ${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}"></td>
         <input id="dcUsd" type="hidden"
                th:value="${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}">
-        <!--        쿠폰과 포인트 양쪽에서 원래 값을 보존하기 위한 인풋 태그-->
-        <input type="hidden" id="couponDcUsd"
-               th:value="${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}">
-        <input type="hidden" id="pointDcUsd"
-               th:value="${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}">
         <td id="dcWonText"
             th:text="'(' + ${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * exRate.exchangeRate, 1, 'COMMA')} + '원)'"></td>
-        <input id="dcWon" type="text"
-               th:value="${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * exRate.exchangeRate, 1)}">
-        <input type="hidden" id="couponDcWon"
-               th:value="${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * exRate.exchangeRate, 1)}">
-        <input type="hidden" id="pointDcWon"
+        <input id="dcWon" type="hidden"
                th:value="${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * exRate.exchangeRate, 1)}">
     </tr>
 </table>
@@ -303,19 +295,12 @@
 <p>최종 결제금액</p>
 <span id="finalUsdText" th:text="'$ ' + ${#aggregates.sum(cartList.![productPrice * cartQty])}"></span><br>
 <input type="hidden" id="finalUsd" th:value="${#aggregates.sum(cartList.![productPrice * cartQty])}">
-<!--쿠폰과 포인트 사용 함수에서 각각 금액 적용 전의 원본이 필요하기 때문에 밑의 2개 input 태그가 필요함-->
-<input type="hidden" id="couponFinalUsd" th:value="${#aggregates.sum(cartList.![productPrice * cartQty])}">
-<input type="hidden" id="pointFinalUsd" th:value="${#aggregates.sum(cartList.![productPrice * cartQty])}">
 <span id="finalWonText"
       th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productPrice * cartQty]) * exRate.exchangeRate, 1, 'COMMA')} + '원'"></span>
 <input type="hidden" id="finalWon"
        th:value="${#aggregates.sum(cartList.![productPrice * cartQty]) * exRate.exchangeRate}">
-<input type="hidden" id="couponFinalWon"
-       th:value="${#aggregates.sum(cartList.![productPrice * cartQty]) * exRate.exchangeRate}">
-<input type="hidden" id="pointFinalWon"
-       th:value="${#aggregates.sum(cartList.![productPrice * cartQty]) * exRate.exchangeRate}">
 <p><input type="checkbox">주문 정보를 확인하였으며, 구매에 동의합니다.</p>
-<button id="requestPay" onclick="requestPay(this.name, this.value, this.accessKey)" name="kakaopay.TC0ONETIME">주문하기
+<button id="requestPay" onclick="requestPay(this.name)" name="kakaopay.TC0ONETIME">주문하기
 </button>
 
 <!--     modal-->
@@ -414,224 +399,250 @@
         }
     }
 
+    const pointWon = parseInt([[${#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * exRate.exchangeRate * 0.1}]]); // 사용 가능 적립금 원화
+    const pointUsd = parseInt([[${#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * 0.1}]]); // 사용 가능 적립금 달러
+    const totalOriginUsd = parseInt([[${#aggregates.sum(cartList.![productOriginalPrice * cartQty])}]]); // 총 주문금액 달러
+    const totalOriginWon = parseInt([[${#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * exRate.exchangeRate}]]); // 총 주문금액 원화
+    const netDcWon = parseInt([[${#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * exRate.exchangeRate}]]); // 인터넷 회원 할인 원화
+    const netDcUsd = parseInt([[${#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)])}]]); // 인터넷 회원 할인 달러
+    // 전액사용
+    function useAll() {
+        let couponValueWon = parseInt($("#selectCoupon option:selected").val()); // 선택된 쿠폰 원화
+        let couponValueUsd = parseInt(couponValueWon / [[${exRate.exchangeRate}]]); // 선택된 쿠폰 달러
+        let finalWon = totalOriginWon - netDcWon - couponValueWon; // 최종 결제금액 원화
+        let finalUsd = totalOriginUsd - netDcUsd - couponValueUsd; // 최종 결제금액 달러
+        console.log("finalWon: ", finalWon);
+        console.log("totalOriginWon: ", totalOriginWon);
+        console.log("netDcWon: ", netDcWon);
+        console.log("pointWon: ", pointWon);
+        console.log("couponValueWon: ", couponValueWon);
+        if (finalWon == 0) {
+            alert("최종 결제 금액이 0원입니다.");
+            $("input:checkbox[id='useAll']").prop("checked", false);
+        } else if ($("#useAll").is(":checked") && finalWon > pointWon) { // 최종 결제 금액이 사용 가능 포인트보다 큼
+            console.log("useAll-if")
+            // 적립금 사용 표현
+            document.getElementById("inputPoint").value = pointWon;
+            document.getElementById("usePoint").innerHTML = (-pointWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
+            // 달러 총 할인금액 표현
+            document.getElementById("dcUsd").value = netDcUsd + pointUsd + couponValueUsd;
+            document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + pointUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 원화 총 할인금액 표현
+            document.getElementById("dcWon").value = netDcWon + pointWon + couponValueWon;
+            document.getElementById("dcWonText").innerText = '(' + (netDcWon + pointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            // 최종 결제 달러 표현
+            document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - pointUsd - couponValueUsd;
+            document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - pointUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 최종 결제 원화 표현
+            document.getElementById("finalWon").value = totalOriginWon - netDcWon - pointWon - couponValueWon;
+            document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - pointWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
+        } else if ($("#useAll").is(":checked") && finalWon <= pointWon) { // 최종 결제 금액이 사용 가능한 포인트보다 작거나 같음(최종 결제 금액만큼만 포인트 사용)
+            console.log("useAll-else if")
+            // 적립금 사용 표현
+            document.getElementById("inputPoint").value = finalWon;
+            document.getElementById("usePoint").innerHTML = (-finalWon).toLocaleString();
+            // 달러 총 할인금액 표현
+            document.getElementById("dcUsd").value = netDcUsd + finalUsd + couponValueUsd;
+            document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + finalUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 원화 총 할인금액 표현
+            document.getElementById("dcWon").value = netDcWon + finalWon + couponValueWon;
+            document.getElementById("dcWonText").innerText = '(' + (netDcWon + finalWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            // 최종 결제 달러 표현
+            document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - finalUsd - couponValueUsd;
+            document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - finalUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 최종 결제 원화 표현
+            document.getElementById("finalWon").value = totalOriginWon - netDcWon - finalWon - couponValueWon;
+            document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - finalWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
+        } else { // 체크 해제 시
+            console.log("useAll-else")
+            // 적립금 사용 표현
+            document.getElementById("inputPoint").value = 0;
+            document.getElementById("usePoint").innerHTML = 0;
+            // 달러 총 할인금액 표현
+            document.getElementById("dcUsd").value = netDcUsd + couponValueUsd;
+            document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 원화 총 할인금액 표현
+            document.getElementById("dcWon").value = netDcWon + couponValueWon;
+            document.getElementById("dcWonText").innerText = '(' + (netDcWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            // 최종 결제 달러 표현
+            document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - couponValueUsd;
+            document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 최종 결제 원화 표현
+            document.getElementById("finalWon").value = totalOriginWon - netDcWon - couponValueWon;
+            document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
+        }
+    }
+
+    // 포인트 입력 처리
+    function inputPoint() {
+        console.log("inputPoint: 함수 실행");
+        let couponValueWon = parseInt($("#selectCoupon option:selected").val()); // 선택된 쿠폰 원화
+        let couponValueUsd = parseInt(couponValueWon / [[${exRate.exchangeRate}]]); // 선택된 쿠폰 달러
+        let inputPointWon = parseInt(document.getElementById("inputPoint").value); // 입력한 적립금 원화
+        let inputPointUsd = parseInt(inputPointWon / [[${exRate.exchangeRate}]]); // 입력한 적립금 달러
+        let finalWon = totalOriginWon - netDcWon - couponValueWon; // 최종 결제금액 원화
+        console.log("finalWon: ", finalWon);
+        console.log("totalOriginWon: ", totalOriginWon);
+        console.log("netDcWon: ", netDcWon);
+        console.log("pointWon: ", pointWon);
+        console.log("couponValueWon: ", couponValueWon);
+        $("input:checkbox[id='useAll']").prop("checked", false);
+        if (finalWon == 0) {
+            alert("최종 결제 금액이 0원입니다.");
+        } else if (inputPointWon < 0) {
+            alert("입력한 포인트가 0보다 작습니다.");
+            $("input:checkbox[id='useAll']").prop("checked", true);
+            useAll();
+        } else if (inputPointWon > pointWon) { // 입력 포인트가 사용 가능 포인트보다 큼(자동으로 전액 사용)
+            alert("사용 가능한 적립금을 초과하였습니다.")
+            $("input:checkbox[id='useAll']").prop("checked", true);
+            useAll();
+        } else if (inputPointWon == pointWon) { // 입력 포인트가 사용 가능 포인트와 같음(전액 사용)
+            $("input:checkbox[id='useAll']").prop("checked", true);
+            useAll();
+        } else if (inputPointWon < finalWon) { // 입력 포인트가 최종 결제 원화보다 작음
+            console.log("inputPoint-else-if1")
+            // 적립금 사용 표현
+            document.getElementById("inputPoint").value = inputPointWon;
+            document.getElementById("usePoint").innerHTML = (-inputPointWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
+            // 달러 총 할인금액 표현
+            document.getElementById("dcUsd").value = netDcUsd + inputPointUsd + couponValueUsd;
+            document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + inputPointUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 원화 총 할인금액 표현
+            document.getElementById("dcWon").value = netDcWon + inputPointWon + couponValueWon;
+            document.getElementById("dcWonText").innerText = '(' + (netDcWon + inputPointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            // 최종 결제 달러 표현
+            document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd;
+            document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 최종 결제 원화 표현
+            document.getElementById("finalWon").value = totalOriginWon - netDcWon - inputPointWon - couponValueWon;
+            document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - inputPointWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
+        } else if (inputPointWon >= finalWon) { // 입력 포인트가 최종 결제 원화보다 크거나 같음(최종 결제 금액만큼 포인트 사용)-전액 사용 함수 실행
+            console.log("inputPoint-else-if2")
+            $("input:checkbox[id='useAll']").prop("checked", true);
+            useAll();
+        } else {
+            console.log("inputPoint-else");
+            alert("숫자를 입력하세요.");
+            $("input:checkbox[id='useAll']").prop("checked", true);
+            useAll();
+        }
+    }
+
+    // 쿠폰 선택 처리
+    function selectCoupon() {
+        let couponValueWon = parseInt($("#selectCoupon option:selected").val()); // 선택된 쿠폰 원화
+        let couponValueUsd = parseInt(couponValueWon / [[${exRate.exchangeRate}]]); // 선택된 쿠폰 달러
+        let inputPointWon = parseInt(document.getElementById("inputPoint").value); // 입력한 적립금 원화
+        let inputPointUsd = parseInt(inputPointWon / [[${exRate.exchangeRate}]]); // 입력한 적립금 달러
+        let finalWon = totalOriginWon - netDcWon - inputPointWon; // 최종 결제금액 원화
+        const couponMemberId = $("#selectCoupon option:selected").attr("name");
+        if (couponMemberId != null && couponValueWon <= finalWon) { // 쿠폰 선택 and 최종결제금액이 쿠폰금액보다 크거나 같음
+            // 쿠폰 사용 표현
+            document.getElementById("useCoupon").innerHTML = (-couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
+            // 달러 총 할인금액 표현
+            document.getElementById("dcUsd").value = netDcUsd + inputPointUsd + couponValueUsd;
+            document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + inputPointUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 원화 총 할인금액 표현
+            document.getElementById("dcWon").value = netDcWon + inputPointWon + couponValueWon;
+            document.getElementById("dcWonText").innerText = '(' + (netDcWon + inputPointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            // 최종 결제 달러 표현
+            document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd;
+            document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 최종 결제 원화 표현
+            document.getElementById("finalWon").value = totalOriginWon - netDcWon - inputPointWon - couponValueWon;
+            document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - inputPointWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
+        } else if (couponMemberId != null && couponValueWon > finalWon) { // 쿠폰 선택 and 최종결제금액이 쿠폰금액보다 작음
+            alert("쿠폰 금액이 최종 결제 금액보다 큽니다.")
+        } else { // '선택'을 선택
+            // 쿠폰 사용 표현
+            document.getElementById("useCoupon").innerHTML = (-couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
+            // 달러 총 할인금액 표현
+            document.getElementById("dcUsd").value = netDcUsd + inputPointUsd + couponValueUsd;
+            document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + inputPointUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 원화 총 할인금액 표현
+            document.getElementById("dcWon").value = netDcWon + inputPointWon + couponValueWon;
+            document.getElementById("dcWonText").innerText = '(' + (netDcWon + inputPointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            // 최종 결제 달러 표현
+            document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd;
+            document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 최종 결제 원화 표현
+            document.getElementById("finalWon").value = totalOriginWon - netDcWon - inputPointWon - couponValueWon;
+            document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - inputPointWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
+        }
+    }
+
     // 아임포트
-    const IMP = window.IMP; // 생략 가능
-    IMP.init("imp66752664"); // 예: imp00000000
-    function requestPay(pgName, paymentWon) {
+    const IMP = window.IMP;
+    IMP.init("imp66752664");
+    function requestPay(pgName) {
+        const couponMemberId = $("#selectCoupon option:selected").attr("name");
+        const finalUsd = document.getElementById("finalUsd").value;
+        const finalWon = document.getElementById("finalWon").value;
+        const inputPoint = document.getElementById("inputPoint").value;
+        const couponValueWon = parseInt($("#selectCoupon option:selected").val());
+        const exchangeRate = [[${exRate.exchangeRate}]];
+        const departureAirport = $("#departureAirport option:selected").attr("value");
+        const departureDate = document.getElementById("datepicker").value;
+        const departureNumber = document.getElementById("departureNumber").value;
         // IMP.request_pay(param, callback) 결제창 호출
         IMP.request_pay({ // param
             pg: pgName,
             pay_method: "card",
             merchant_uid: 'merchant_' + new Date().getTime(), // 중복되지 않는 값(임의의 값, 주문 고유번호)
             name: "[[${cartList.get(0).productName}]] 외 [[${cartList.size()} - 1]]개",
-            amount: 1,
+            amount: document.getElementById("finalWon").value,
             buyer_email: "[[${member.memberEmail}]]",
             buyer_name: "[[${member.memberName}]]",
             buyer_tel: "[[${member.memberMobile}]]",
         }, function (rsp) { // callback
-            if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
-                // jQuery로 HTTP 요청
-                // jQuery.ajax({
-                //     url: "{서버의 결제 정보를 받는 endpoint}", // 예: https://www.myservice.com/payments/complete
-                //     method: "POST",
-                //     headers: { "Content-Type": "application/json" },
-                //     data: {
-                //         imp_uid: rsp.imp_uid,
-                //         merchant_uid: rsp.merchant_uid
-                //     }
-                // }).done(function (data) {
-                //     // 가맹점 서버 결제 API 성공시 로직
-                // })
-                alert("완료" + rsp.imp_uid + rsp.merchant_uid)
-            } else {
-                alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
-            }
+            // console.log("function 진입")
+            // if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
+            //     console.log("rsp.success" + rsp.success)
+            //     // jQuery로 HTTP 요청
+            //     jQuery.ajax({
+            //         url: "/order/save",
+            //         method: "POST",
+            //         headers: { "Content-Type": "application/json" },
+            //         data: {
+            //             imp_uid: rsp.imp_uid,
+            //             merchant_uid: rsp.merchant_uid,
+            //         },
+            //         dataType: "json",
+            //     }).done(function (data) {
+            //         // 가맹점 서버 결제 API 성공시 로직
+            //         alert("성공");
+            //     })
+            //     alert("완료" + rsp.imp_uid + rsp.merchant_uid)
+            // } else {
+            //     alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
+            // }
+            $.ajax({
+                type: "post",
+                url: "/order/save",
+                data: {
+                    "imp_uid": rsp.imp_uid,
+                    "merchant_uid": rsp.merchant_uid,
+                    "couponMemberId": couponMemberId,
+                    "netDcWon": netDcWon,
+                    "orderUsd": finalUsd,
+                    "orderWon": finalWon,
+                    "pointUseValue": inputPoint,
+                    "couponUseValue": couponValueWon,
+                    "exchangeRate": exchangeRate,
+                    "orderDepartureAirport": departureAirport,
+                    "orderDepartureDate": departureDate,
+                    "orderDepartureNumber": departureNumber,
+                },
+                dataType: "json",
+                success: function (result) {
+                    alert("성공")
+                },
+                error: function () {
+                    alert("어디가 틀렸을까");
+                }
+            })
         });
-    }
-
-    // 전액사용
-    function useAll() {
-        const point = parseInt(document.getElementById("point").value);
-        const pointUsd = parseInt(point / [[${exRate.exchangeRate}]]);
-        const finalWon = parseInt(document.getElementById("finalWon").value);
-        const couponFinalWon = parseInt(document.getElementById("couponFinalWon").value);
-        const couponFinalUsd = parseInt(document.getElementById("couponFinalUsd").value);
-        const dcUsd = parseInt(document.getElementById("dcUsd").value);
-        const dcWon = parseInt(document.getElementById("dcWon").value);
-        const couponDcUsd = parseInt(document.getElementById("couponDcUsd").value);
-        const couponDcWon = parseInt(document.getElementById("couponDcWon").value);
-        console.log(point);
-        console.log(pointUsd);
-        console.log(finalWon);
-        console.log(couponFinalWon);
-        console.log(dcUsd);
-        console.log("dcWon = " + dcWon);
-        if ($("#useAll").is(":checked") && couponFinalWon > point) { // 최종 결제 금액이 보유 포인트보다 큼
-            console.log("if")
-            // 적립금 사용 표현
-            document.getElementById("inputPoint").value = point.toLocaleString('ko-KR', {maximumFractionDigits: 0});
-            document.getElementById("usePoint").innerHTML = (-point).toLocaleString('ko-KR', {maximumFractionDigits: 0});
-            // 총 할인금액 표현
-            document.getElementById("dcUsdText").innerText = '$ ' + (couponDcUsd + pointUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("dcUsd").value = couponDcUsd + pointUsd;
-            document.getElementById("pointDcUsd").value = couponDcUsd + pointUsd;
-            document.getElementById("dcWonText").innerText = '(' + (couponDcWon + point).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
-            document.getElementById("dcWon").value = couponDcWon + point;
-            document.getElementById("pointDcWon").value = couponDcWon + point;
-            // 최종 결제 달러 표현
-            document.getElementById("finalUsd").value = (couponFinalUsd - pointUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("pointFinalUsd").value = (couponFinalUsd - pointUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("finalUsdText").innerText = '$' + (couponFinalUsd - pointUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            // 최종 결제 원화 표현
-            document.getElementById("finalWon").value = (couponFinalWon - point).toLocaleString('ko-KR', {maximumFractionDigits: 0});
-            document.getElementById("pointFinalWon").value = (couponFinalWon - point).toLocaleString('ko-KR', {maximumFractionDigits: 0});
-            document.getElementById("finalWonText").innerText = (couponFinalWon - point).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
-        } else if ($("#useAll").is(":checked") && couponFinalWon <= point) { // 최종 결제 금액이 보유 포인트보다 작거나 같음(최종 결제 금액만큼만 포인트 사용)
-            console.log("else if")
-            // 적립금 사용 표현
-            document.getElementById("inputPoint").value = couponFinalWon.toLocaleString();
-            document.getElementById("usePoint").innerHTML = (-couponFinalWon).toLocaleString();
-            // 총 할인금액 표현
-            document.getElementById("dcUsdText").innerText = '$ ' + (couponDcUsd + couponFinalUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("dcUsd").value = couponDcUsd + couponFinalUsd;
-            document.getElementById("pointDcUsd").value = couponDcUsd + couponFinalUsd;
-            document.getElementById("dcWonText").innerText = '(' + (couponDcWon + couponFinalWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
-            document.getElementById("dcWon").value = couponDcWon + couponFinalWon;
-            document.getElementById("pointDcWon").value = couponDcWon + couponFinalWon;
-            // 최종 결제 달러 표현
-            document.getElementById("finalUsd").value = 0;
-            document.getElementById("pointFinalUsd").value = 0;
-            document.getElementById("finalUsdText").innerText = '$ ' + 0;
-            // 최종 결제 원화 표현
-            document.getElementById("finalWon").value = 0;
-            document.getElementById("pointFinalWon").value = 0;
-            document.getElementById("finalWonText").innerText = 0 + '원';
-        } else { // 체크 해제 시
-            console.log("else")
-            // 적립금 사용 표현
-            document.getElementById("inputPoint").value = 0;
-            document.getElementById("usePoint").innerHTML = 0;
-            // 총 할인금액 표현
-            document.getElementById("dcUsdText").innerText = '$ ' + couponDcUsd.toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("dcUsd").value = couponDcUsd;
-            document.getElementById("pointDcUsd").value = couponDcUsd + couponFinalUsd;
-            document.getElementById("dcWonText").innerText = '(' + couponDcWon.toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
-            document.getElementById("dcWon").value = couponDcWon;
-            document.getElementById("pointDcWon").value = couponDcWon;
-            // 최종 결제 달러 표현
-            document.getElementById("finalUsd").value = couponFinalUsd;
-            document.getElementById("pointFinalUsd").value = couponFinalUsd;
-            document.getElementById("finalUsdText").innerText = '$ ' + couponFinalUsd;
-            // 최종 결제 원화 표현
-            document.getElementById("finalWon").value = couponFinalWon;
-            document.getElementById("pointFinalWon").value = couponFinalWon;
-            document.getElementById("finalWonText").innerText = couponFinalWon.toLocaleString() + '원';
-        }
-    }
-
-    // 포인트 입력 처리
-    function inputPoint(inputPoint) {
-        const parseInputPoint = parseInt(inputPoint);
-        const parseInputPointUsd = parseInt(inputPoint / [[${exRate.exchangeRate}]]);
-        const point = parseInt(document.getElementById("point").value);
-        const couponFinalWon = parseInt(document.getElementById("couponFinalWon").value);
-        const couponFinalUsd = parseInt(document.getElementById("couponFinalUsd").value);
-        const couponDcUsd = parseInt(document.getElementById("couponDcUsd").value);
-        const couponDcWon = parseInt(document.getElementById("couponDcWon").value);
-        if (parseInputPoint > point) { // 입력 포인트가 사용 가능 포인트보다 큼(자동으로 전액 사용)
-            alert("포인트가 부족합니다.")
-            $("input:checkbox[id='useAll']").prop("checked", true);
-            useAll();
-        } else if (couponFinalWon > parseInputPoint) { // 입력 포인트가 최종 결제 원화보다 작음
-            console.log("if")
-            // 적립금 사용 표현
-            document.getElementById("inputPoint").value = parseInputPoint.toLocaleString('ko-KR', {maximumFractionDigits: 0});
-            document.getElementById("usePoint").innerHTML = (-parseInputPoint).toLocaleString('ko-KR', {maximumFractionDigits: 0});
-            // 총 할인금액 표현
-            document.getElementById("dcUsdText").innerText = '$ ' + (couponDcUsd + parseInputPointUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("DcUsd").value = couponDcUsd + parseInputPointUsd;
-            document.getElementById("pointDcUsd").value = couponDcUsd + parseInputPointUsd;
-            document.getElementById("dcWonText").innerText = '(' + (couponDcWon + parseInputPoint).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
-            document.getElementById("dcWon").value = couponDcWon + parseInputPoint;
-            document.getElementById("pointDcWon").value = couponDcWon + parseInputPoint;
-            // 최종 결제 달러 표현
-            document.getElementById("finalUsd").value = (couponFinalUsd - parseInputPointUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("pointFinalUsd").value = (couponFinalUsd - parseInputPointUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("finalUsdText").innerText = '$ ' + (couponFinalUsd - parseInputPointUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            // 최종 결제 원화 표현
-            document.getElementById("finalWon").value = (couponFinalWon - parseInputPoint).toLocaleString('ko-KR', {maximumFractionDigits: 0});
-            document.getElementById("pointFinalWon").value = (couponFinalWon - parseInputPoint).toLocaleString('ko-KR', {maximumFractionDigits: 0});
-            document.getElementById("finalWonText").innerText = (couponFinalWon - parseInputPoint).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
-        } else if (couponFinalWon <= parseInputPoint) { // 입력 포인트가 최종 결제 원화보다 크거나 같음(최종 결제 금액만큼 포인트 사용)
-            console.log("else if")
-            // 적립금 사용 표현
-            document.getElementById("inputPoint").value = couponFinalWon.toLocaleString();
-            document.getElementById("usePoint").innerHTML = (-couponFinalWon).toLocaleString();
-            // 총 할인금액 표현
-            document.getElementById("dcUsdText").innerText = '$ ' + (couponDcUsd + couponFinalUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("dcUsd").value = couponDcUsd + couponFinalUsd;
-            document.getElementById("pointDcUsd").value = couponDcUsd + couponFinalUsd;
-            document.getElementById("dcWonText").innerText = '(' + (couponDcWon + couponFinalWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
-            document.getElementById("dcWon").value = couponDcWon + couponFinalWon;
-            document.getElementById("pointDcWon").value = couponDcWon + couponFinalWon;
-            // 최종 결제 달러 표현
-            document.getElementById("finalUsd").value = 0;
-            document.getElementById("pointFinalUsd").value = 0;
-            document.getElementById("finalUsdText").innerText = '$ ' + 0;
-            // 최종 결제 원화 표현
-            document.getElementById("finalWon").value = 0;
-            document.getElementById("pointFinalWon").value = 0;
-            document.getElementById("finalWonText").innerText = 0 + '원';
-        }
-    }
-
-    // 쿠폰 선택 처리
-    function selectCoupon() {
-        const couponValue = parseInt($("#selectCoupon option:selected").val());
-        const couponValueUsd = parseInt(couponValue / [[${exRate.exchangeRate}]]);
-        const couponMemberId = $("#selectCoupon option:selected").attr("name");
-        const pointFinalWon = parseInt(document.getElementById("pointFinalWon").value);
-        const pointDcUsd = parseInt(document.getElementById("pointDcUsd").value);
-        const pointDcWon = parseInt(document.getElementById("pointDcWon").value);
-        if (couponMemberId != null && pointFinalWon >= couponValue) { // 쿠폰 선택 and 최종결제금액이 쿠폰금액보다 크거나 같음
-            // 쿠폰 사용 표현
-            document.getElementById("useCoupon").innerHTML = parseInt(-couponValue).toLocaleString('ko-KR');
-            // 총 할인금액 표현
-            document.getElementById("dcUsdText").innerText = '$ ' + (pointDcUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("DcUsd").value = pointDcUsd + couponValueUsd;
-            document.getElementById("couponDcUsd").value = pointDcUsd + couponValueUsd;
-            document.getElementById("dcWonText").innerText = '(' + (pointDcWon - couponValue).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
-            document.getElementById("dcWon").value = pointDcWon + couponValue;
-            document.getElementById("couponDcWon").value = pointDcWon + couponValue;
-            // 최종 결제 달러 표현
-            document.getElementById("finalUsd").value = (pointDcUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("couponFinalUsd").value = (pointDcUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("finalUsdText").innerText = '$ ' + (pointDcUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            // 최종 결제 원화 표현
-            document.getElementById("finalWon").value = (pointDcWon - couponValue).toLocaleString('ko-KR', {maximumFractionDigits: 0});
-            document.getElementById("finalWonText").innerText = (pointDcWon - couponValue).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
-            document.getElementById("couponFinalWon").value = (pointDcWon - couponValue).toLocaleString('ko-KR', {maximumFractionDigits: 0});
-        } else if (couponMemberId != null && pointFinalWon < couponValue) { // 쿠폰 선택 and 최종결제금액이 쿠폰금액보다 작음
-            alert("쿠폰 금액이 최종 결제 금액보다 큽니다.")
-        } else {
-            // 쿠폰 사용 표현
-            document.getElementById("useCoupon").innerHTML = 0;
-            // 총 할인금액 표현
-            document.getElementById("dcUsdText").innerText = '$ ' + pointDcUsd.toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("DcUsd").value = pointDcUsd;
-            document.getElementById("couponDcUsd").value = pointDcUsd;
-            document.getElementById("dcWonText").innerText = '(' + pointDcWon.toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
-            document.getElementById("dcWon").value = pointDcWon;
-            document.getElementById("couponDcWon").value = pointDcWon;
-            // 최종 결제 달러 표현
-            document.getElementById("finalUsd").value = pointDcUsd.toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("finalUsdText").innerText = '$ ' + pointDcUsd.toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            document.getElementById("couponFinalUsd").value = pointDcUsd.toLocaleString('ko-KR', {maximumFractionDigits: 1});
-            // 최종 결제 원화 표현
-            document.getElementById("finalWon").value = pointDcWon.toLocaleString('ko-KR', {maximumFractionDigits: 0});
-            document.getElementById("finalWonText").innerText = pointDcWon.toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
-            document.getElementById("couponFinalWon").value = pointDcWon.toLocaleString('ko-KR', {maximumFractionDigits: 0});
-        }
     }
 </script>
 </html>
