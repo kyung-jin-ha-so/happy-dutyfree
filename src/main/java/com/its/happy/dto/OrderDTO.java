@@ -1,5 +1,6 @@
 package com.its.happy.dto;
 
+import com.its.happy.entity.OrderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,21 @@ public class OrderDTO {
     private double exchangeRate;
     private Long couponMemberId;
     private Long memberId;
+
+    public static OrderDTO toDTO(OrderEntity orderEntity) {
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setOrderId(orderEntity.getOrderId());
+        orderDTO.setOrderCreatedTime(orderEntity.getCreatedTime());
+        orderDTO.setOrderUpdatedTime(orderEntity.getUpdatedTime());
+        orderDTO.setOrderStatus(orderEntity.getOrderStatus());
+        orderDTO.setNetDcWon(orderEntity.getNetDcWon());
+        orderDTO.setOrderUsd(orderEntity.getOrderUsd());
+        orderDTO.setOrderWon(orderEntity.getOrderWon());
+        orderDTO.setPointUseValue(orderEntity.getPointUseValue());
+        orderDTO.setCouponUseValue(orderEntity.getCouponUseValue());
+        orderDTO.setExchangeRate(orderEntity.getExchangeRate());
+        orderDTO.setCouponMemberId(orderEntity.getCouponMemberEntity().getCouponMemberId());
+        orderDTO.setMemberId(orderEntity.getCouponMemberEntity().getMemberEntity().getMemberId());
+        return orderDTO;
+    }
 }

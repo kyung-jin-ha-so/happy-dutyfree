@@ -28,19 +28,40 @@ public class OrderController {
     private final ProductService productService;
     private final OrderProductService orderProductService;
     private final OrderDepartureService orderDepartureService;
+    private final MemberService memberService;
 
-    @GetMapping("/{memberId}")
-    public String orderTest(@PathVariable Long memberId, CartArrayDTO cartArrayDTO) {
-        System.out.println("memberId = " + memberId);
-        System.out.println("cartArrayDTO = " + cartArrayDTO);
-        return "index";
+    // 장바구니 구매 테스트
+    @GetMapping("/test")
+    public String saveTest(Model model, HttpSession session) {
+        List<CartDTO> cartDTOList = new ArrayList<>();
+
+        Optional<CartEntity> optionalCartEntity = cartRepository.findById(1L);
+        CartEntity cartEntity = optionalCartEntity.get();
+        CartDTO cartDTO = CartDTO.toCartDTO(cartEntity);
+        cartDTOList.add(cartDTO);
+
+        Optional<CartEntity> optionalCartEntity2 = cartRepository.findById(2L);
+        CartEntity cartEntity2 = optionalCartEntity2.get();
+        CartDTO cartDTO2 = CartDTO.toCartDTO(cartEntity2);
+        cartDTOList.add(cartDTO2);
+
+        session.setAttribute("cartDTOList", cartDTOList);
+        model.addAttribute("cartList", cartDTOList);
+
+        // loginId(member) model
+        Long loginId = (Long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(loginId);
+        model.addAttribute("member", memberDTO);
+
+        //
+        ExchangeRateDTO exchangeRateDTO = new ExchangeRateDTO(1L, 1298.91, "2022-07-29");
+        model.addAttribute("exRate", exchangeRateDTO);
+        return "/orderPages/test";
     }
 
     // 장바구니 구매
     @GetMapping("/save-form")
     public String saveForm(@ModelAttribute CartArrayDTO cartArrayDTO, Model model, HttpSession session) {
-        System.out.println("OrderController.saveForm");
-
         // 장바구니에서 상품 array 옮겨담기
         List<CartDTO> cartDTOList = new ArrayList<>();
         for (int i = 0; i < cartArrayDTO.getCarts().size(); i++) {
@@ -53,23 +74,45 @@ public class OrderController {
 
         // loginId(member) model
         Long loginId = (Long) session.getAttribute("loginId");
-        MemberDTO memberDTO = orderService.findByMemberId(loginId);
+        MemberDTO memberDTO = memberService.findById(loginId);
         model.addAttribute("member", memberDTO);
 
         return "/orderPages/save";
     }
 
     // 바로 구매
-//    @GetMapping("/save-form2")
-//    public String saveForm(Model model, HttpSession session, @RequestParam("productId") Long productId, @RequestParam("orderQty") int orderQty) {
-//
-//        System.out.println("cartDTOList = " + cartDTOList);
-//        model.addAttribute("cartList", cartDTOList);
-//        Long loginId = (Long) session.getAttribute("loginId");
-//        MemberDTO memberDTO = orderService.findByMemberId(loginId);
-//        model.addAttribute("member", memberDTO);
-//        return "/orderPages/save";
-//    }
+    @GetMapping("/save-form2")
+    public String saveForm2(Model model, HttpSession session, @RequestParam("productId") Long productId, @RequestParam("orderQty") int orderQty) {
+        // loginId(member) model
+        Long loginId = (Long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(loginId);
+        model.addAttribute("member", memberDTO);
+
+        // html과 save메서드를 두 개 만들지 않기 위한 작업
+        // 상품 정보를 장바구니에 담는 과정
+        CartDTO cartDTO = new CartDTO();
+        cartDTO.setProductId(productId);
+        cartDTO.setCartQty(orderQty);
+        cartDTO.setMemberId(loginId);
+        Long cartId = cartService.save2(cartDTO);
+
+        // 담은 장바구니의 cartId와 함께 리턴받아 findCartDTO의 필드를 productDTO의 정보로 채움
+        CartDTO findCartDTO = cartService.findByCartId(cartId);
+        ProductDTO productDTO = productService.findById(productId);
+        findCartDTO.setProductName(productDTO.getProductName());
+        findCartDTO.setProductOriginalPrice(productDTO.getProductOriginalPrice());
+        findCartDTO.setProductDiscount(productDTO.getProductDiscount());
+        findCartDTO.setProductPrice(productDTO.getProductPrice());
+        findCartDTO.setProductThumbnail(productDTO.getProductThumbnail());
+
+        // 만든 DTO를 리스트에 담고 session, model
+        List<CartDTO> cartDTOList = new ArrayList<>();
+        cartDTOList.add(findCartDTO);
+        session.setAttribute("cartDTOList", cartDTOList); // save 메서드에서 쓰기 위해 session
+        model.addAttribute("cartList", cartDTOList);
+
+        return "/orderPages/save";
+    }
 
     @PostMapping("/save")
     public ResponseEntity save(@ModelAttribute OrderDTO orderDTO, @RequestParam("orderDepartureAirport") String orderDepartureAirport, @RequestParam("orderDepartureDate") String orderDepartureDate, @RequestParam("orderDepartureNumber") String orderDepartureNumber, HttpSession session) {
@@ -78,6 +121,7 @@ public class OrderController {
 
         Long memberId = orderDTO.getMemberId();
         Long couponMemberId = orderDTO.getCouponMemberId();
+
         // 쿠폰 사용 처리
         CouponMemberDTO couponMemberDTO = couponService.findByCouponMemberId(couponMemberId);
         couponMemberDTO.setCouponStatus("사용 후");
@@ -126,32 +170,17 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/test")
-    public String saveTest(Model model, HttpSession session) {
-        List<CartDTO> cartDTOList = new ArrayList<>();
-
-        Optional<CartEntity> optionalCartEntity = cartRepository.findById(1L);
-        CartEntity cartEntity = optionalCartEntity.get();
-        CartDTO cartDTO = CartDTO.toCartDTO(cartEntity);
-        cartDTOList.add(cartDTO);
-
-        Optional<CartEntity> optionalCartEntity2 = cartRepository.findById(2L);
-        CartEntity cartEntity2 = optionalCartEntity2.get();
-        CartDTO cartDTO2 = CartDTO.toCartDTO(cartEntity2);
-        cartDTOList.add(cartDTO2);
-
-        session.setAttribute("cartDTOList", cartDTOList);
-        model.addAttribute("cartList", cartDTOList);
-
-        // loginId(member) model
+    @GetMapping("/list")
+    public String list(Model model, HttpSession session) {
         Long loginId = (Long) session.getAttribute("loginId");
-        MemberDTO memberDTO = orderService.findByMemberId(loginId);
-        model.addAttribute("member", memberDTO);
-
-        //
-        ExchangeRateDTO exchangeRateDTO = new ExchangeRateDTO(1L, 1298.91, "2022-07-29");
-        model.addAttribute("exRate", exchangeRateDTO);
-        return "/orderPages/test";
+        List<OrderDTO> orderDTOList = orderService.findByMemberId(loginId);
+        model.addAttribute("orderList", orderDTOList);        return "/orderPages/list";
     }
+
+    @GetMapping("/detail")
+    public String detail() {
+        return "/orderPages/detail";
+    }
+
 
 }
