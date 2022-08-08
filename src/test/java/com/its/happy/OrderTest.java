@@ -30,7 +30,7 @@ public class OrderTest {
     private CartService cartService;
 
     public ProductDTO newProduct(int i) {
-        ProductDTO productDTO = new ProductDTO("임시상품" + i, 5000 + i, 4000 + i);
+        ProductDTO productDTO = new ProductDTO("임시상품" + i, 10, 5);
         return productDTO;
     }
 
@@ -57,6 +57,6 @@ public class OrderTest {
     @Test
     @DisplayName("테스트용 장바구니 저장")
     public void cartSaveTest() {
-        cartService.save(2L, 1L, 2);
+        cartService.save(2L, 1L, 3);
     }
 }
