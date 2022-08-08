@@ -1,5 +1,6 @@
 package com.its.happy.entity;
 
+import com.its.happy.dto.OrderProductDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,4 +39,13 @@ public class OrderProductEntity {
     @JoinColumn(name = "product_id")
     private ProductEntity productEntity;
 
+    public static OrderProductEntity toEntity(OrderProductDTO orderProductDTO, OrderEntity orderEntity, ProductEntity productEntity) {
+        OrderProductEntity orderProductEntity = new OrderProductEntity();
+        orderProductEntity.setOrderQty(orderProductDTO.getOrderQty());
+        orderProductEntity.setProductDiscount(orderProductDTO.getProductDiscount());
+        orderProductEntity.setProductOriginalPrice(orderProductDTO.getProductOriginalPrice());
+        orderProductEntity.setOrderEntity(orderEntity);
+        orderProductEntity.setProductEntity(productEntity);
+        return orderProductEntity;
+    }
 }

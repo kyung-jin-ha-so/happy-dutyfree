@@ -10,23 +10,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
             crossorigin="anonymous"></script>
-
+    <!-- iamport.payment.js -->
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
     <!--    datepicker-->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-          rel="stylesheet">
-    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <!-- iamport.payment.js -->
-    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          rel="stylesheet">
+
+    <script th:src="@{/js/datepicker.js}"></script>
 </head>
 <body>
-<h2>save.html</h2>
-해피멤버쉽: <p th:text="${member.memberTier}"></p>
-<p th:text="${member.memberName}">님 께서 즉시 받으실 수 있는 쇼핑 혜택입니다.</p>
-할인쿠폰: <p th:text="${member.couponMemberEntityList.size()}">&nbsp;개</p>
+<h2>test.html</h2>
+
+해피멤버쉽: <label th:text="${member.memberTier}"></label><br>
+<span th:text="${member.memberName}"></span>님 께서 즉시 받으실 수 있는 쇼핑 혜택입니다.<br>
+할인쿠폰:
+<label th:each="coupon: ${member.couponMemberEntityList}">
+    <span th:text="${#lists.size(coupon.couponStatus)}" th:if="${coupon.couponStatus.equals('사용 전')}">&nbsp;개</span>
+</label>
+
 <table>
     <tr>
         <th>상품명</th>
@@ -37,12 +42,21 @@
     </tr>
     <tr th:each="cart: ${cartList}">
         <td th:src="@{|/upload/${cart.productThumbnail}|}" th:text="${cart.productName}"></td>
-        <td th:text="${cart.productOriginalPrice}"></td>
+        <td>
+            <span style="text-decoration: line-through; font-weight: bold"
+                  th:text="'$ ' + ${cart.productOriginalPrice}"></span><br>
+            <span style="color: red; font-weight: bold" th:text="'$ ' + ${cart.productPrice}"></span>
+        </td>
         <td th:text="${cart.cartQty}"></td>
-        <td th:text="${cart.productDiscount}"></td>
-        <td th:text="${cart.productPrice}"></td>
+        <td th:text="${cart.productDiscount} + '%'"></td>
+        <td>
+            <span style="color: red; font-weight: bold" th:text="'$ ' + ${cart.productPrice * cart.cartQty}"></span><br>
+            <span style="color: gray; font-size: small"
+                  th:text="'(' + ${#numbers.formatInteger(cart.productPrice * cart.cartQty * session.exchangeRate, 1, 'COMMA') } + '원)'"></span>
+        </td>
     </tr>
 </table>
+
 <h2>고객정보</h2>
 <table>
     <thead>
@@ -97,9 +111,14 @@
                 </tr>
                 <tr th:each="departure: ${member.departureEntityList}">
                     <td><input type="radio" name="departureRadio" th:attrappend="id=${departureStat.index}"></td>
-                    <td th:text="${departure.departureDate}"></td>
-                    <td th:text="${departure.departureAirport}"></td>
-                    <td th:text="${departure.arrivalRegion}"></td>
+                    <td th:text="${departure.departureDate}" th:id="${'departureDate' + departureStat.index}"></td>
+                    <td th:text="${departure.departureAirport}"
+                        th:id="${'departureAirport' + departureStat.index}"></td>
+                    <td th:text="${departure.arrivalRegion}" th:id="${'arrivalRegion' + departureStat.index}"></td>
+                    <td th:text="${departure.departureNumber}" th:id="${'departureNumber' + departureStat.index}"
+                        hidden></td>
+                    <td th:text="${departure.departureFeature}" th:id="${'departureFeature' + departureStat.index}"
+                        hidden></td>
                 </tr>
             </table>
         </div>
@@ -110,7 +129,7 @@
     <tr>
         <th>출국장소</th>
         <td>
-            <select name="departureAirport">
+            <select name="departureAirport" id="departureAirport">
                 <option value="">선택하세요</option>
                 <option value="ICN">인천공항</option>
                 <option value="GMP">김포공항</option>
@@ -143,7 +162,7 @@
     <tr>
         <th>목적지</th>
         <td>
-            <select name="arrivalRegion">
+            <select name="arrivalRegion" id="arrivalRegion">
                 <option value="">선택</option>
                 <option value="캐나다">캐나다</option>
                 <option value="중국">중국</option>
@@ -166,23 +185,31 @@
     <tr>
         <th>쿠폰</th>
         <td>
-            <select name="arrivalRegion">
-                <option value="">선택</option>
+            <select id="selectCoupon" onchange="selectCoupon()">
+                <option value="0">선택</option>
                 <option th:each="coupon : ${member.couponMemberEntityList}"
                         th:value="${coupon.couponEntity.couponValue}"
                         th:text="${coupon.couponEntity.couponName}"
-                        th:if="${coupon.couponStatus.equals('사용 전')}">
+                        th:if="${coupon.couponStatus.equals('사용 전')}"
+                        th:name="${coupon.couponMemberId}">
                 </option>
             </select>
-            사용 가능한 쿠폰: <span id="couponQty">개</span>
+            사용 가능한 쿠폰:
+            <label th:each="coupon: ${member.couponMemberEntityList}">
+                 <span th:text="${#lists.size(coupon.couponStatus)}"
+                       th:if="${coupon.couponStatus.equals('사용 전')}">&nbsp;개</span>
+            </label>
         </td>
     </tr>
     <tr>
         <th>적립금</th>
         <td>
-            사용 가능한 적립금: <span th:text="${#aggregates.sum(member.pointEntityList.![pointValue])}">원</span><br>
-            <input type="text">원
-            <input type="checkbox">전액사용
+            보유 적립금: <span
+                th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span><br>
+            사용 가능한 적립금(총 주문 금액의 10%): <span
+                th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * session.exchangeRate * 0.1, 1, 'COMMA')} + '원'"></span><br>
+            <input id="inputPoint" type="text" onchange="inputPoint()" value="0">원
+            <input type="checkbox" id="useAll" onclick="useAll()">전액사용
         </td>
     </tr>
 </table>
@@ -192,71 +219,89 @@
     <tr>
         <th>결제수단</th>
         <td>
-            <input type="radio" id="card" name="payMethod" value="신용카드" onchange="setDisplay()">신용카드
-            <input type="radio" name="payMethod" value="실시간계좌이체" onchange="setDisplay()">실시간계좌이체
-            <input type="radio" name="payMethod" value="카카오페이" onchange="setDisplay()" checked>카카오페이
-            <input type="radio" name="payMethod" value="네이버페이" onchange="setDisplay()">네이버페이
+            <input type="radio" id="card" name="payMethod" value="신용카드" onchange="payMethod()">신용카드
+            <input type="radio" id="kakao" name="payMethod" value="카카오페이" onchange="payMethod()" checked>카카오페이
+            <input type="radio" id="toss" name="payMethod" value="토스페이" onchange="payMethod()">토스페이
         </td>
     </tr>
 </table>
 <!--    신용카드 결제-->
-<div id="cardDiv" style="display: none">
-    <table>
-        <tr>
-            <th>카드종류</th>
-            <td>
-                <select>
-                    <option value=""></option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <th>할부선택</th>
-            <td>
-                <select>
-                    <option value=""></option>
-                </select>
-            </td>
-        </tr>
-    </table>
-</div>
+<!--<div id="cardDiv" style="display: none">-->
+<!--    <table>-->
+<!--        <tr>-->
+<!--            <th>카드종류</th>-->
+<!--            <td>-->
+<!--                <select>-->
+<!--                    <option value=""></option>-->
+<!--                </select>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <th>할부선택</th>-->
+<!--            <td>-->
+<!--                <select>-->
+<!--                    <option value=""></option>-->
+<!--                </select>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--    </table>-->
+<!--</div>-->
 
 <h2>최종 결제금액 내역</h2>
 <table>
     <tr>
         <td>총 주문 상품</td>
-        <td>1개
-            <button>상품 수정 ></button>
+        <td th:text="${cartList.size()} + '개'"></td>
+        <td>
+            <button onclick="location.href='/cart/cartList';">상품 수정</button>
         </td>
     </tr>
     <tr>
         <td>총 주문금액</td>
-        <td></td>
+        <td th:text="'$ ' + ${#aggregates.sum(cartList.![productOriginalPrice * cartQty])}"></td>
+        <td th:text="'(' + ${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * session.exchangeRate, 1, 'COMMA') } + '원)'"></td>
     </tr>
     <tr>
+        <!--        모든 할인(인터넷할인, 적립금, 쿠폰)-->
         <td>총 할인금액</td>
-        <td></td>
+        <td id="dcUsdText"
+            th:text="'$ ' + ${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}"></td>
+        <input id="dcUsd" type="hidden"
+               th:value="${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}">
+        <td id="dcWonText"
+            th:text="'(' + ${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * session.exchangeRate, 1, 'COMMA')} + '원)'"></td>
+        <input id="dcWon" type="hidden"
+               th:value="${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * session.exchangeRate, 1)}">
     </tr>
 </table>
 <table>
     <tr>
         <td>인터넷 회원 할인</td>
-        <td>-21,223원</td>
+        <td th:text="'-' + ${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * session.exchangeRate, 1, 'COMMA') } + '원'"></td>
     </tr>
     <tr>
         <td>적립금 사용</td>
-        <td>-5000원</td>
+        <td>
+            <span id="usePoint">0</span><span>원</span>
+        </td>
     </tr>
     <tr>
         <td>쿠폰 사용</td>
-        <td>-10000원</td>
+        <td>
+            <span id="useCoupon">0</span><span>원</span>
+        </td>
     </tr>
 </table>
 <p>최종 결제금액</p>
-<p>$ 252.45</p>
-<p>328.123원</p>
+<span id="finalUsdText" th:text="'$ ' + ${#aggregates.sum(cartList.![productPrice * cartQty])}"></span><br>
+<input type="hidden" id="finalUsd" th:value="${#aggregates.sum(cartList.![productPrice * cartQty])}">
+<span id="finalWonText"
+      th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productPrice * cartQty]) * session.exchangeRate, 1, 'COMMA')} + '원'"></span>
+<input type="hidden" id="finalWon"
+       th:value="${#aggregates.sum(cartList.![productPrice * cartQty]) * session.exchangeRate}">
 <p><input type="checkbox">주문 정보를 확인하였으며, 구매에 동의합니다.</p>
-<button onclick="requestPay(this.name, this.value, this.accessKey)" name="kakaopay.TC0ONETIME">주문하기</button>
+<button id="requestPay" onclick="requestPay(this.name)" name="kakaopay.TC0ONETIME">주문하기
+</button>
 
 <!--     modal-->
 <div class="modal fade modal-lg" id="exampleModalToggle" aria-hidden="true"
@@ -311,167 +356,330 @@
 </div>
 
 </body>
-<script th:inline="javascript">
+<script th:src="@{/js/flight.js}"></script>
+<script>
     // 출국정보 불러오기
-    $("button[name=departureRadio]").click(function () {
+    $("input:radio[name=departureRadio]").click(function () {
+        // 출국정보 리스트의 선택한 인덱스 뽑아오기
         const index = $(this).attr("id");
         console.log(index);
-        const dp = [[${member.departureEntityList.get(index).departureDate}]];
-        console.log(dp);
-    })
 
-    // datepicker(달력)
-    $(function () {
-        //모든 datepicker에 대한 공통 옵션 설정
-        $.datepicker.setDefaults({
-            dateFormat: 'yymmdd' //Input Display Format 변경
-            , showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
-            , showMonthAfterYear: true //년도 먼저 나오고, 뒤에 월 표시
-            , changeYear: true //콤보박스에서 년 선택 가능
-            , changeMonth: true //콤보박스에서 월 선택 가능
-            , showOn: "both" //button:버튼을 표시하고,버튼을 눌러야만 달력 표시 ^ both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시
-            , buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-            , buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-            , buttonText: "선택" //버튼에 마우스 갖다 댔을 때 표시되는 텍스트
-            , yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
-            , monthNamesShort: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] //달력의 월 부분 텍스트
-            , monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] //달력의 월 부분 Tooltip 텍스트
-            , dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'] //달력의 요일 부분 텍스트
-            , dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'] //달력의 요일 부분 Tooltip 텍스트
-            , minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-            , maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)
-        });
+        // 뽑아온 인덱스로 설정한 id에 해당하는 데이터 뽑아오기
+        let departureDate = document.getElementById("departureDate" + index).innerText;
+        let departureAirport = document.getElementById("departureAirport" + index).innerText;
+        let arrivalRegion = document.getElementById("arrivalRegion" + index).innerText;
+        let departureNumber = document.getElementById("departureNumber" + index).innerText;
+        let departureFeature = document.getElementById("departureFeature" + index).innerText;
+        console.log("departureDate:" + departureDate);
+        console.log("departureAirport:" + departureAirport);
+        console.log("arrivalRegion:" + arrivalRegion);
+        console.log("departureNumber:" + departureNumber);
+        console.log("departureFeature:" + departureFeature);
 
-        //input을 datepicker로 선언
-        $("#datepicker").datepicker();
-        $("#datepicker2").datepicker();
-
-        //From의 초기값을 오늘 날짜로 설정
-        $('#datepicker').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
-        //To의 초기값을 내일로 설정
-        $('#datepicker2').datepicker('setDate', '+1D'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
-
-        //return날짜를 depart날짜보다 앞으로 설정 못하게, depart날짜를 과거 선택 못하게
-        $('#datepicker').datepicker();
-        $('#datepicker').datepicker('option', 'minDate', '0');
-        $('#datepicker').datepicker("option", "maxDate", $("#datepicker2").val());
-        $('#datepicker').datepicker("option", "onClose", function (selectedDate) {
-            $("#datepicker2").datepicker("option", "minDate", selectedDate);
-        });
-        $('#datepicker2').datepicker();
-        $('#datepicker2').datepicker("option", "minDate", $("#datepicker").val());
-        $('#datepicker2').datepicker("option", "onClose", function (selectedDate) {
-            $("#datepicker").datepicker("option", "maxDate", selectedDate);
-        });
+        // 뽑아온 데이터를 뿌리기
+        document.getElementById("datepicker").value = departureDate;
+        document.getElementById("departureAirport").value = departureAirport;
+        document.getElementById("arrivalRegion").value = arrivalRegion;
+        document.getElementById("departureNumber").value = departureNumber;
+        if (departureFeature == '직항')
+            $("input:radio[name='departureFeature']:radio[value='직항']").prop('checked', true);
+        else
+            $("input:radio[name='departureFeature']:radio[value='경유']").prop('checked', true);
     });
 
-    // 편명 검색 클릭 시 항공사 정보 체크 및 이동(flightNext 태그의 name값으로 지정)
-    const airportCheck = () => {
-        const selectAirport = $("select[name=departureAirport]").val();
-        const selectDate = $("input[name=departureDate]").val();
-        if (selectAirport == "") {
-            alert("출국장소를 선택하세요")
-        } else if (selectDate == "") {
-            alert("출국일시를 선택하세요")
-        } else {
-            document.getElementById("flightNext").setAttribute("name", selectAirport);
-            document.getElementById("flightNext").setAttribute("accessKey", selectDate);
-            console.log(document.getElementById("flightNext"));
-            $('#searchBtn').get(0).click();
-        }
-    }
-
-    // 해당 공항, 항공사 운항 스케쥴 불러오기
-    const flightList = (cityCode, airline, departureDate) => {
-        console.log(cityCode);
-        console.log(airline);
-        console.log(departureDate);
-        $.ajax({
-            type: "get",
-            url: "/departure/findFlightList",
-            data: {
-                "departureDate": departureDate,
-                "cityCode": cityCode,
-                "airline": airline
-            },
-            dataType: "json",
-            success: function (result) {
-                console.log(result);
-                let output = "<table class='table'>";
-                for (let i in result) {
-                    output += "<tr>";
-                    output += "<td>" + result[i].airlineKorean + "(" + airline + ")" + "</td>";
-                    output += "<td>" + result[i].airport + "(" + result[i].airportCode + ")" + "</td>";
-                    output += "<td>" + result[i].internationalNum + "</td>";
-                    output += "<td>" + result[i].internationalTime + "</td>";
-                    output += "<td>" + "<button type='button' data-bs-dismiss=\"modal\" class='btn-outline' onclick=\"flightUpdate('" + result[i].internationalNum + "')\">" + "선택" + "</button>" + "</td>";
-                    output += "</tr>";
-                }
-                output += "</table>";
-                document.getElementById('flight-list').innerHTML = output;
-            },
-            error: function () {
-                alert("error");
-            }
-        })
-    }
-
-    // 결제방법 선택에 따라 테이블 보이기/숨기기
-    function setDisplay() {
+    // 결제방법 선택
+    function payMethod() {
         if ($('input:radio[id=card]').is(':checked')) {
-            $('#cardDiv').show();
-        } else {
-            $('#cardDiv').hide();
+            // $('#cardDiv').show();
+            document.getElementById("requestPay").setAttribute("name", "html5_inicis.INIpayTest");
+        } else if ($('input:radio[id=kakao]').is(':checked')) {
+            document.getElementById("requestPay").setAttribute("name", "kakaopay.TC0ONETIME");
+        } else if ($('input:radio[id=toss]').is(':checked')) {
+            document.getElementById("requestPay").setAttribute("name", "tosspay.tosstest");
         }
     }
 
-    // 쿠폰 갯수 표현하기(옵션의 '선택'부분 갯수를 빼기 위해 두 번 파싱)
-    document.getElementById("couponQty").innerHTML = String(parseInt($("select[name=departureAirport] option").size()) - 1);
+    const pointWon = parseInt([[${#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * session.exchangeRate * 0.1}]]); // 사용 가능 적립금 원화
+    const pointUsd = parseInt([[${#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * 0.1}]]); // 사용 가능 적립금 달러
+    const totalOriginUsd = parseInt([[${#aggregates.sum(cartList.![productOriginalPrice * cartQty])}]]); // 총 주문금액 달러
+    const totalOriginWon = parseInt([[${#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * session.exchangeRate}]]); // 총 주문금액 원화
+    const netDcWon = parseInt([[${#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * session.exchangeRate}]]); // 인터넷 회원 할인 원화
+    const netDcUsd = parseInt([[${#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)])}]]); // 인터넷 회원 할인 달러
+    // 전액사용
+    function useAll() {
+        let couponValueWon = parseInt($("#selectCoupon option:selected").val()); // 선택된 쿠폰 원화
+        let couponValueUsd = parseInt(couponValueWon / [[${session.exchangeRate}]]); // 선택된 쿠폰 달러
+        let finalWon = totalOriginWon - netDcWon - couponValueWon; // 최종 결제금액 원화
+        let finalUsd = totalOriginUsd - netDcUsd - couponValueUsd; // 최종 결제금액 달러
+        console.log("finalWon: ", finalWon);
+        console.log("totalOriginWon: ", totalOriginWon);
+        console.log("netDcWon: ", netDcWon);
+        console.log("pointWon: ", pointWon);
+        console.log("couponValueWon: ", couponValueWon);
+        if (finalWon == 0) {
+            alert("최종 결제 금액이 0원입니다.");
+            $("input:checkbox[id='useAll']").prop("checked", false);
+        } else if ($("#useAll").is(":checked") && finalWon > pointWon) { // 최종 결제 금액이 사용 가능 포인트보다 큼
+            console.log("useAll-if")
+            // 적립금 사용 표현
+            document.getElementById("inputPoint").value = pointWon;
+            document.getElementById("usePoint").innerHTML = (-pointWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
+            // 달러 총 할인금액 표현
+            document.getElementById("dcUsd").value = netDcUsd + pointUsd + couponValueUsd;
+            document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + pointUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 원화 총 할인금액 표현
+            document.getElementById("dcWon").value = netDcWon + pointWon + couponValueWon;
+            document.getElementById("dcWonText").innerText = '(' + (netDcWon + pointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            // 최종 결제 달러 표현
+            document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - pointUsd - couponValueUsd;
+            document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - pointUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 최종 결제 원화 표현
+            document.getElementById("finalWon").value = totalOriginWon - netDcWon - pointWon - couponValueWon;
+            document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - pointWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
+        } else if ($("#useAll").is(":checked") && finalWon <= pointWon) { // 최종 결제 금액이 사용 가능한 포인트보다 작거나 같음(최종 결제 금액만큼만 포인트 사용)
+            console.log("useAll-else if")
+            // 적립금 사용 표현
+            document.getElementById("inputPoint").value = finalWon;
+            document.getElementById("usePoint").innerHTML = (-finalWon).toLocaleString();
+            // 달러 총 할인금액 표현
+            document.getElementById("dcUsd").value = netDcUsd + finalUsd + couponValueUsd;
+            document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + finalUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 원화 총 할인금액 표현
+            document.getElementById("dcWon").value = netDcWon + finalWon + couponValueWon;
+            document.getElementById("dcWonText").innerText = '(' + (netDcWon + finalWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            // 최종 결제 달러 표현
+            document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - finalUsd - couponValueUsd;
+            document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - finalUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 최종 결제 원화 표현
+            document.getElementById("finalWon").value = totalOriginWon - netDcWon - finalWon - couponValueWon;
+            document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - finalWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
+        } else { // 체크 해제 시
+            console.log("useAll-else")
+            // 적립금 사용 표현
+            document.getElementById("inputPoint").value = 0;
+            document.getElementById("usePoint").innerHTML = 0;
+            // 달러 총 할인금액 표현
+            document.getElementById("dcUsd").value = netDcUsd + couponValueUsd;
+            document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 원화 총 할인금액 표현
+            document.getElementById("dcWon").value = netDcWon + couponValueWon;
+            document.getElementById("dcWonText").innerText = '(' + (netDcWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            // 최종 결제 달러 표현
+            document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - couponValueUsd;
+            document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 최종 결제 원화 표현
+            document.getElementById("finalWon").value = totalOriginWon - netDcWon - couponValueWon;
+            document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
+        }
+    }
 
-    // 항공사 라디오 선택 시, 해당 항공사명(id)을 flightNext 태그의 value값으로 지정
-    $("input:radio[name=selectAirline]").click(function () {
-        document.getElementById("flightNext").setAttribute("value", $("input:radio[name=selectAirline]:checked").attr('id'));
-        console.log(document.getElementById("flightNext"));
-    });
+    // 포인트 입력 처리
+    function inputPoint() {
+        console.log("inputPoint: 함수 실행");
+        let couponValueWon = parseInt($("#selectCoupon option:selected").val()); // 선택된 쿠폰 원화
+        let couponValueUsd = parseInt(couponValueWon / [[${session.exchangeRate}]]); // 선택된 쿠폰 달러
+        let inputPointWon = parseInt(document.getElementById("inputPoint").value); // 입력한 적립금 원화
+        let inputPointUsd = parseInt(inputPointWon / [[${session.exchangeRate}]]); // 입력한 적립금 달러
+        let finalWon = totalOriginWon - netDcWon - couponValueWon; // 최종 결제금액 원화
+        console.log("finalWon: ", finalWon);
+        console.log("totalOriginWon: ", totalOriginWon);
+        console.log("netDcWon: ", netDcWon);
+        console.log("pointWon: ", pointWon);
+        console.log("couponValueWon: ", couponValueWon);
+        $("input:checkbox[id='useAll']").prop("checked", false);
+        if (finalWon == 0) {
+            alert("최종 결제 금액이 0원입니다.");
+        } else if (inputPointWon < 0) {
+            alert("입력한 포인트가 0보다 작습니다.");
+            $("input:checkbox[id='useAll']").prop("checked", true);
+            useAll();
+        } else if (inputPointWon > pointWon) { // 입력 포인트가 사용 가능 포인트보다 큼(자동으로 전액 사용)
+            alert("사용 가능한 적립금을 초과하였습니다.")
+            $("input:checkbox[id='useAll']").prop("checked", true);
+            useAll();
+        } else if (inputPointWon == pointWon) { // 입력 포인트가 사용 가능 포인트와 같음(전액 사용)
+            $("input:checkbox[id='useAll']").prop("checked", true);
+            useAll();
+        } else if (inputPointWon < finalWon) { // 입력 포인트가 최종 결제 원화보다 작음
+            console.log("inputPoint-else-if1")
+            // 적립금 사용 표현
+            document.getElementById("inputPoint").value = inputPointWon;
+            document.getElementById("usePoint").innerHTML = (-inputPointWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
+            // 달러 총 할인금액 표현
+            document.getElementById("dcUsd").value = netDcUsd + inputPointUsd + couponValueUsd;
+            document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + inputPointUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 원화 총 할인금액 표현
+            document.getElementById("dcWon").value = netDcWon + inputPointWon + couponValueWon;
+            document.getElementById("dcWonText").innerText = '(' + (netDcWon + inputPointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            // 최종 결제 달러 표현
+            document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd;
+            document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 최종 결제 원화 표현
+            document.getElementById("finalWon").value = totalOriginWon - netDcWon - inputPointWon - couponValueWon;
+            document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - inputPointWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
+        } else if (inputPointWon >= finalWon) { // 입력 포인트가 최종 결제 원화보다 크거나 같음(최종 결제 금액만큼 포인트 사용)-전액 사용 함수 실행
+            console.log("inputPoint-else-if2")
+            $("input:checkbox[id='useAll']").prop("checked", true);
+            useAll();
+        } else {
+            console.log("inputPoint-else");
+            alert("숫자를 입력하세요.");
+            $("input:checkbox[id='useAll']").prop("checked", true);
+            useAll();
+        }
+    }
 
-
-    const flightUpdate = (internationalNum) => {
-        console.log(internationalNum)
-        document.getElementById("departureNumber").value = internationalNum;
+    // 쿠폰 선택 처리
+    function selectCoupon() {
+        let couponValueWon = parseInt($("#selectCoupon option:selected").val()); // 선택된 쿠폰 원화
+        let couponValueUsd = parseInt(couponValueWon / [[${session.exchangeRate}]]); // 선택된 쿠폰 달러
+        let inputPointWon = parseInt(document.getElementById("inputPoint").value); // 입력한 적립금 원화
+        let inputPointUsd = parseInt(inputPointWon / [[${session.exchangeRate}]]); // 입력한 적립금 달러
+        let finalWon = totalOriginWon - netDcWon - inputPointWon; // 최종 결제금액 원화
+        const couponMemberId = $("#selectCoupon option:selected").attr("name");
+        if (couponMemberId != null && couponValueWon <= finalWon) { // 쿠폰 선택 and 최종결제금액이 쿠폰금액보다 크거나 같음
+            // 쿠폰 사용 표현
+            document.getElementById("useCoupon").innerHTML = (-couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
+            // 달러 총 할인금액 표현
+            document.getElementById("dcUsd").value = netDcUsd + inputPointUsd + couponValueUsd;
+            document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + inputPointUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 원화 총 할인금액 표현
+            document.getElementById("dcWon").value = netDcWon + inputPointWon + couponValueWon;
+            document.getElementById("dcWonText").innerText = '(' + (netDcWon + inputPointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            // 최종 결제 달러 표현
+            document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd;
+            document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 최종 결제 원화 표현
+            document.getElementById("finalWon").value = totalOriginWon - netDcWon - inputPointWon - couponValueWon;
+            document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - inputPointWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
+        } else if (couponMemberId != null && couponValueWon > finalWon) { // 쿠폰 선택 and 최종결제금액이 쿠폰금액보다 작음
+            alert("쿠폰 금액이 최종 결제 금액보다 큽니다.")
+        } else { // '선택'을 선택
+            // 쿠폰 사용 표현
+            document.getElementById("useCoupon").innerHTML = (-couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
+            // 달러 총 할인금액 표현
+            document.getElementById("dcUsd").value = netDcUsd + inputPointUsd + couponValueUsd;
+            document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + inputPointUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 원화 총 할인금액 표현
+            document.getElementById("dcWon").value = netDcWon + inputPointWon + couponValueWon;
+            document.getElementById("dcWonText").innerText = '(' + (netDcWon + inputPointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            // 최종 결제 달러 표현
+            document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd;
+            document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
+            // 최종 결제 원화 표현
+            document.getElementById("finalWon").value = totalOriginWon - netDcWon - inputPointWon - couponValueWon;
+            document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - inputPointWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
+        }
     }
 
     // 아임포트
-    const IMP = window.IMP; // 생략 가능
-    IMP.init("imp66752664"); // 예: imp00000000
-
-    function requestPay(pgName, productName, paymentWon) {
+    const IMP = window.IMP;
+    IMP.init("imp66752664");
+    function requestPay(pgName) {
         // IMP.request_pay(param, callback) 결제창 호출
         IMP.request_pay({ // param
             pg: pgName,
             pay_method: "card",
             merchant_uid: 'merchant_' + new Date().getTime(), // 중복되지 않는 값(임의의 값, 주문 고유번호)
-            name: productName,
-            amount: paymentWon,
+            name: "[[${cartList.get(0).productName}]] 외 [[${cartList.size()} - 1]]개",
+            amount: document.getElementById("finalWon").value,
             buyer_email: "[[${member.memberEmail}]]",
             buyer_name: "[[${member.memberName}]]",
-            buyer_tel: "[[${member.memeberMobile}]]",
+            buyer_tel: "[[${member.memberMobile}]]",
         }, function (rsp) { // callback
+            console.log("function 진입")
             if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
+                console.log("rsp.success" + rsp.success)
                 // jQuery로 HTTP 요청
                 // jQuery.ajax({
-                //     url: "{서버의 결제 정보를 받는 endpoint}", // 예: https://www.myservice.com/payments/complete
+                //     url: "/order/save",
                 //     method: "POST",
                 //     headers: { "Content-Type": "application/json" },
                 //     data: {
-                //         imp_uid: rsp.imp_uid,
-                //         merchant_uid: rsp.merchant_uid
-                //     }
+                //         "imp_uid": rsp.imp_uid,
+                //         "merchant_uid": rsp.merchant_uid,
+                //         "couponMemberId": couponMemberId,
+                //         "netDcWon": netDcWon,
+                //         "orderUsd": finalUsd,
+                //         "orderWon": finalWon,
+                //         "pointUseValue": inputPoint,
+                //         "couponUseValue": couponValueWon,
+                //         "exchangeRate": exchangeRate,
+                //         "orderDepartureAirport": departureAirport,
+                //         "orderDepartureDate": departureDate,
+                //         "orderDepartureNumber": departureNumber,
+                //     },
+                //     dataType: "json",
                 // }).done(function (data) {
                 //     // 가맹점 서버 결제 API 성공시 로직
+                //     alert("성공");
+                // })
+                // $.ajax({
+                //     url: "/order/save",
+                //     type: "post",
+                //     data: {
+                //         "imp_uid": rsp.imp_uid,
+                //         "merchant_uid": rsp.merchant_uid,
+                //         "couponMemberId": couponMemberId,
+                //         "netDcWon": netDcWon,
+                //         "orderUsd": finalUsd,
+                //         "orderWon": finalWon,
+                //         "pointUseValue": inputPoint,
+                //         "couponUseValue": couponValueWon,
+                //         "exchangeRate": exchangeRate,
+                //         "orderDepartureAirport": departureAirport,
+                //         "orderDepartureDate": departureDate,
+                //         "orderDepartureNumber": departureNumber
+                //     },
+                //     dataType: "json",
+                //     success: function (result) {
+                //         alert("성공")
+                //     },
+                //     error: function () {
+                //         alert("어디가 틀렸을까");
+                //     }
                 // })
                 alert("완료" + rsp.imp_uid + rsp.merchant_uid)
+                save();
             } else {
                 alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
+            }
+        });
+    }
+
+    function save() {
+        const couponMemberId = $("#selectCoupon option:selected").attr("name");
+        const memberId = [[${member.memberId}]];
+        const finalUsd = document.getElementById("finalUsd").value;
+        const finalWon = document.getElementById("finalWon").value;
+        const inputPoint = document.getElementById("inputPoint").value;
+        const couponValueWon = parseInt($("#selectCoupon option:selected").val());
+        const exchangeRate = [[${session.exchangeRate}]];
+        const departureAirport = $("#departureAirport option:selected").attr("value");
+        const departureDate = document.getElementById("datepicker").value;
+        const departureNumber = document.getElementById("departureNumber").value;
+        $.ajax({
+            type: "post",
+            url: "/order/save",
+            data: {
+                "netDcWon": netDcWon,
+                "orderUsd": finalUsd,
+                "orderWon": finalWon,
+                "pointUseValue": inputPoint,
+                "couponUseValue": couponValueWon,
+                "exchangeRate": exchangeRate,
+                "couponMemberId": couponMemberId,
+                "memberId": memberId,
+                "orderDepartureAirport": departureAirport,
+                "orderDepartureDate": departureDate,
+                "orderDepartureNumber": departureNumber,
+            },
+            dataType: "json",
+            success: function (result) {
+                alert("성공")
+            },
+            error: function () {
+                alert("어디가 틀렸을까");
             }
         });
     }
