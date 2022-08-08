@@ -8,13 +8,22 @@
             box-size: border-box;
             border-collapse: collapse;
         }
+
         .container-01 {
             width: 100%;
-            height: 350px;
+            height: 330px;
             display: flex;
             margin: 0;
             padding: 2rem 10rem;
         }
+
+        .container-02 {
+            width: 100%;
+            display: flex;
+            margin: 0;
+            padding: 2rem 10rem;
+        }
+
         .nav-container {
             display: flex;
             flex-direction: column;
@@ -22,115 +31,126 @@
             height: 100%;
             text-align: center;
         }
+
         .nav-container .item {
             justify-content: space-between;
             height: 25%;
             position: relative;
-            padding: 10px;
             border: 1px solid #ccc;
+            padding-top: 20px;
+            cursor: pointer;
         }
+
         .img-container {
             width: 75%;
-            background-color: lightcoral;
         }
+
         .img-container img {
             width: 100%;
             height: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
 <body>
-<h2>이벤트 목록</h2>
-<form action="/event/search" method="get">
-    <input type="text" name="q" placeholder="검색">
-    <input type="submit" value="검색">
-</form>
+<div style="margin: 15px;">
+    <form action="/event/search" method="get">
+        <input type="text" name="q" placeholder="이벤트 검색">
+        <input type="submit" value="검색">
+    </form>
+</div>
 <div class="container-01">
     <div class="nav-container">
-        <div class="item item-01" style="background-color: lightgray; font-weight: bold; font-size: 20px">행복면세 쿠폰 혜택</div>
-        <div class="item item-02" onclick="changeImg02()">행복 회원분들! 쿠폰 챙겨가세요!</div>
-        <div class="item item-03" onclick="changeImg03()">행복이가 생일을 챙겨드려요!</div>
-        <div class="item item-04" onclick="changeImg04()">임진년을 맞아 호랑이띠 회원을 챙겨드려요!</div>
+        <div class="item item-01"
+             style="background-color: gray; color: white; font-weight: bold; font-size: 20px; padding-top: 10px">행복면세 쿠폰 혜택
+        </div>
+        <div class="item item-02" onclick="changeImg02()" style="height: 100px;">행복 회원분들! 쿠폰 챙겨가세요!</div>
+        <div class="item item-03" onclick="changeImg03()" style="height: 100px;">행복이가 생일을 챙겨드려요!</div>
+        <div class="item item-04" onclick="changeImg04()" style="height: 100px;">임진년을 맞아 호랑이띠 회원을 챙겨드려요!</div>
     </div>
     <div class="img-container">
-        <img th:src="@{/img/event_banner.jpg}" class="img" alt="">
+        <a href="#" class="img-link">
+            <img th:src="@{/img/event_banner.jpg}" class="img" alt="">
+        </a>
     </div>
 </div>
-<table class="table table-hover">
-    <tr>
-        <th>이벤트 번호</th>
-        <th>이벤트 제목</th>
-        <th>작성 시간</th>
-        <th>쿠폰이름</th>
-        <th>쿠폰금액</th>
-        <th>썸네일</th>
-    </tr>
-    <tr th:each="event: ${eventList}">
-        <td th:text="${event.eventId}"></td>
-        <td>
-            <a th:href="@{|/event/${event.eventId}(couponName=${event.couponEntity.couponName},couponId=${event.couponEntity.couponId})}"
-               th:text="${event.eventTitle}"></a></td>
-        <td th:text="${event.eventCreatedDate}"></td>
-        <td th:text="${event.couponEntity.couponName}"></td>
-        <td th:text="${event.couponEntity.couponValue}"></td>
-        <td><img th:src="@{|/upload/${event.eventThumbnailName}|}" width="100" height="100" alt=""></td>
-    </tr>
-</table>
 
-<div th:if="${startPage}" class="container">
-    <ul class="pagination justify-content-center">
-        <li class="page-item">
-            <!--첫페이지 요청 링크-->
-            <a class="page-link" th:href="@{/event(page=1)}">
-                <span>First</span>
-            </a>
-        </li>
+<!--부트스트랩 card 시작-->
+<div class="container-02">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="event: ${eventList}">
+            <div class="card h-100">
+                <a th:href="@{|/event/${event.eventId}(couponName=${event.couponEntity.couponName},couponId=${event.couponEntity.couponId})}">
+                    <img th:src="@{|/upload/${event.eventThumbnailName}|}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                    <a th:href="@{|/event/${event.eventId}(couponName=${event.couponEntity.couponName},couponId=${event.couponEntity.couponId})}"
+                       style="color: black"><h5 class="card-title" th:text="${event.eventTitle}"></h5></a>
+                    <a th:href="@{|/event/${event.eventId}(couponName=${event.couponEntity.couponName},couponId=${event.couponEntity.couponId})}"
+                       style="color: black"><p class="card-text" th:text="${event.eventContents}"></p></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display: block">
+    <div th:if="${startPage}" class="container">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <!--첫페이지 요청 링크-->
+                <a class="page-link" th:href="@{/event(page=1)}">
+                    <span>First</span>
+                </a>
+            </li>
 
-        <!--    첫페이지에 있으면 < 화살표가 disable되라-->
-        <li th:class="${eventList.first} ? 'disabled'" class="page-item">
-            <!--boardList.first: isFirst()
-                boardList.number: getNumber()-->
-            <a class="page-link" th:href="${eventList.first} ? '#' : @{/event(page=${eventList.number})}">
-                <span><</span> <!-- < -->
-            </a>
-        </li>
+            <!--    첫페이지에 있으면 < 화살표가 disable되라-->
+            <li th:class="${eventList.first} ? 'disabled'" class="page-item">
+                <!--boardList.first: isFirst()
+                    boardList.number: getNumber()-->
+                <a class="page-link" th:href="${eventList.first} ? '#' : @{/event(page=${eventList.number})}">
+                    <span><</span> <!-- < -->
+                </a>
+            </li>
 
-        <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할 -->
-        <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
-            th:class="${page == eventList.number + 1} ? 'page-item active'" class="page-item">
-            <!--      ↑현재페이지에 배경색을 줌-->
-            <a class="page-link" th:text="${page}" th:href="@{/event(page=${page})}"></a>
-        </li>
+            <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할 -->
+            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                th:class="${page == eventList.number + 1} ? 'page-item active'" class="page-item">
+                <!--      ↑현재페이지에 배경색을 줌-->
+                <a class="page-link" th:text="${page}" th:href="@{/event(page=${page})}"></a>
+            </li>
 
-        <!-- 다음 페이지 요청
-            현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
-            getNumber() 값은 2임.
-            따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
-        <li th:class="${eventList.last} ? 'disabled'">
-            <a class="page-link" th:href="${eventList.last} ? '#' : @{/event(page=${eventList.number + 2})}">
-                <span>&gt;</span>
-            </a>
-        </li>
+            <!-- 다음 페이지 요청
+                현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
+                getNumber() 값은 2임.
+                따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
+            <li th:class="${eventList.last} ? 'disabled'">
+                <a class="page-link" th:href="${eventList.last} ? '#' : @{/event(page=${eventList.number + 2})}">
+                    <span>&gt;</span>
+                </a>
+            </li>
 
-        <li class="page-item">
-            <a class="page-link" th:href="@{/event(page=${eventList.totalPages})}">
-                <span>Last</span>
-            </a>
-        </li>
-    </ul>
+            <li class="page-item">
+                <a class="page-link" th:href="@{/event(page=${eventList.totalPages})}">
+                    <span>Last</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 </div>
 </body>
-<script th:inline="javascript">
+<script th:inline="javascript" th:each="event: ${eventList}">
     const changeImg02 = () => {
+        const link = document.querySelector('.img-link');
         const img = document.querySelector('.img');
         const item02 = document.querySelector('.item-02');
         const item03 = document.querySelector('.item-03');
         const item04 = document.querySelector('.item-04');
 
-        item02.style.backgroundColor = 'lightgreen';
+        item02.style.backgroundColor = 'lightpink';
         item03.style.backgroundColor = '#fff';
         item04.style.backgroundColor = '#fff';
         img.src = '/img/event_banner01.jpg';
+        link.href = "/event/6?couponName=띠&couponId=3"
     }
     const changeImg03 = () => {
         const img = document.querySelector('.img');
@@ -138,7 +158,7 @@
         const item03 = document.querySelector('.item-03');
         const item04 = document.querySelector('.item-04');
 
-        item03.style.backgroundColor = 'lightgreen';
+        item03.style.backgroundColor = 'lightpink';
         item02.style.backgroundColor = '#fff';
         item04.style.backgroundColor = '#fff';
         img.src = '/img/event_banner02.jpg';
@@ -149,7 +169,7 @@
         const item03 = document.querySelector('.item-03');
         const item04 = document.querySelector('.item-04');
 
-        item04.style.backgroundColor = 'lightgreen';
+        item04.style.backgroundColor = 'lightpink';
         item02.style.backgroundColor = '#fff';
         item03.style.backgroundColor = '#fff';
         img.src = '/img/event_banner03.jpg';

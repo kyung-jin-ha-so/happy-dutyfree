@@ -8,27 +8,127 @@
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 </head>
+<style>
+    .membership-container {
+        display: flex;
+        max-width: 1000px;
+        height: 150px;
+        border: 1px solid #e5e5e5;
+        background-color: rgba(107, 201, 170, 0.3);
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .myTier-container {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        width: 200px;
+        height: 100%;
+        background-color: pink;
+    }
+
+    .detail-container {
+        display: inline-block;
+        width: 800px;
+        height: 100%;
+        background-color: yellowgreen;
+    }
+
+    .contents-container {
+        display: flex;
+        height: 50px;
+        background-color: #b6d4fe;
+    }
+
+    .point-container {
+        display: inline-block;
+        width: 50%;
+        height: 100%;
+        background-color: #3dd5f3;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .coupon-container {
+        display: inline-block;
+        width: 50%;
+        height: 100%;
+        list-style: none;
+        background-color: #20c997;
+        margin: 0;
+        padding: 0;
+    }
+
+    .myPage-container {
+        display: flex;
+    }
+
+    table {
+        width: 1000px;
+        border-top: 1px solid #444444;
+        border-collapse: collapse;
+    }
+
+    th {
+        border-bottom: 1px solid #444444;
+        padding: 10px;
+        text-align: center;
+        background-color: lightgray;
+    }
+
+    td {
+        border-bottom: 1px solid #444444;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .totalPrice-container {
+        width: 1000px;
+        text-align: right;
+    }
+</style>
+
 <body>
 <h2>장바구니</h2>
-
-<!-- 체크박스 전체 여부 -->
-<div class="all_check_input_div">
-    <input type="checkbox" class="all_check_input input_size_20" checked="checked"><span
-        class="all_chcek_span">전체선택</span>
+<!--회원 등급, 포인트, 쿠폰 표기 div-->
+<div class="membership-container">
+    <div class="myTier-container" th:text="${member.memberTier}"></div>
+    <div class="detail-container">
+        <div class="contents-container" th:text="${session.loginId}+ '님께서 즉시 받으실 수 있는 쇼핑 혜택입니다.'"></div>
+        <div class="myPage-container">
+            <div class="point-container" th:each="point : ${pointList}">
+                <p>적립금</p>
+                <li th:text="${point.pointValue}"></li>
+            </div>
+            <div class="coupon-container">
+                <p>할인쿠폰</p>
+                <li class="totalCoupon"></li>
+            </div>
+        </div>
+    </div>
 </div>
-<table th:each="cart : ${cartList}">
+<div th:each="coupon: ${myCoupon}">
+    <div class="coupon_info_td">
+        <input type="hidden" class="individual_totalCoupon_input"
+               th:value="${#lists.size('coupon')}">
+    </div>
+</div>
+<table>
     <tr>
-        <th>선택</th>
-        <th>상품</th>
-        <th>원가</th>
-        <th>인터넷할인가</th>
+        <!-- 체크박스 전체 여부 -->
+        <th class="all_check_input_div">
+            <input type="checkbox" class="all_check_input input_size_20" checked="checked"><span
+                class="all_chcek_span"></span>
+        </th>
+        <th>상품명</th>
+        <th>판매 금액</th>
         <th>수량</th>
-        <th>썸네일</th>
-        <th>총 금액</th>
-        <th>원화</th>
+        <th>구매 금액</th>
         <th>삭제</th>
     </tr>
-    <tr>
+    <tr th:each="cart : ${cartList}">
         <td class="cart_info_td">
             <input type="hidden" class="individual_totalPrice_input"
                    th:value="${exchangeRateDTO.exchangeRate*cart.productPrice*cart.cartQty}"></div>
@@ -43,23 +143,31 @@
             <input type="hidden" class="individual_productPrice_input" th:value="${cart.productPrice}">
             <input type="hidden" class="individual_productThumbnail_input" th:value="${cart.productThumbnail}">
         </td>
-        <td><a th:href="@{|/product/detail/${cart.productId}|}" th:text="${cart.productName}"></a></td>
-        <td><STRIKE th:text="|$${cart.productOriginalPrice}|"></STRIKE></td>
-        <td th:text="|$${cart.productPrice}|" id="productPrice" th:value="${cart.productPrice}"></td>
+        <td style="text-align: left"><img th:src="@{|/upload/${cart.productThumbnail}|}" width="100" height="100"
+                                          alt="">
+            <span>
+                <a th:href="@{|/product/detail/${cart.productId}|}" th:text="${cart.productName}"></a>
+            </span>
+        </td>
+        <td><STRIKE th:text="|$${cart.productOriginalPrice}|"></STRIKE><br>
+            <span th:text="|$${cart.productPrice}|" id="productPrice" th:value="${cart.productPrice}"></span>
         <td>
             <button th:onclick="'minusBtn(' + ${cart.cartId} + ')'" class="minus_btn"> -</button>
-            <input type="text" class="quantity_input" th:id="${cart.cartId}" th:value="${cart.cartQty}">
+            <input type="text" class="quantity_input" th:id="${cart.cartId}" th:value="${cart.cartQty}"
+                   style="width: 50px;">
             <button th:onclick="'plusBtn(' + ${cart.cartId} + ')'" class="plus_btn"> +</button>
         </td>
-        <td><img th:src="@{|/upload/${cart.productThumbnail}|}" width="100" height="100" alt=""></td>
-        <td th:text="|$${cart.cartQty*cart.productPrice}|"></td>
-        <td th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*cart.productPrice*cart.cartQty, 3, 'COMMA')} + '원'"></td>
+        <td><span th:text="|$${cart.cartQty*cart.productPrice}|"></span><br>
+            <span th:text="|(${#numbers.formatInteger(exchangeRateDTO.exchangeRate*cart.productPrice*cart.cartQty, 3, 'COMMA')}| + '원)'"></span>
+        </td>
+
         <td><input type="button" th:onclick="deleteCart([[${cart.cartId}]])" value="삭제"></a></td>
     </tr>
 </table>
-
-<span class="total"></span>
-
+<div class="totalPrice-container">
+    <h2 class="totalDollar"></h2>
+    <h5 class="totalWon"></h5>
+</div>
 <div th:each="cart : ${cartList}">
     <form action="/order/save-form" method="get" class="order_form"></form>
 </div>
@@ -130,13 +238,16 @@
 
     function setTotalInfo() {
         let totalPrice = 0;
+        let totalPriceDollar = 0;
         $(".cart_info_td").each(function (index, element) {
             if ($(element).find(".individual_cart_checkbox").is(":checked") === true) {	//체크여부
                 // 총 가격
                 totalPrice += parseFloat($(element).find(".individual_totalPrice_input").val());
+                totalPriceDollar += parseInt($(element).find(".individual_productPrice_input").val());
             }
         });
-        $(".total").text("총금액: " + totalPrice.toLocaleString() + "원");
+        $(".totalDollar").text("주문금액: $" + totalPriceDollar.toLocaleString());
+        $(".totalWon").text("총금액: " + totalPrice.toLocaleString() + "원");
     }
 
     //체크박스 전체 선택
@@ -193,5 +304,18 @@
     const deleteCart = (cartId) => {
         location.href = "/cart/delete/" + cartId;
     }
+    const loginId = [[${session.loginId}]];
+    $(document).ready(function () {
+        totalInfo();
+    });
+
+    function totalInfo() {
+        let totalPrice = 0;
+        $(".coupon_info_td").each(function (index, element) {
+            totalPrice += parseFloat($(element).find(".individual_totalCoupon_input").val());
+        });
+        $(".totalCoupon").text(totalPrice.toLocaleString() + "개");
+    }
+
 </script>
 </html>
