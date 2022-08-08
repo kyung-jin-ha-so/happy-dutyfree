@@ -29,12 +29,12 @@ public class HomeController {
 
     private final ExchangeRateService exchangeRateService;
 
-    @GetMapping("/")
+    @GetMapping("/index")
     public String index(){
         return "index";
     }
 
-    @GetMapping("/main")
+    @GetMapping("/")
     public String main(Model model, HttpSession session){
         List<CategoryDTO> categoryDTOList = categoryService.findAll();
         List<ProductDTO> productDTOList = productService.findMainAll();

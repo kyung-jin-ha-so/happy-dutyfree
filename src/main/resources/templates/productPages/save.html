@@ -215,43 +215,19 @@
                 <input type="text" name="productQuantity">
             </div>
         </div>
+
+        <div class="save-item">
+            <div class="title-wrap">
+                <span class="title">상품 썸네일</span>
+            </div>
+            <div class="input-wrap">
+                <input type="file" name="productThumbnailFile">
+            </div>
+        </div>
+
         <div class="btn-wrap">
             <button type="submit" class="save-btn">등록</button>
         </div>
-    </div>
-
-
-    <div style="display:none">
-        <h2>상품 등록</h2>
-        <div class="">
-            <div>상품 이름</div>
-            <div><input type="text" name="productName"></div>
-        </div>
-        <div>상품 카테고리</div>
-        <div>
-            <select id="categoryId" name="categoryId">
-                <option value=""> -- 선택 --</option>
-                <option th:each="category: ${categoryDTOList}" th:value="${category.categoryId}"
-                        th:utext="${category.categoryName}"></option>
-            </select>
-        </div>
-        상품 설명
-        <textarea name="productDesc"> </textarea> <br>
-        <input multiple type="file" name="productFile"><br>
-
-        상품 브랜드
-        <input type="text" name="productBrand"><br>
-        상품 정가
-        <!--        <input type="text" name="productOriginalPrice" id="productOriginalPrice" th:onblur="calPrice()"><br>-->
-        할인율
-        <!--        <input type="text" name="productDiscount" id="productDiscount" th:onblur="calPrice()"><br>-->
-        상품 회원가
-        <!--        <input type="text" id="productPrice" name="productPrice"><br>-->
-        상품 수량
-        <input type="text" name="productQuantity"><br>
-        상품 썸네일
-        <input type="file" name="productThumbnailFile"><br>
-        <input type="submit" value="제출">
     </div>
 </form>
 

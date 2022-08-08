@@ -1,11 +1,7 @@
 package com.its.happy.controller;
 
-import com.its.happy.dto.CartDTO;
-import com.its.happy.dto.ExchangeRateDTO;
-import com.its.happy.dto.LikeDTO;
-import com.its.happy.service.CartService;
-import com.its.happy.service.ExchangeRateService;
-import com.its.happy.service.ProductService;
+import com.its.happy.dto.*;
+import com.its.happy.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +19,9 @@ public class CartController {
     private final CartService cartService;
     private final ProductService productService;
     private final ExchangeRateService exchangeRateService;
-
+    private final PointService pointService;
+    private final CouponService couponService;
+    private final MemberService memberService;
     @GetMapping("/save")
     public ResponseEntity save(@RequestParam("productId") Long productId, @RequestParam("memberId") Long memberId, @RequestParam("cartQty") int cartQty) {
         String result = cartService.save(productId, memberId, cartQty);
@@ -46,8 +44,14 @@ public class CartController {
         Long memberId = (Long) session.getAttribute("loginId");
         List<CartDTO> cartDTOList = cartService.findById(memberId);
         model.addAttribute("cartList", cartDTOList);
+        List<PointDTO> pointDTOList = pointService.findByPoint(memberId);
+        model.addAttribute("pointList",pointDTOList);
+        List<CouponMemberDTO> couponMemberDTOList  = couponService.findByMyCoupon(memberId);
+        model.addAttribute("myCoupon", couponMemberDTOList);
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
         return "cartPages/list";
     }
     @PostMapping("/update/")
