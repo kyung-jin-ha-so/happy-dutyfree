@@ -23,7 +23,7 @@
 .search .right_box{display:inline-block; vertical-align:middle; width:225px;}
 /*.search .right_box a{display:block;}*/
 /*.search .right_box a img{width:100%;}*/
-.search .right_box a{width:100%; display:block; background:#000; height:80px;}
+.search .right_box a{width:100%; display:block; background:white; height:80px;}
 
 /* main_visual */
 .main_visual{height:500px; overflow:hidden;}
