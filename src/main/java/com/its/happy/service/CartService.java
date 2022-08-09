@@ -1,9 +1,7 @@
 package com.its.happy.service;
 
 import com.its.happy.dto.CartDTO;
-import com.its.happy.dto.LikeDTO;
 import com.its.happy.entity.CartEntity;
-import com.its.happy.entity.LikeEntity;
 import com.its.happy.entity.MemberEntity;
 import com.its.happy.entity.ProductEntity;
 import com.its.happy.repository.CartRepository;
@@ -60,10 +58,10 @@ public class CartService {
     public List<CartDTO> findById(Long memberId) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
         List<CartDTO> cartDTOList = new ArrayList<>();
-        if(optionalMemberEntity.isPresent()){
+        if (optionalMemberEntity.isPresent()) {
             MemberEntity memberEntity = optionalMemberEntity.get();
             List<CartEntity> cartEntityList = memberEntity.getCartEntityList();
-            for(CartEntity cartEntity : cartEntityList){
+            for (CartEntity cartEntity : cartEntityList) {
                 cartDTOList.add(CartDTO.toCartDTO(cartEntity));
             }
         }
@@ -72,7 +70,7 @@ public class CartService {
 
     public void updateCartQty(CartDTO cartDTO) {
         Optional<CartEntity> optionalCartEntity = cartRepository.findById(cartDTO.getCartId());
-        if(optionalCartEntity.isPresent()) {
+        if (optionalCartEntity.isPresent()) {
             CartEntity cartEntity = optionalCartEntity.get();
             MemberEntity memberEntity = cartEntity.getMemberEntity();
             ProductEntity productEntity = cartEntity.getProductEntity();
@@ -82,9 +80,33 @@ public class CartService {
             cartRepository.save(cartEntity1);
         }
     }
+
     @Transactional
     public void deleteById(Long cartId) {
         cartRepository.deleteById(cartId);
+    }
+
+    public Long save2(CartDTO cartDTO) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(cartDTO.getMemberId());
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(cartDTO.getProductId());
+        int cartQty = cartDTO.getCartQty();
+        if (optionalMemberEntity.isPresent()) {
+            if (optionalProductEntity.isPresent()) {
+                MemberEntity memberEntity = optionalMemberEntity.get();
+                ProductEntity productEntity = optionalProductEntity.get();
+                return cartRepository.save(CartEntity.toCartEntity(cartQty, productEntity, memberEntity)).getCartId();
+            }
+        }
+        return null;
+    }
+
+    public CartDTO findByCartId(Long cartId) {
+        Optional<CartEntity> optionalCartEntity = cartRepository.findById(cartId);
+        if(optionalCartEntity.isPresent()) {
+            CartEntity cartEntity = optionalCartEntity.get();
+            return CartDTO.toCartDTO(cartEntity);
+        }
+        return null;
     }
 }
 

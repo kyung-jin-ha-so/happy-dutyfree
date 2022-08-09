@@ -5,6 +5,7 @@ import com.its.happy.dto.CouponMemberDTO;
 import com.its.happy.dto.EventDTO;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.criterion.Order;
 
 import javax.persistence.*;
 
@@ -32,10 +33,23 @@ public class CouponMemberEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
+    // CouponMemberEntity(1) 가 OrderEntity(1)에게 참조당함
+    @OneToOne(mappedBy = "couponMemberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private OrderEntity orderEntity;
+
     public static CouponMemberEntity toCouponMember(MemberEntity memberEntity, CouponEntity couponEntity) {
         CouponMemberEntity couponMemberEntity = new CouponMemberEntity();
         couponMemberEntity.setCouponStatus("사용 전");
         couponMemberEntity.setCouponEntity(couponEntity);
+        couponMemberEntity.setMemberEntity(memberEntity);
+        return couponMemberEntity;
+    }
+
+    public static CouponMemberEntity toUpdateCouponMember(CouponMemberDTO couponMemberDTO, MemberEntity memberEntity) {
+        CouponMemberEntity couponMemberEntity = new CouponMemberEntity();
+        couponMemberEntity.setCouponMemberId(couponMemberDTO.getCouponMemberId());
+        couponMemberEntity.setCouponStatus(couponMemberDTO.getCouponStatus());
+        couponMemberEntity.setCouponEntity(couponMemberDTO.getCouponEntity());
         couponMemberEntity.setMemberEntity(memberEntity);
         return couponMemberEntity;
     }

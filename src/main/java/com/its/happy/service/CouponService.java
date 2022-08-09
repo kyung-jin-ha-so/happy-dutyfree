@@ -106,7 +106,26 @@ public class CouponService {
             return null;
         }
     }
+
     public void update(CouponDTO couponDTO) {
         couponRepository.save(CouponEntity.toUpdateCouponEntity(couponDTO));
+    }
+
+    public CouponMemberDTO findByCouponMemberId(Long couponMemberId) {
+        Optional<CouponMemberEntity> optionalCouponMemberEntity = couponMemberRepository.findById(couponMemberId);
+        if (optionalCouponMemberEntity.isPresent()) {
+            return CouponMemberDTO.toCouponMemberDTO(optionalCouponMemberEntity.get());
+        } else {
+            return null;
+        }
+    }
+
+    public void updateCouponMember(CouponMemberDTO couponMemberDTO) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(couponMemberDTO.getCouponMemberId());
+        if (optionalMemberEntity.isPresent()) {
+            MemberEntity memberEntity = optionalMemberEntity.get();
+            CouponMemberEntity couponMemberEntity = CouponMemberEntity.toUpdateCouponMember(couponMemberDTO, memberEntity);
+            couponMemberRepository.save(couponMemberEntity);
+        }
     }
 }
