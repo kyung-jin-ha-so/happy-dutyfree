@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<h2>주문 내역</h2>
+<table>
+    <tr>
+        <th>주문번호</th>
+        <th>주문일시</th>
+        <th>주문명</th>
+        <th>결제금액</th>
+        <th>주문상태</th>
+        <th>출국일</th>
+        <th>주문취소</th>
+    </tr>
+    <tr th:each="order: ${orderList}">
+        <td th:text="${order.orderId}"></td>
+        <td th:text="${order.orderCreatedTime}"></td>
+        <td>
+            <a th:href="@{|/order/detail/${order.orderId}|}" th:text="${order.orderProductEntityList.get(0).productName + '외' + (order.orderProductEntityList.size() - 1) + '개'}"></a>
+        </td>
+        <td th:text="${'$' + order.orderUsd + '(' + order.orderWon + '원)'}"></td>
+        <td th:text="${order.orderStatus}"></td>
+        <td th:text="${order.orderDepartureEntity.orderDepartureDate}"></td>
+        <td>
+            <a th:href="@{|/order/cancel/${order.orderId}|}">취소</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
