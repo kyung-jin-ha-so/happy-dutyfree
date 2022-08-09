@@ -13,10 +13,10 @@
         a:hover{font-size:12px; color:#fff; text-decoration:none;}
         a:visited{font-size:12px; color:#fff;  text-decoration:none;}
         input{width:274px; padding:10px 20px; box-sizing:border-box; display:inline-block}
-        a{margin-left:10px; display:inline-block; height:40px; line-height:40px; text-align:center; width:60px; background:#222; color:#fff; font-size:16px; letter-spacing:-0.04em; font-weight:400;}
+        a.black02{margin-left:10px; display:inline-block; height:40px; line-height:40px; text-align:center; width:60px; background:#222; color:#fff; font-size:12px; letter-spacing:-0.04em; font-weight:400;}
 
 
-        #wrap{width:350px; margin:50px auto 150px;}
+        #wrap2{width:350px; margin:50px auto 150px;}
         .tit{ text-align:center; padding-bottom:30px;}
         .tit a{display:block;}
         .tit a img{max-width:100%;}
@@ -26,7 +26,7 @@
 </head>
 <body>
 <th:block th:replace="include/header :: header"></th:block>
-<div id="wrap">
+<div id="wrap2">
     <div class="tit">
         <a href="/" class="logo">
             <img src="" alt="">
@@ -35,9 +35,9 @@
     </div>
     <form action="/member/findEmail" method="post">
         <input type="text" name="memberMobile" id="memberMobile" placeholder="숫자만입력해주세요">
-        <a href="javascript:;" id="sendSMS" onclick="mobileCheck()">인증하기</a>
+        <a href="javascript:;" id="sendSMS" onclick="mobileCheck()" class="black02">인증하기</a>
         <input type="text" id="userNum" placeholder="인증번호입력" class="mt-10">
-        <a href="javascript:;" id="mobileCk" class="mt-10">확인</a>
+        <a href="javascript:;" id="mobileCk" class="mt-10 black02">확인</a>
     </form>
     <form action="/member/findEmailResult" method="get" name="findEmailResultForm">
         <input type="hidden" name="memberMobile" id="memberMobileResult">
