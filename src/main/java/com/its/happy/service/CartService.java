@@ -86,7 +86,7 @@ public class CartService {
         cartRepository.deleteById(cartId);
     }
 
-    public Long save2(CartDTO cartDTO) {
+    public CartDTO save2(CartDTO cartDTO) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(cartDTO.getMemberId());
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(cartDTO.getProductId());
         int cartQty = cartDTO.getCartQty();
@@ -94,17 +94,8 @@ public class CartService {
             if (optionalProductEntity.isPresent()) {
                 MemberEntity memberEntity = optionalMemberEntity.get();
                 ProductEntity productEntity = optionalProductEntity.get();
-                return cartRepository.save(CartEntity.toCartEntity(cartQty, productEntity, memberEntity)).getCartId();
+                return CartDTO.toCartDTO(cartRepository.save(CartEntity.toCartEntity(cartQty, productEntity, memberEntity)));
             }
-        }
-        return null;
-    }
-
-    public CartDTO findByCartId(Long cartId) {
-        Optional<CartEntity> optionalCartEntity = cartRepository.findById(cartId);
-        if(optionalCartEntity.isPresent()) {
-            CartEntity cartEntity = optionalCartEntity.get();
-            return CartDTO.toCartDTO(cartEntity);
         }
         return null;
     }
