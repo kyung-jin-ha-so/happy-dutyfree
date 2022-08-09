@@ -1,7 +1,6 @@
 package com.its.happy.controller;
 
 import com.its.happy.dto.*;
-import com.its.happy.entity.CartEntity;
 import com.its.happy.repository.CartRepository;
 import com.its.happy.service.*;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/order")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
-    private final CartRepository cartRepository;
     private final CouponService couponService;
     private final PointService pointService;
     private final CartService cartService;
@@ -29,32 +26,6 @@ public class OrderController {
     private final OrderProductService orderProductService;
     private final OrderDepartureService orderDepartureService;
     private final MemberService memberService;
-
-    // 장바구니 구매 테스트
-//    @GetMapping("/test")
-//    public String saveTest(Model model, HttpSession session) {
-//        List<CartDTO> cartDTOList = new ArrayList<>();
-//
-//        Optional<CartEntity> optionalCartEntity = cartRepository.findById(1L);
-//        CartEntity cartEntity = optionalCartEntity.get();
-//        CartDTO cartDTO = CartDTO.toCartDTO(cartEntity);
-//        cartDTOList.add(cartDTO);
-//
-//        Optional<CartEntity> optionalCartEntity2 = cartRepository.findById(2L);
-//        CartEntity cartEntity2 = optionalCartEntity2.get();
-//        CartDTO cartDTO2 = CartDTO.toCartDTO(cartEntity2);
-//        cartDTOList.add(cartDTO2);
-//
-//        session.setAttribute("cartDTOList", cartDTOList);
-//        model.addAttribute("cartList", cartDTOList);
-//
-//        // loginId(member) model
-//        Long loginId = (Long) session.getAttribute("loginId");
-//        MemberDTO memberDTO = memberService.findById(loginId);
-//        model.addAttribute("member", memberDTO);
-//
-//        return "/orderPages/test";
-//    }
 
     // 장바구니 구매
     @GetMapping("/save-form")
@@ -158,6 +129,8 @@ public class OrderController {
             orderProductDTO.setProductOriginalPrice(cartDTOList.get(i).getProductOriginalPrice());
             orderProductDTO.setProductId(cartDTOList.get(i).getProductId());
             orderProductDTO.setOrderId(orderId);
+            orderProductDTO.setProductPrice(cartDTOList.get(i).getProductPrice());
+            orderProductDTO.setProductName(cartDTOList.get(i).getProductName());
             orderProductService.save(orderProductDTO);
         }
 
@@ -181,13 +154,27 @@ public class OrderController {
         Long loginId = (Long) session.getAttribute("loginId");
         List<OrderDTO> orderDTOList = orderService.findByMemberId(loginId);
         model.addAttribute("orderList", orderDTOList);
+        System.out.println("orderDTOList = " + orderDTOList);
         return "/orderPages/list";
     }
 
-    @GetMapping("/detail")
-    public String detail() {
+    @GetMapping("/detail/{orderId}")
+    public String detail(@PathVariable Long orderId, Model model) {
+        System.out.println("OrderController.detail");
+        System.out.println("orderId = " + orderId);
+        OrderDTO orderDTO = orderService.findById(orderId);
+        model.addAttribute("order", orderDTO);
+
         return "/orderPages/detail";
     }
 
-
+    @GetMapping("/cancel/{orderId}")
+    public String cancel(@PathVariable Long orderId) {
+        System.out.println("OrderController.cancel");
+        System.out.println("orderId = " + orderId);
+        OrderDTO orderDTO = orderService.findById(orderId);
+        orderDTO.setOrderStatus("주문취소");
+        orderService.save(orderDTO);
+        return "redirect:/order/list";
+    }
 }

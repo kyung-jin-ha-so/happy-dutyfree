@@ -583,7 +583,7 @@
             console.log("function 진입")
             if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
                 console.log("rsp.success" + rsp.success)
-                alert("완료" + rsp.imp_uid + rsp.merchant_uid)
+                alert("결제완료")
                 save();
             } else {
                 alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
@@ -619,13 +619,11 @@
                 "orderDepartureNumber": departureNumber,
             },
             dataType: "json",
-            success: function (result) {
-                alert("성공");
-                location.href = "/order/";
+            success: function () {
+                location.href = "/order/list";
             },
             error: function () {
-                alert("어디가 틀렸을까");
-                location.href = "/order/";
+                location.href = "/order/list";
             }
         });
     }
