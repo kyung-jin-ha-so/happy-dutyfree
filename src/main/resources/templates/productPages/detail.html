@@ -23,7 +23,6 @@
         .product_detail_head {
             max-width: 1200px;
             margin: auto;
-            background-color: #bfbfbf;
         }
 
         .product_detail {
@@ -37,8 +36,8 @@
 
         .tab_area {
             width: 1200px;
-            margin: auto;
             text-align: center;
+            margin: auto auto 20px;
         }
 
         .tab_area .tab_cont {
@@ -133,7 +132,7 @@
             width: 30px;
             background: #222;
             color: #fff;
-            font-size: 16px;
+            font-size: 20px;
             letter-spacing: -0.04em;
             font-weight: 400;
             text-decoration: none;
@@ -148,7 +147,7 @@
             width: 30px;
             background: #222;
             color: #fff;
-            font-size: 16px;
+            font-size: 20px;
             letter-spacing: -0.04em;
             font-weight: 400;
             text-decoration: none;
@@ -170,6 +169,8 @@
         .product_detail_thumb img {
             width: 100%;
         }
+        input.inline{display:inline-block; vertical-align:middle;}
+        a.inline{display:inline-block; vertical-align:middle; width:30px; height:30px; background:#222; color:#fff; font-size:16px; letter-spacing:-0.04em; font-weight:400; line-height:25px; text-align:center;}
 
     </style>
 </head>
@@ -227,9 +228,11 @@
         </p>
 
         <div class="qty_btn">
-            <a href="javascript:;" class="minus_btn" onclick="qtyCount('minus')">-</a>
-            <input type="text" id="productQty" value="1" readonly="readonly" style="text-align:center; width: 100px"/>
-            <a href="javascript:;" class="plus_btn" onclick="qtyCount('plus')">+</a>
+            <a href="javascript:;" class="inline" onclick="qtyCount('minus')">-</a>
+<!--            <a href="javascript:;" class="minus_btn inline" onclick="qtyCount('minus')">-</a>-->
+            <input type="text" id="productQty" value="1" readonly="readonly" style="text-align:center; width: 100px" class="inline"/>
+            <a href="javascript:;" class="inline" onclick="qtyCount('plus')">+</a>
+<!--            <a href="javascript:;" class="plus_btn inline" onclick="qtyCount('plus')">+</a>-->
         </div>
         <div class="fw-bold text-lg-start fs-5 mt-2">
             <input type="button" class="btn btn-danger d-grid gap-2 mt-20" onclick="addToOrder()" value="주문하기"
