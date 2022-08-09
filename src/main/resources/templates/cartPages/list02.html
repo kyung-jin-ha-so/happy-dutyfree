@@ -93,34 +93,26 @@
 <body>
 <h2>장바구니</h2>
 <!--회원 등급, 포인트, 쿠폰 표기 div-->
-<div class="pay_box">
-    <div class="top_box">
-        <ul>
-            <li class="on">
-                <img src="" alt="">
-                <p>STEP01 장바구나</p>
-            </li>
-            <li>
-                <img src="" alt="">
-                <p>STEP02 주문/결제정보</p>
-            </li>
-            <li>
-                <img src="" alt="">
-                <p>STEP03 결제완료</p>
-            </li>
-        </ul>
-    </div>
-    <div class="bot_box">
-        <div class="left_box">
-            <p>해피 멤버십</p>
-            <div class="logo_box">
-                <img src="" alt="">
+<div class="membership-container">
+    <div class="myTier-container" th:text="${member.memberTier}"></div>
+    <div class="detail-container">
+        <div class="contents-container" th:text="${session.loginId}+ '님께서 즉시 받으실 수 있는 쇼핑 혜택입니다.'"></div>
+        <div class="myPage-container">
+            <div class="point-container" th:each="point : ${pointList}">
+                <p>적립금</p>
+                <li th:text="${point.pointValue}"></li>
             </div>
-            <span>브론즈</span>
+            <div class="coupon-container">
+                <p>할인쿠폰</p>
+                <li class="totalCoupon"></li>
+            </div>
         </div>
-        <div class="right_box">
-            <div class="txt_box"></div>
-        </div>
+    </div>
+</div>
+<div th:each="coupon: ${myCoupon}">
+    <div class="coupon_info_td">
+        <input type="hidden" class="individual_totalCoupon_input"
+               th:value="${#lists.size('coupon')}">
     </div>
 </div>
 <table>
@@ -162,7 +154,7 @@
         <td>
             <button th:onclick="'minusBtn(' + ${cart.cartId} + ')'" class="minus_btn"> -</button>
             <input type="text" class="quantity_input" th:id="${cart.cartId}" th:value="${cart.cartQty}"
-                   style="width: 50px; text-align: center">
+                   style="width: 50px;">
             <button th:onclick="'plusBtn(' + ${cart.cartId} + ')'" class="plus_btn"> +</button>
         </td>
         <td><span th:text="|$${cart.cartQty*cart.productPrice}|"></span><br>
@@ -270,47 +262,43 @@
     });
     //주문페이지로 이동
     $(".order_btn").on("click", function () {
-        if ([[${passport}]] != null) {
-            let form_contents = '';
-            let orderNumber = 0;
-            $(".cart_info_td").each(function (index, element) {
-                if ($(element).find(".individual_cart_checkbox").is(":checked") === true) {	//체크여부
-                    let cartId = $(element).find(".individual_cartId_input").val();
-                    let cartQty = $(element).find(".individual_cartQty_input").val();
-                    let productId = $(element).find(".individual_productId_input").val();
-                    let productId_input = "<input name='carts[" + orderNumber + "].productId' type='hidden' value='" + productId + "'>";
-                    let memberId = $(element).find(".individual_memberId_input").val();
-                    let productName = $(element).find(".individual_productName_input").val();
-                    let productOriginalPrice = $(element).find(".individual_productOriginalPrice_input").val();
-                    let productDiscount = $(element).find(".individual_productDiscount_input").val();
-                    let productPrice = $(element).find(".individual_productPrice_input").val();
-                    let productThumbnail = $(element).find(".individual_productThumbnail_input").val();
+        let form_contents = '';
+        let orderNumber = 0;
+        $(".cart_info_td").each(function (index, element) {
+            if ($(element).find(".individual_cart_checkbox").is(":checked") === true) {	//체크여부
+                let cartId = $(element).find(".individual_cartId_input").val();
+                let cartQty = $(element).find(".individual_cartQty_input").val();
+                let productId = $(element).find(".individual_productId_input").val();
+                let productId_input = "<input name='carts[" + orderNumber + "].productId' type='hidden' value='" + productId + "'>";
+                let memberId = $(element).find(".individual_memberId_input").val();
+                let productName = $(element).find(".individual_productName_input").val();
+                let productOriginalPrice = $(element).find(".individual_productOriginalPrice_input").val();
+                let productDiscount = $(element).find(".individual_productDiscount_input").val();
+                let productPrice = $(element).find(".individual_productPrice_input").val();
+                let productThumbnail = $(element).find(".individual_productThumbnail_input").val();
 
-                    let cartId_input = "<input name='carts[" + orderNumber + "].cartId' type='hidden' value='" + cartId + "'>";
-                    form_contents += cartId_input;
-                    let cartQty_input = "<input name='carts[" + orderNumber + "].cartQty' type='hidden' value='" + cartQty + "'>";
-                    form_contents += cartQty_input;
-                    form_contents += productId_input;
-                    let memberId_input = "<input name='carts[" + orderNumber + "].memberId' type='hidden' value='" + memberId + "'>";
-                    form_contents += memberId_input;
-                    let productName_input = "<input name='carts[" + orderNumber + "].productName' type='hidden' value='" + productName + "'>";
-                    form_contents += productName_input;
-                    let productOriginalPrice_input = "<input name='carts[" + orderNumber + "].productOriginalPrice' type='hidden' value='" + productOriginalPrice + "'>";
-                    form_contents += productOriginalPrice_input;
-                    let productDiscount_input = "<input name='carts[" + orderNumber + "].productDiscount' type='hidden' value='" + productDiscount + "'>";
-                    form_contents += productDiscount_input;
-                    let productPrice_input = "<input name='carts[" + orderNumber + "].productPrice' type='hidden' value='" + productPrice + "'>";
-                    form_contents += productPrice_input;
-                    let productThumbnail_input = "<input name='carts[" + orderNumber + "].productThumbnail' type='hidden' value='" + productThumbnail + "'>";
-                    form_contents += productThumbnail_input;
-                    orderNumber += 1;
-                }
-            });
-            $(".order_form").html(form_contents);
-            $(".order_form").submit();
-        } else {
-            alert("여권정보 등록 후 주문 가능합니다.")
-        }
+                let cartId_input = "<input name='carts[" + orderNumber + "].cartId' type='hidden' value='" + cartId + "'>";
+                form_contents += cartId_input;
+                let cartQty_input = "<input name='carts[" + orderNumber + "].cartQty' type='hidden' value='" + cartQty + "'>";
+                form_contents += cartQty_input;
+                form_contents += productId_input;
+                let memberId_input = "<input name='carts[" + orderNumber + "].memberId' type='hidden' value='" + memberId + "'>";
+                form_contents += memberId_input;
+                let productName_input = "<input name='carts[" + orderNumber + "].productName' type='hidden' value='" + productName + "'>";
+                form_contents += productName_input;
+                let productOriginalPrice_input = "<input name='carts[" + orderNumber + "].productOriginalPrice' type='hidden' value='" + productOriginalPrice + "'>";
+                form_contents += productOriginalPrice_input;
+                let productDiscount_input = "<input name='carts[" + orderNumber + "].productDiscount' type='hidden' value='" + productDiscount + "'>";
+                form_contents += productDiscount_input;
+                let productPrice_input = "<input name='carts[" + orderNumber + "].productPrice' type='hidden' value='" + productPrice + "'>";
+                form_contents += productPrice_input;
+                let productThumbnail_input = "<input name='carts[" + orderNumber + "].productThumbnail' type='hidden' value='" + productThumbnail + "'>";
+                form_contents += productThumbnail_input;
+                orderNumber += 1;
+            }
+        });
+        $(".order_form").html(form_contents);
+        $(".order_form").submit();
     });
     //장바구니 개별삭제
     const deleteCart = (cartId) => {
