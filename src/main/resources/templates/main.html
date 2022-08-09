@@ -83,12 +83,12 @@
             </ul>
         </div>
         <!-- 상품창 -->
-        <div class="prod_list">
+        <div class="prod_list" style="overflow:hidden;">
             <div class="main_tit">
                 <p>상품목록</p>
             </div>
-            <ul>
-                <li th:each="product: ${productList}">
+            <ul class="swiper-wrapper">
+                <li th:each="product: ${productList}" class="swiper-slide">
                     <a th:href="@{|/product/detail/${product.productId}|}">
                         <!-- img_size 310*200 -->
                         <div class="img_box">
@@ -105,6 +105,18 @@
                 </li>
             </ul>
         </div>
+        <script>
+            var main_prod = new Swiper('.prod_list', {
+//					loop:true,
+                autoplay: {   // 슬라이드 자동
+                    delay: 4000,  // 멈춰있는시간
+                    disableOnInteraction: false, // 마우스로 드래그 해도 계속해서 슬라이드 진행
+                },
+                loop:true,
+                slidesPerView: 4,
+                spaceBetween: 50,
+            });
+        </script>
         <!-- 상품창 -->
         <!-- main_visual -->
 

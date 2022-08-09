@@ -85,20 +85,52 @@
     }
 
     .totalPrice-container {
-        width: 1000px;
+        width: 1200px;
         text-align: right;
+        margin-top:20px;
     }
+    .content_btn_section {
+        margin: 0 auto;
+        display: block;
+        width: 200px;
+        text-align:center;
+        margin-bottom:100px;
+        height:50px;
+    }
+    .content_btn_section button{
+        width:100%; height:100%; background:#84dccd; color:#fff; border:0; outline:0; font-size:18px; font-weight:bold;
+    }
+
+    .wrap{width:1200px; margin:0 auto;}
+    table{width:1200px; margin:0 auto;}
+    .pay_box{font-size:0; letter-spacing:-4px; width:1200px; margin:0 auto 50px;}
+    .pay_box .top_box{border=bottom:1px solid #666;}
+    .pay_box .top_box ul li{display:inline-block; vertical-align:top; width:32%; text-align:center;}
+    .pay_box .top_box ul li p{font-size:20px; letter-spacing:-0.04em; color:#222; font-weight:bold;}
+    .pay_box .top_box ul li.on p{color:#f60;}
+    .pay_box .bot_box .left_box{display:inline-block; vertical-align:top; width:30%; background:#f5f5f5; height:300px; padding:20px; box-sizing:border-box;}
+    .pay_box .bot_box .left_box p{font-size:24px; letter-spacing:-0.04em; color:#222; font-weight: bold; padding-bottom:50px;}
+    .pay_box .bot_box .left_box .logo_box{text-align:center;}
+    .pay_box .bot_box .left_box .logo_box span{font-size:20px; letter-spacing:-0.04em; color:#444; font-weight:400}
+    .pay_box .bot_box .right_box{display:inline-block; vertical-align:top; width:70%; background:#aaa; height:300px; padding:20px; box-sizing:border-box;}
+    .pay_box .bot_box .right_box .txt_box{border-bottom:1px solid #666;}
+    .pay_box .bot_box .right_box .txt_box p{font-size:24px; letter-spacing:-0.04em; color:#222; font-weight: bold}
+    .pay_box .bot_box .right_box ul li{display:inline-block; vertical-align:top; width:50%; border-right:1px solid #666; box-sizing:border-box; text-align:center; padding-top:50px; height:200px;}
+    .pay_box .bot_box .right_box ul li:last-of-type{border-right:0;}
+    .pay_box .bot_box .right_box ul li p{font-size:22px; letter-spacing:-0.04em; color:#222; font-weight: bold}
+    .pay_box .bot_box .right_box ul li span{display:block; font-size:18px; letter-spacing:-0.04em; color:#444; font-weight:bold;}
 </style>
 
 <body>
 <h2>장바구니</h2>
+
 <!--회원 등급, 포인트, 쿠폰 표기 div-->
 <div class="pay_box">
     <div class="top_box">
         <ul>
             <li class="on">
                 <img src="" alt="">
-                <p>STEP01 장바구나</p>
+                <p>STEP01 장바구니</p>
             </li>
             <li>
                 <img src="" alt="">
@@ -115,14 +147,27 @@
             <p>해피 멤버십</p>
             <div class="logo_box">
                 <img src="" alt="">
+                <span>브론즈</span>
             </div>
-            <span>브론즈</span>
         </div>
         <div class="right_box">
-            <div class="txt_box"></div>
+            <div class="txt_box">
+                <p>민소희님께서 즉시 받으실 수 있는 쇼핑 혜택입니다.</p>
+            </div>
+            <ul>
+                <li>
+                    <p>적립금</p>
+                    <span>2,000원</span>
+                </li>
+                <li>
+                    <p>할인쿠폰</p>
+                    <span>2개</span>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
+
 <table>
     <tr>
         <!-- 체크박스 전체 여부 -->
@@ -172,17 +217,18 @@
         <td><input type="button" th:onclick="deleteCart([[${cart.cartId}]])" value="삭제"></a></td>
     </tr>
 </table>
-<div class="totalPrice-container">
-    <h2 class="totalDollar"></h2>
-    <h5 class="totalWon"></h5>
+<div class="wrap">
+    <div class="totalPrice-container">
+        <h2 class="totalDollar"></h2>
+        <h5 class="totalWon"></h5>
+    </div>
+    <div th:each="cart : ${cartList}">
+        <form action="/order/save-form" method="get" class="order_form"></form>
+    </div>
+    <div class="content_btn_section">
+        <button class="order_btn">주문하기</button>
+    </div>
 </div>
-<div th:each="cart : ${cartList}">
-    <form action="/order/save-form" method="get" class="order_form"></form>
-</div>
-<div class="content_btn_section">
-    <button class="order_btn">주문하기</button>
-</div>
-
 </body>
 <script th:inline="javascript" th:each="cart: ${cartList}">
     //상품수량 수정 (더하기)
