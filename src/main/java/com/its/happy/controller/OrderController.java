@@ -26,6 +26,7 @@ public class OrderController {
     private final OrderProductService orderProductService;
     private final OrderDepartureService orderDepartureService;
     private final MemberService memberService;
+    private final ExchangeRateService exchangeRateService;
 
     // 장바구니 구매
     @GetMapping("/save-form")
@@ -63,11 +64,9 @@ public class OrderController {
         cartDTO.setProductId(productId);
         cartDTO.setCartQty(orderQty);
         cartDTO.setMemberId(loginId);
-        Long cartId = cartService.save2(cartDTO);
-        System.out.println("cartId = " + cartId);
+        CartDTO findCartDTO = cartService.save2(cartDTO);
 
-        // 담은 장바구니의 cartId와 함께 리턴받아 findCartDTO의 필드를 productDTO의 정보로 채움
-        CartDTO findCartDTO = cartService.findByCartId(cartId);
+        // 리턴받은 findCartDTO의 필드를 productDTO의 정보로 채움
         ProductDTO productDTO = productService.findById(productId);
         findCartDTO.setProductName(productDTO.getProductName());
         findCartDTO.setProductOriginalPrice(productDTO.getProductOriginalPrice());
@@ -177,4 +176,36 @@ public class OrderController {
         orderService.save(orderDTO);
         return "redirect:/order/list";
     }
+
+    @GetMapping("/re-order")
+    public String reOrder(@ModelAttribute CartArrayDTO cartArrayDTO, Model model, HttpSession session) {
+        System.out.println("OrderController.reOrder");
+        List<CartDTO> cartDTOList = new ArrayList<>();
+        for (int i = 0; i < cartArrayDTO.getCarts().size(); i++) {
+            CartDTO cartDTO1 = cartArrayDTO.getCarts().get(i);
+            System.out.println("cartDTO1 = " + cartDTO1);
+            CartDTO cartDTO = cartService.save2(cartDTO1);
+            cartDTOList.add(cartDTO);
+            System.out.println("OrderController.reOrder");
+        }
+
+        Long memberId = (Long) session.getAttribute("loginId");
+
+        model.addAttribute("cartList", cartDTOList);
+
+        List<PointDTO> pointDTOList = pointService.findByPoint(memberId);
+        model.addAttribute("pointList",pointDTOList);
+
+        List<CouponMemberDTO> couponMemberDTOList  = couponService.findByMyCoupon(memberId);
+        model.addAttribute("myCoupon", couponMemberDTOList);
+
+        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
+        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
+
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
+
+        return "cartPages/list";
+    }
+
 }
