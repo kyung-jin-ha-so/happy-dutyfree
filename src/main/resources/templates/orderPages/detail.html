@@ -22,7 +22,11 @@
     </tr>
     <tr th:each="orderProduct: ${order.orderProductEntityList}">
         <td th:text="${orderProduct.orderProductId}"></td>
-        <td th:text="${orderProduct.productName}"></td>
+        <td>
+            <span th:src="@{|/upload/${orderProduct.productEntity.productThumbnail}|}"></span>
+            <a th:text="${orderProduct.productName}"
+               th:href="@{|/product/detail/${orderProduct.productEntity.productId}|}"></a>
+        </td>
         <td>
             <span style="text-decoration: line-through; font-weight: bold"
                   th:text="${orderProduct.productOriginalPrice}"></span><br>
@@ -30,15 +34,49 @@
         </td>
         <td th:text="${orderProduct.orderQty} + '개'"></td>
         <td>
-            <span style="color: red; font-weight: bold" th:text="'$ ' + ${orderProduct.productPrice * orderProduct.orderQty}"></span><br>
+            <span style="color: red; font-weight: bold"
+                  th:text="'$ ' + ${orderProduct.productPrice * orderProduct.orderQty}"></span><br>
             <span style="color: gray; font-size: small"
-                  th:text="'(' + ${#numbers.formatInteger(orderProduct.productPrice * orderProduct.orderQty * session.exchangeRate, 1, 'COMMA') } + '원)'"></span>
+                  th:text="'(' + ${#numbers.formatInteger(orderProduct.productPrice * orderProduct.orderQty * order.exchangeRate, 1, 'COMMA') } + '원)'"></span>
         </td>
         <td>
             <button th:onclick="saveReview([[${orderProduct.orderProductId}]])">상품평작성</button>
         </td>
     </tr>
 </table>
+총 주문 금액<br>
+<span th:text="${'$' + #numbers.formatInteger(#aggregates.sum(order.orderProductEntityList.![productOriginalPrice]), 1, 'COMMA')}"></span><br>
+<span th:text="${#numbers.formatInteger(#aggregates.sum(order.orderProductEntityList.![productOriginalPrice]) * order.exchangeRate, 1, 'COMMA') + '원'}"></span><br>
+총 할인 금액<br>
+<span th:text="${'$' + #numbers.formatInteger((order.netDcWon / order.exchangeRate) + (order.pointUseValue / order.exchangeRate) + (order.couponUseValue / order.exchangeRate), 1, 'COMMA')}"></span><br>
+<span th:text="${#numbers.formatInteger(order.netDcWon + order.pointUseValue + order.couponUseValue, 1, 'COMMA') + '원'}"></span><br>
+인터넷 회원 할인 적용(비과세)
+<span th:text="${#numbers.formatInteger(order.netDcWon, 1, 'COMMA')} + '원'"></span><br>
+적립금 할인 적용(비과세)
+<span th:text="${#numbers.formatInteger(order.pointUseValue, 1, 'COMMA')} + '원'"></span><br>
+쿠폰 할인 적용(비과세)
+<span th:text="${#numbers.formatInteger(order.couponUseValue, 1, 'COMMA')} + '원'"></span><br>
+최종 결제금액<br>
+<span th:text="${'$' + #numbers.formatInteger(order.orderUsd, 1, 'COMMA')}"></span><br>
+<span th:text="${#numbers.formatInteger(order.orderWon, 1, 'COMMA') + '원'}"></span><br>
+기존 구매하신 제품들을 재 구매하시려면 재주문하기 버튼을 클릭해주세요.
+<form action="/order/re-order" method="get" class="order_form">
+    <div th:each="orderProduct, i : ${order.orderProductEntityList}">
+        <input type="hidden" th:name="${'carts[' + i.index + '].cartQty'}" th:value="${orderProduct.orderQty}">
+        <input type="hidden" th:name="${'carts[' + i.index + '].productId'}"
+               th:value="${orderProduct.productEntity.productId}">
+        <input type="hidden" th:name="${'carts[' + i.index + '].memberId'}" th:value="${orderProduct.orderEntity.memberEntity.memberId}">
+        <input type="hidden" th:name="${'carts[' + i.index + '].productName'}" th:value="${orderProduct.productName}">
+        <input type="hidden" th:name="${'carts[' + i.index + '].productOriginalPrice'}"
+               th:value="${orderProduct.productOriginalPrice}">
+        <input type="hidden" th:name="${'carts[' + i.index + '].productDiscount'}" th:value="${orderProduct.productDiscount}">
+        <input type="hidden" th:name="${'carts[' + i.index + '].productPrice'}" th:value="${orderProduct.productPrice}">
+        <input type="hidden" th:name="${'carts[' + i.index + '].productThumbnail'}"
+               th:value="${orderProduct.productEntity.productThumbnail}">
+    </div>
+    <button type="submit">재주문하기</button>
+</form>
+
 </body>
 <script th:inline="javascript">
     const saveReview = (id) => {
