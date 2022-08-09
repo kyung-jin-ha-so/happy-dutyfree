@@ -7,11 +7,12 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
     <style>
-        a{
+        a {
             text-decoration: none;
         }
+
         .product_list_head {
             max-width: 1200px;
             margin: auto;
@@ -85,7 +86,7 @@
         .tab_area_head {
             display: flex;
             width: 100%;
-            margin: 20px 0 0 0;
+            margin: 50px 0 0 0;
             background-color: red;
         }
 
@@ -153,8 +154,21 @@
             text-decoration: none;
             border-radius: 10px;
         }
-        .product_detail .product_detail_thumb{
+
+        .product_detail .product_detail_thumb {
             margin-right: 50px;
+        }
+
+        .mt-20 {
+            margin-top: 50px
+        }
+
+        .mt-15 {
+            margin-top: 40px
+        }
+
+        .product_detail_thumb img {
+            width: 100%;
         }
 
     </style>
@@ -177,15 +191,18 @@
     <h5 th:text="${product.productName}"></h5>
 </div>
 <div class="row product_detail mb-4">
-    <div class="col-4 product_detail_thumb">
+    <div class="col-5 product_detail_thumb">
         <div><img th:src="@{|/upload/${product.productThumbnail}|}" width="400" height="300" alt=""></div>
         <div><span th:text="'상품 만족도 ' + ${product.productStar}"></span></div>
         <div style="font-size: small" class="text-sm-end">
             <span th:if="${like == null}">
-                <i class="bi bi-heart" onclick="saveWish()"></i></span>
+                <i class="bi bi-heart" onclick="saveWish()"></i>
+            <span style="cursor:pointer" onclick="saveWish()"> 상품 찜하기</span>
+            </span>
             <span th:if="${like != null}">
-                <i class="bi bi-heart-fill" onclick="deleteWish()"></i></span>
-            <span> 상품 찜하기</span>
+                <i class="bi bi-heart-fill" onclick="deleteWish()"></i>
+            <span style="cursor:pointer" onclick="deleteWish()"> 상품 찜취소</span>
+            </span>
         </div>
     </div>
     <div class="col-3 fw-bold text-lg-start fs-5 mt-5">
@@ -193,7 +210,8 @@
         <p>회원가</p>
         <p>수량</p>
         <div>
-            <input type="button" class="btn btn-secondary" onclick="addToCart()" value="장바구니" style="width: 250px">
+            <input type="button" class="btn btn-secondary mt-15" onclick="addToCart()" value="장바구니"
+                   style="width: 250px">
         </div>
     </div>
     <div class="col fw-bold text-lg-start fs-5 mt-5">
@@ -214,7 +232,7 @@
             <a href="javascript:;" class="plus_btn" onclick="qtyCount('plus')">+</a>
         </div>
         <div class="fw-bold text-lg-start fs-5 mt-2">
-            <input type="button" class="btn btn-danger d-grid gap-2" onclick="addToOrder()" value="주문하기"
+            <input type="button" class="btn btn-danger d-grid gap-2 mt-20" onclick="addToOrder()" value="주문하기"
                    style="width: 250px">
         </div>
     </div>
@@ -244,10 +262,6 @@
 
     </div>
 </div>
-
-<!--    <div th:each="${session.loginEmail == 'admin'}">-->
-<a th:href="@{|/product/update/${product.productId}|}">수정</a>
-<!--    </div>-->
 
 </body>
 <script th:inline="javascript">
