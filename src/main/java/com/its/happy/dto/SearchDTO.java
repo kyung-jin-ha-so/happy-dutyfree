@@ -12,7 +12,7 @@ public class SearchDTO {
     private Long searchId;
     private String searchName;
     private LocalDateTime searchCreatedTime;
-    private MemberEntity memberEntity;
+//    private MemberEntity memberEntity;
 
 
     public static SearchDTO toDTO(SearchEntity searchEntity) {
@@ -20,7 +20,7 @@ public class SearchDTO {
         searchDTO.setSearchId(searchEntity.getSearchId());
         searchDTO.setSearchName(searchEntity.getSearchName());
         searchDTO.setSearchCreatedTime(searchEntity.getCreatedTime());
-        searchDTO.setMemberEntity(searchEntity.getMemberEntity());
+//        searchDTO.setMemberEntity(searchEntity.getMemberEntity());
         return searchDTO;
     }
 }
