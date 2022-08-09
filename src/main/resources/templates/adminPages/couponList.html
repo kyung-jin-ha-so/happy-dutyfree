@@ -66,8 +66,7 @@
             <col style="width:30%">
             <col style="width:20%">
             <col style="width:20%">
-            <col style="width:10%">
-            <col style="width:10%">
+            <col style="width:20%">
           </colgroup>
           <tr>
             <th>쿠폰 번호</th>
@@ -75,14 +74,12 @@
             <th>쿠폰 금액</th>
             <th>쿠폰 최소 금액</th>
             <th>수정</th>
-            <th>삭제</th>
           </tr>
           <tr th:each="coupon: ${couponList}">
             <td th:text="${coupon.couponId}"></td>
             <td th:text="${coupon.couponName}"></td>
             <td th:text="${#numbers.formatInteger(coupon.couponValue, 3, 'COMMA')}"></td>
             <td th:text="${#numbers.formatInteger(coupon.couponMinimumValue, 3, 'COMMA')}"></td>
-            <td><input type="button" th:onclick="toDelete([[${coupon.couponId}]])" value="삭제"></td>
             <td><input type="button" th:onclick="toUpdate([[${coupon.couponId}]])" value="수정"></td>
           </tr>
         </table>
