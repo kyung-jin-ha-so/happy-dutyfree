@@ -27,11 +27,7 @@
 
 해피멤버쉽: <label th:text="${member.memberTier}"></label><br>
 <span th:text="${member.memberName}"></span>님 께서 즉시 받으실 수 있는 쇼핑 혜택입니다.<br>
-할인쿠폰:
-<label th:each="coupon: ${member.couponMemberEntityList}">
-    <span th:text="${#lists.size(coupon.couponStatus)}" th:if="${coupon.couponStatus.equals('사용 전')}">&nbsp;개</span>
-</label>
-
+할인쿠폰: <span th:text="${#lists.size(member.couponMemberEntityList.?[couponStatus=='사용 전'])} + '개'"></span>
 <table>
     <tr>
         <th>상품명</th>
@@ -195,10 +191,7 @@
                 </option>
             </select>
             사용 가능한 쿠폰:
-            <label th:each="coupon: ${member.couponMemberEntityList}">
-                 <span th:text="${#lists.size(coupon.couponStatus)}"
-                       th:if="${coupon.couponStatus.equals('사용 전')}">&nbsp;개</span>
-            </label>
+            <span th:text="${#lists.size(member.couponMemberEntityList.?[couponStatus=='사용 전'])} + '개'"></span>
         </td>
     </tr>
     <tr>
@@ -298,7 +291,7 @@
 <span id="finalWonText"
       th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productPrice * cartQty]) * session.exchangeRate, 1, 'COMMA')} + '원'"></span>
 <input type="hidden" id="finalWon"
-       th:value="${#aggregates.sum(cartList.![productPrice * cartQty]) * session.exchangeRate}">
+       th:value="${#numbers.formatInteger(#aggregates.sum(cartList.![productPrice * cartQty]) * session.exchangeRate, 0)}">
 <p><input type="checkbox">주문 정보를 확인하였으며, 구매에 동의합니다.</p>
 <button id="requestPay" onclick="requestPay(this.name)" name="kakaopay.TC0ONETIME">주문하기
 </button>
@@ -626,8 +619,8 @@
                 "orderDepartureNumber": departureNumber,
             },
             dataType: "json",
-            success: function () {
-                alert("성공")
+            success: function (result) {
+                alert("성공");
                 location.href = "/order/";
             },
             error: function () {
