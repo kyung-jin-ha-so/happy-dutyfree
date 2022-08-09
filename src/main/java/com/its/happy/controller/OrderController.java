@@ -174,7 +174,8 @@ public class OrderController {
     public String list(Model model, HttpSession session) {
         Long loginId = (Long) session.getAttribute("loginId");
         List<OrderDTO> orderDTOList = orderService.findByMemberId(loginId);
-        model.addAttribute("orderList", orderDTOList);        return "/orderPages/list";
+        model.addAttribute("orderList", orderDTOList);
+        return "/orderPages/list";
     }
 
     @GetMapping("/detail")

@@ -11,6 +11,17 @@
 #haeder ul li:last-of-type a:after{display:none;}
 /* search_box */
 .search{position:relative; z-index:100;}
+ul{overflow: hidden}
+.invisible {
+    display: none;
+}
+#recent_search{background:#fff; font-size:16px; color:#222; font-weight:700; padding:10px 10px;}
+#recent_search #recommend_item{padding-top:10px}
+#recent_search #recommend_item:after{content:''; display:block; clear:both;}
+#recent_search .right{float:right}
+#recent_search span.text{font-size:15px; color:#222; font-weight: 700}
+#recent_search span.align-self-end{font-size:15px; color:#666; font-weight: 400}
+#recent_search span.btn{cursor:pointer;}
 .search .left_box{display:inline-block; vertical-align:middle; margin-right:100px;}
 .search .left_box .logo{width:133px;}
 /* img삽입후 주석풀고 .search .left_box .logo a는 삭제해주세요 */
