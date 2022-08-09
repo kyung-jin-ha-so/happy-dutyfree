@@ -22,6 +22,9 @@ public class CartController {
     private final PointService pointService;
     private final CouponService couponService;
     private final MemberService memberService;
+    private final PassportService passportService;
+    private final DepartureService departureService;
+
     @GetMapping("/save")
     public ResponseEntity save(@RequestParam("productId") Long productId, @RequestParam("memberId") Long memberId, @RequestParam("cartQty") int cartQty) {
         String result = cartService.save(productId, memberId, cartQty);
@@ -52,6 +55,8 @@ public class CartController {
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         MemberDTO memberDTO = memberService.findById(memberId);
         model.addAttribute("member",memberDTO);
+        PassportDTO passportDTO = passportService.findByLoginId(memberId);
+        model.addAttribute("passport", passportDTO);
         return "cartPages/list";
     }
     @PostMapping("/update/")
