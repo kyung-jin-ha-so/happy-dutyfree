@@ -31,33 +31,30 @@ public class OrderController {
     private final MemberService memberService;
 
     // 장바구니 구매 테스트
-    @GetMapping("/test")
-    public String saveTest(Model model, HttpSession session) {
-        List<CartDTO> cartDTOList = new ArrayList<>();
-
-        Optional<CartEntity> optionalCartEntity = cartRepository.findById(1L);
-        CartEntity cartEntity = optionalCartEntity.get();
-        CartDTO cartDTO = CartDTO.toCartDTO(cartEntity);
-        cartDTOList.add(cartDTO);
-
-        Optional<CartEntity> optionalCartEntity2 = cartRepository.findById(2L);
-        CartEntity cartEntity2 = optionalCartEntity2.get();
-        CartDTO cartDTO2 = CartDTO.toCartDTO(cartEntity2);
-        cartDTOList.add(cartDTO2);
-
-        session.setAttribute("cartDTOList", cartDTOList);
-        model.addAttribute("cartList", cartDTOList);
-
-        // loginId(member) model
-        Long loginId = (Long) session.getAttribute("loginId");
-        MemberDTO memberDTO = memberService.findById(loginId);
-        model.addAttribute("member", memberDTO);
-
-        //
-        ExchangeRateDTO exchangeRateDTO = new ExchangeRateDTO(1L, 1298.91, "2022-07-29");
-        model.addAttribute("exRate", exchangeRateDTO);
-        return "/orderPages/test";
-    }
+//    @GetMapping("/test")
+//    public String saveTest(Model model, HttpSession session) {
+//        List<CartDTO> cartDTOList = new ArrayList<>();
+//
+//        Optional<CartEntity> optionalCartEntity = cartRepository.findById(1L);
+//        CartEntity cartEntity = optionalCartEntity.get();
+//        CartDTO cartDTO = CartDTO.toCartDTO(cartEntity);
+//        cartDTOList.add(cartDTO);
+//
+//        Optional<CartEntity> optionalCartEntity2 = cartRepository.findById(2L);
+//        CartEntity cartEntity2 = optionalCartEntity2.get();
+//        CartDTO cartDTO2 = CartDTO.toCartDTO(cartEntity2);
+//        cartDTOList.add(cartDTO2);
+//
+//        session.setAttribute("cartDTOList", cartDTOList);
+//        model.addAttribute("cartList", cartDTOList);
+//
+//        // loginId(member) model
+//        Long loginId = (Long) session.getAttribute("loginId");
+//        MemberDTO memberDTO = memberService.findById(loginId);
+//        model.addAttribute("member", memberDTO);
+//
+//        return "/orderPages/test";
+//    }
 
     // 장바구니 구매
     @GetMapping("/save-form")
@@ -83,6 +80,7 @@ public class OrderController {
     // 바로 구매
     @GetMapping("/save-form2")
     public String saveForm2(Model model, HttpSession session, @RequestParam("productId") Long productId, @RequestParam("orderQty") int orderQty) {
+        System.out.println("OrderController.saveForm2");
         // loginId(member) model
         Long loginId = (Long) session.getAttribute("loginId");
         MemberDTO memberDTO = memberService.findById(loginId);
@@ -95,6 +93,7 @@ public class OrderController {
         cartDTO.setCartQty(orderQty);
         cartDTO.setMemberId(loginId);
         Long cartId = cartService.save2(cartDTO);
+        System.out.println("cartId = " + cartId);
 
         // 담은 장바구니의 cartId와 함께 리턴받아 findCartDTO의 필드를 productDTO의 정보로 채움
         CartDTO findCartDTO = cartService.findByCartId(cartId);
@@ -104,6 +103,7 @@ public class OrderController {
         findCartDTO.setProductDiscount(productDTO.getProductDiscount());
         findCartDTO.setProductPrice(productDTO.getProductPrice());
         findCartDTO.setProductThumbnail(productDTO.getProductThumbnail());
+        System.out.println("productDTO = " + productDTO);
 
         // 만든 DTO를 리스트에 담고 session, model
         List<CartDTO> cartDTOList = new ArrayList<>();
@@ -120,18 +120,24 @@ public class OrderController {
         System.out.println("orderDTO = " + orderDTO + ", orderDepartureAirport = " + orderDepartureAirport + ", orderDepartureDate = " + orderDepartureDate + ", orderDepartureNumber = " + orderDepartureNumber + ", session = " + session);
 
         Long memberId = orderDTO.getMemberId();
-        Long couponMemberId = orderDTO.getCouponMemberId();
+        System.out.println("memberId = " + memberId);
 
         // 쿠폰 사용 처리
-        CouponMemberDTO couponMemberDTO = couponService.findByCouponMemberId(couponMemberId);
-        couponMemberDTO.setCouponStatus("사용 후");
-        couponService.updateCouponMember(couponMemberDTO);
+        if (orderDTO.getCouponMemberId() != null) {
+            Long couponMemberId = orderDTO.getCouponMemberId();
+            System.out.println("couponMemberId = " + couponMemberId);
+            CouponMemberDTO couponMemberDTO = couponService.findByCouponMemberId(couponMemberId);
+            couponMemberDTO.setCouponStatus("사용 후");
+            couponService.updateCouponMember(couponMemberDTO);
+            System.out.println("couponMemberDTO = " + couponMemberDTO);
+        }
 
         // 적립금 사용 처리
         PointDTO pointDTO = new PointDTO();
         pointDTO.setPointValue(-orderDTO.getPointUseValue());
         pointDTO.setMemberId(memberId);
         pointService.update(memberId, pointDTO);
+        System.out.println("pointDTO = " + pointDTO);
 
         // 주문 저장하기
         orderDTO.setOrderStatus("주문완료");
@@ -174,7 +180,8 @@ public class OrderController {
     public String list(Model model, HttpSession session) {
         Long loginId = (Long) session.getAttribute("loginId");
         List<OrderDTO> orderDTOList = orderService.findByMemberId(loginId);
-        model.addAttribute("orderList", orderDTOList);        return "/orderPages/list";
+        model.addAttribute("orderList", orderDTOList);
+        return "/orderPages/list";
     }
 
     @GetMapping("/detail")
