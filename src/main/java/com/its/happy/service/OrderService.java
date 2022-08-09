@@ -26,14 +26,24 @@ public class OrderService {
 
     public Long save(OrderDTO orderDTO) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(orderDTO.getMemberId());
-        Optional<CouponMemberEntity> optionalCouponMemberEntity = couponMemberRepository.findById(orderDTO.getCouponMemberId());
         if (optionalMemberEntity.isPresent()) {
-            if (optionalCouponMemberEntity.isPresent()) {
+            if (orderDTO.getCouponMemberId() != null) {
+                Optional<CouponMemberEntity> optionalCouponMemberEntity = couponMemberRepository.findById(orderDTO.getCouponMemberId());
+                if (optionalCouponMemberEntity.isPresent()) {
+                    MemberEntity memberEntity = optionalMemberEntity.get();
+                    CouponMemberEntity couponMemberEntity = optionalCouponMemberEntity.get();
+                    return orderRepository.save(OrderEntity.toEntity(orderDTO, couponMemberEntity, memberEntity)).getOrderId();
+                }
+            } else {
                 MemberEntity memberEntity = optionalMemberEntity.get();
-                CouponMemberEntity couponMemberEntity = optionalCouponMemberEntity.get();
+                CouponMemberEntity couponMemberEntity = null;
                 return orderRepository.save(OrderEntity.toEntity(orderDTO, couponMemberEntity, memberEntity)).getOrderId();
             }
         }
+
+
+
+
         return null;
     }
 
