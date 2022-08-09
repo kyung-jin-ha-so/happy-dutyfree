@@ -12,17 +12,18 @@
 /* search_box */
 .search{position:relative; z-index:100;}
 .search .left_box{display:inline-block; vertical-align:middle; margin-right:100px;}
-.search .left_box .logo{width:133px;}
+.search .left_box .logo{width:160px;}
 /* img삽입후 주석풀고 .search .left_box .logo a는 삭제해주세요 */
 /*.search .left_box .logo a{display:block;}
 .search .left_box .logo a img{width:100%;}*/
-.search .left_box .logo a{width:100%; display:block; background:#000; height:57px;}
+.search .left_box .logo a{width:100%; display:block; background:#000; height:75px;}
+.search .left_box .logo a img{width:100%; height:100%;}
 .search .left_box .category{margin-top:10px; position:relative;}
 .search .left_box .category > a{font-size:16px; letter-spacing:-0.045em; color:#000; font-weight:bold; text-align:center; border:1px solid #aaa; display:block;}
 .search .left_box .category:hover .depth02{display:block;}
 .search .left_box .category .depth02{position:absolute; left:0; top:100%; width:100%; display:none; padding:10px 0;  background:#fff;}
 .search .left_box .category .depth02 li a{display:block; padding:10px; box-sizing:border-box; font-size:14px; letter-spacing:-0.04em; color:#222; font-weight:300;}
-.search .center_box{display:inline-block; vertical-align:middle; width:630px; margin-right:100px; position:relative; height:40px;}
+.search .center_box{display:inline-block; vertical-align:middle; width:603px; margin-right:100px; position:relative; height:40px;}
 .search .center_box input{width:100%; height:40px; padding:0 60px 0 20px; box-sizing:border-box;}
 .search .center_box a{display:block; position:absolute; right:20px; top:50%; transform:translateY(-50%);}
 /* img삽입후 주석풀고 .search .left_box .logo a는 삭제해주세요 */
