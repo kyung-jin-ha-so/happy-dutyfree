@@ -93,34 +93,26 @@
 <body>
 <h2>장바구니</h2>
 <!--회원 등급, 포인트, 쿠폰 표기 div-->
-<div class="pay_box">
-    <div class="top_box">
-        <ul>
-            <li class="on">
-                <img src="" alt="">
-                <p>STEP01 장바구나</p>
-            </li>
-            <li>
-                <img src="" alt="">
-                <p>STEP02 주문/결제정보</p>
-            </li>
-            <li>
-                <img src="" alt="">
-                <p>STEP03 결제완료</p>
-            </li>
-        </ul>
-    </div>
-    <div class="bot_box">
-        <div class="left_box">
-            <p>해피 멤버십</p>
-            <div class="logo_box">
-                <img src="" alt="">
+<div class="membership-container">
+    <div class="myTier-container" th:text="${member.memberTier}"></div>
+    <div class="detail-container">
+        <div class="contents-container" th:text="${session.loginId}+ '님께서 즉시 받으실 수 있는 쇼핑 혜택입니다.'"></div>
+        <div class="myPage-container">
+            <div class="point-container" th:each="point : ${pointList}">
+                <p>적립금</p>
+                <li th:text="${point.pointValue}"></li>
             </div>
-            <span>브론즈</span>
+            <div class="coupon-container">
+                <p>할인쿠폰</p>
+                <li class="totalCoupon"></li>
+            </div>
         </div>
-        <div class="right_box">
-            <div class="txt_box"></div>
-        </div>
+    </div>
+</div>
+<div th:each="coupon: ${myCoupon}">
+    <div class="coupon_info_td">
+        <input type="hidden" class="individual_totalCoupon_input"
+               th:value="${#lists.size('coupon')}">
     </div>
 </div>
 <table>

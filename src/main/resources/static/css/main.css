@@ -6,7 +6,7 @@
 /* search_box */
 .search{position:relative; z-index:100;}
 .search .left_box{display:inline-block; vertical-align:middle; margin-right:100px;}
-.search .left_box .logo{width:133px;}
+.search .left_box .logo{width:160px;}
 /* img삽입후 주석풀고 .search .left_box .logo a는 삭제해주세요 */
 /*.search .left_box .logo a{display:block;}
 .search .left_box .logo a img{width:100%;}*/
@@ -16,7 +16,7 @@
 .search .left_box .category:hover .depth02{display:block;}
 .search .left_box .category .depth02{position:absolute; left:0; top:100%; width:100%; display:none; padding:10px 0;  background:#fff;}
 .search .left_box .category .depth02 li a{display:block; padding:10px; box-sizing:border-box; font-size:14px; letter-spacing:-0.04em; color:#222; font-weight:300;}
-.search .center_box{display:inline-block; vertical-align:middle; width:633px; margin-right:100px; position:relative; height:40px;}
+.search .center_box{display:inline-block; vertical-align:middle; width:606px; margin-right:100px; position:relative; height:40px;}
 .search .center_box input{width:100%; height:40px; padding:0 60px 0 20px; box-sizing:border-box;}
 .search .center_box a{display:block; position:absolute; right:20px; top:50%; transform:translateY(-50%);}
 /* img삽입후 주석풀고 .search .left_box .logo a는 삭제해주세요 */
@@ -97,11 +97,11 @@
 /* right_box 내용 삽입후 주석풀어주세요 */
 /*.mypage_content .right_box{display:inline-block; vertical-align:top;  width:845px; padding-top:30px;}*/
 
-.manage_content .left_box{display:inline-block; vertical-align:top; width:300px; background: #b8f8f8
+.manage_content .left_box{display:inline-block; vertical-align:top; width:300px; background: #b8f8f8; padding:0 0 400px;
 }
 /* logo img삽입후 삭제 */
-.manage_content .left_box .logo_box{width:150px; margin:50px auto; text-align:Center;}
-.manage_content .left_box .logo_box a{display:block; width:150px; height:50px; background:#000;}
+.manage_content .left_box .logo_box{width:160px; margin:50px auto; text-align:Center;}
+.manage_content .left_box .logo_box a{display:block; width:160px; height:75px; background:#000;}
 /* logo img삽입후 삭제 */
 /* logo img삽입후 주석풀어주세요 */
 /*.manage_content .left_box .logo_box a{display:block;}*/
@@ -109,7 +109,7 @@
 .manage_content .left_box .logo_box p{font-size:24px; letter-spacing:-0.045em; color:#222; font-weight:bold; padding-top:20px;}
 .manage_content .left_box .slide_box .box{width:200px; margin:0 auto; background:#fff;}
 .manage_content .left_box .slide_box .box + .box{margin-top:30px;}
-.manage_content .left_box .slide_box .box > ul > li > a{display:block; font-size:20px; letter-spacing:-0.04em; color:#fff; font-weight:bold; padding:10px 0; background: #83c5c0; }
+.manage_content .left_box .slide_box .box > ul > li > a{display:block; font-size:20px; letter-spacing:-0.04em; color:#fff; font-weight:bold; padding:10px 0; background: #83c5c0;  padding-left:10px;}
 .manage_content .left_box .slide_box .box .depth02 li a{display:block; font-size:16px; letter-spacing:-0.04em; color:#666; font-weight:400; padding:5px 0 5px 10px;}
 .manage_content .left_box .slide_box .box .depth02{display:none;}
 .manage_content .right_box{display:inline-block; vertical-align:top; width:895px; margin-left:-4px;}
@@ -120,7 +120,7 @@
 .manage_content .right_box .path_box ul li:last-of-type{margin-right:0;}
 .manage_content .right_box .path_box ul li:last-of-type:after{display:none;}
 /* content_box에 내용 삽입후 삭제*/
-.manage_content .right_box .content_box{width:800px; margin:50px auto; height:800px; background:#000;}
+/*.manage_content .right_box .content_box{width:800px; margin:50px auto; height:800px; background:#000;}*/
 /* content_box에 내용 삽입후 삭제*/
 /* content_box에 내용 삽입후 주석풀어주세요*/
-/*.manage_content .right_box .content_box{width:800px; margin:50px auto;}*/
+.manage_content .right_box .content_box{width:800px; margin:50px auto;}
