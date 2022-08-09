@@ -2,29 +2,6 @@
 
 /* basic */
 #wrap{width:1200px; margin:0 auto; position:relative;}
-
-/* search_box */
-.search{position:relative; z-index:100;}
-.search .left_box{display:inline-block; vertical-align:middle; margin-right:100px;}
-.search .left_box .logo{width:160px;}
-/* img삽입후 주석풀고 .search .left_box .logo a는 삭제해주세요 */
-/*.search .left_box .logo a{display:block;}
-.search .left_box .logo a img{width:100%;}*/
-.search .left_box .logo a{width:100%; display:block; background:#000; height:57px;}
-.search .left_box .category{margin-top:10px; position:relative;}
-.search .left_box .category > a{font-size:16px; letter-spacing:-0.045em; color:#000; font-weight:bold; text-align:center; border:1px solid #aaa; display:block;}
-.search .left_box .category:hover .depth02{display:block;}
-.search .left_box .category .depth02{position:absolute; left:0; top:100%; width:100%; display:none; padding:10px 0;  background:#fff;}
-.search .left_box .category .depth02 li a{display:block; padding:10px; box-sizing:border-box; font-size:14px; letter-spacing:-0.04em; color:#222; font-weight:300;}
-.search .center_box{display:inline-block; vertical-align:middle; width:606px; margin-right:100px; position:relative; height:40px;}
-.search .center_box input{width:100%; height:40px; padding:0 60px 0 20px; box-sizing:border-box;}
-.search .center_box a{display:block; position:absolute; right:20px; top:50%; transform:translateY(-50%);}
-/* img삽입후 주석풀고 .search .left_box .logo a는 삭제해주세요 */
-.search .right_box{display:inline-block; vertical-align:middle; width:225px;}
-/*.search .right_box a{display:block;}*/
-/*.search .right_box a img{width:100%;}*/
-.search .right_box a{width:100%; display:block; background:#000; height:80px;}
-
 /* main_visual */
 .main_visual{height:500px; overflow:hidden;}
 .main_visual .swiper-wrapper{width:100%; height:100%}
@@ -92,10 +69,10 @@
 .mypage_content .left_box .box a{font-size:16px; letter-spacing:-0.045em; color:#666; font-weight:400; padding-left:10px; position:relative; box-sizing:border-box; display:block;}
 .mypage_content .left_box .box a:after{content:'-'; position:absolute; left:0; top:0;}
 /* right_box 내용 삽입후 삭제 */
-.mypage_content .right_box{display:inline-block; vertical-align:top; background:#000; width:845px; height:800px;}
+/*.mypage_content .right_box{display:inline-block; vertical-align:top; background:#000; width:844px; height:800px;}*/
 /* right_box 내용 삽입후 삭제 */
 /* right_box 내용 삽입후 주석풀어주세요 */
-/*.mypage_content .right_box{display:inline-block; vertical-align:top;  width:845px; padding-top:30px;}*/
+.mypage_content .right_box{display:inline-block; vertical-align:top;  width:845px; padding-top:30px;}
 
 .manage_content .left_box{display:inline-block; vertical-align:top; width:300px; background: #b8f8f8; padding:0 0 400px;
 }
