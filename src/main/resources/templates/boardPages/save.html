@@ -3,7 +3,19 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+
+    <script src="/js/jquery.js"></script>
+
+    <!-- css 연결 -->
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
+
+    <!-- swiper 슬라이더 -->
+    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all"/>
+    <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <title>경진하소</title>
     <script th:inline="javascript">
         var openWin;
 
@@ -140,84 +152,104 @@
     </style>
 </head>
 <body>
-<div class="save-title">
-    <span>이벤트 게시판 관리</span>
-    <span> > </span>
-    <span>이벤트 등록</span>
-</div>
+<div id="wrap">
+    <div class="manage_content">
+        <div class="left_box">
+            <th:block th:replace="include/adminHeader :: adminHeader"></th:block>
+        </div>
+        <script>
+            $('.slide_box .box > ul > li > a').on('click', function () {
+                $(this).next().slideToggle();
+            })
+        </script>
+        <div class="right_box">
+            <div class="logout_box">
+                <a href="javscript:;">로그아웃</a>
+            </div>
+            <div class="path_box">
+                <ul>
+                    <li>이벤트 게시판 관리</li>
+                    <li>이벤트 등록</li>
+                </ul>
+            </div>
+            <div class="content_box">
 
-<form action="/event/save" method="post" enctype="multipart/form-data">
-    <div class="save-container">
-        <div class="head-title-wrap">
-            <h2 class="head-title">이벤트 등록</h2>
+                <form action="/event/save" method="post" enctype="multipart/form-data">
+                    <div class="save-container">
+                        <div class="head-title-wrap">
+                            <h2 class="head-title">이벤트 등록</h2>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">이벤트 제목</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="eventTitle">
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">이벤트 썸네일</span>
+                            </div>
+                            <div class="input-wrap">
+                                <div class="input-wrap">
+                                    <input type="file" name="eventThumbnail"><br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">이벤트 내용</span>
+                            </div>
+                            <div class="input-wrap">
+                                <textarea class="textarea-input" name="eventContents"></textarea>
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">첨부파일 등록</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input multiple="multiple" type="file" name="eventFile">
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">쿠폰 불러오기</span>
+                            </div>
+                            <div class="couponButton">
+                                <input type="button" onclick="openChild()"
+                                       style="width: 65px; background-color: lightgray; border-radius: 5px;" value="선택">
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">쿠폰이름</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" id="couponName" name="couponName" readonly>
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">쿠폰사진</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" id="couponThumbnail" name="couponThumbnail" readonly>
+                            </div>
+                        </div>
+                        <input type="hidden" id="couponId" name="couponId"><br>
+                        <input type="hidden" id="couponValue" name="couponValue"><br>
+                        <input type="hidden" id="couponMinimumValue" name="couponMinimumValue"><br>
+                        <input type="submit"
+                               style="width: 150px; background-color: lightgray; border-radius: 5px; margin-bottom: 30px;"
+                               value="제출">
+                        <br>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">이벤트 제목</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" name="eventTitle">
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">이벤트 썸네일</span>
-            </div>
-            <div class="input-wrap">
-                <div class="input-wrap">
-                    <input type="file" name="eventThumbnail"><br>
-                </div>
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">이벤트 내용</span>
-            </div>
-            <div class="input-wrap">
-                <textarea class="textarea-input" name="eventContents"></textarea>
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">첨부파일 등록</span>
-            </div>
-            <div class="input-wrap">
-                <input multiple="multiple" type="file" name="eventFile">
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">쿠폰 불러오기</span>
-            </div>
-            <div class="couponButton">
-                <input type="button" onclick="openChild()"
-                       style="width: 65px; background-color: lightgray; border-radius: 5px;" value="선택">
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">쿠폰이름</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" id="couponName" name="couponName" readonly>
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">쿠폰사진</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" id="couponThumbnail" name="couponThumbnail" readonly>
-            </div>
-        </div>
-        <input type="hidden" id="couponId" name="couponId"><br>
-        <input type="hidden" id="couponValue" name="couponValue"><br>
-        <input type="hidden" id="couponMinimumValue" name="couponMinimumValue"><br>
-        <input type="submit" style="width: 150px; background-color: lightgray; border-radius: 5px; margin-bottom: 30px;"
-               value="제출">
-        <br>
     </div>
-    </div>
-</form>
+</div>
 </body>
 </html>

@@ -147,27 +147,34 @@
             <p>해피 멤버십</p>
             <div class="logo_box">
                 <img src="" alt="">
-                <span>브론즈</span>
+                <span th:text="${member.memberTier}"></span>
             </div>
         </div>
         <div class="right_box">
             <div class="txt_box">
-                <p>민소희님께서 즉시 받으실 수 있는 쇼핑 혜택입니다.</p>
+                <p th:text="${session.loginName}+ '님께서 즉시 받으실 수 있는 쇼핑 혜택입니다.'"></p>
             </div>
             <ul>
                 <li>
+                    <div th:each="point : ${pointList}">
                     <p>적립금</p>
-                    <span>2,000원</span>
+                    <span th:text="${point.pointValue}"></span>
+                    </div>
                 </li>
                 <li>
                     <p>할인쿠폰</p>
-                    <span>2개</span>
+                    <span class="totalCoupon"></span>
                 </li>
             </ul>
         </div>
     </div>
 </div>
-
+<div th:each="coupon: ${myCoupon}">
+    <div class="coupon_info_td">
+        <input type="hidden" class="individual_totalCoupon_input"
+               th:value="${#lists.size('coupon')}">
+    </div>
+</div>
 <table>
     <tr>
         <!-- 체크박스 전체 여부 -->

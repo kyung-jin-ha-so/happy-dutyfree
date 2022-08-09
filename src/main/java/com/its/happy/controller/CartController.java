@@ -17,13 +17,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CartController {
     private final CartService cartService;
-    private final ProductService productService;
     private final ExchangeRateService exchangeRateService;
     private final PointService pointService;
     private final CouponService couponService;
     private final MemberService memberService;
     private final PassportService passportService;
-    private final DepartureService departureService;
 
     @GetMapping("/save")
     public ResponseEntity save(@RequestParam("productId") Long productId, @RequestParam("memberId") Long memberId, @RequestParam("cartQty") int cartQty) {
