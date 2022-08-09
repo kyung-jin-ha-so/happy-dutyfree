@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<h2>주문 내역</h2>
+<span th:text="${'주문번호 ' + order.orderId + '| 주문일시' + order.orderCreatedTime + ' | 구매상품 총' + order.orderProductEntityList.size() + '개'}"></span>
+<table>
+    <tr>
+        <th>교환권번호</th>
+        <th>상품명</th>
+        <th>판매금액</th>
+        <th>수량</th>
+        <th>구매금액</th>
+        <th>상품평작성</th>
+    </tr>
+    <tr th:each="orderProduct: ${order.orderProductEntityList}">
+        <td th:text="${orderProduct.orderProductId}"></td>
+        <td th:text="${orderProduct.productName}"></td>
+        <td>
+            <span style="text-decoration: line-through; font-weight: bold"
+                  th:text="${orderProduct.productOriginalPrice}"></span><br>
+            <span style="color: red; font-weight: bold" th:text="'$ ' + ${orderProduct.productPrice}"></span>
+        </td>
+        <td th:text="${orderProduct.orderQty} + '개'"></td>
+        <td>
+            <span style="color: red; font-weight: bold" th:text="'$ ' + ${orderProduct.productPrice * orderProduct.orderQty}"></span><br>
+            <span style="color: gray; font-size: small"
+                  th:text="'(' + ${#numbers.formatInteger(orderProduct.productPrice * orderProduct.orderQty * session.exchangeRate, 1, 'COMMA') } + '원)'"></span>
+        </td>
+        <td>
+            <button th:onclick="saveReview([[${orderProduct.orderProductId}]])">상품평작성</button>
+        </td>
+    </tr>
+</table>
+</body>
+<script th:inline="javascript">
+    const saveReview = (id) => {
+        location.href = "/review/save/" + id;
+    }
+</script>
+</html>

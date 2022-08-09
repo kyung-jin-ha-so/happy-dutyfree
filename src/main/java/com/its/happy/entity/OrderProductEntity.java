@@ -29,6 +29,14 @@ public class OrderProductEntity {
     @Column(nullable = false)
     private int orderQty;
 
+    // 상품 할인가
+    @Column(nullable = false)
+    private double productPrice;
+
+    // 상품 이름
+    @Column(nullable = false)
+    private String productName;
+
     // OrderProductEntity(N)가 OrderEntity(1)을 참조함
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
@@ -46,6 +54,8 @@ public class OrderProductEntity {
         orderProductEntity.setProductOriginalPrice(orderProductDTO.getProductOriginalPrice());
         orderProductEntity.setOrderEntity(orderEntity);
         orderProductEntity.setProductEntity(productEntity);
+        orderProductEntity.setProductPrice(orderProductDTO.getProductPrice());
+        orderProductEntity.setProductName(orderProductDTO.getProductName());
         return orderProductEntity;
     }
 }
