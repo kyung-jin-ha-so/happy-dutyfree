@@ -1,18 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
+    <title>경진하소</title>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
+    <script src="/js/jquery.js"></script>
+
+    <!-- css 연결 -->
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
+
+    <!-- swiper 슬라이더 -->
+    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all"/>
+    <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
     <style>
         * {
             box-sizing: border-box;
         }
-        .update-title{font-weight: 600; font-size: 1.3rem}
-        .update-container{max-width: 800px; text-align: center; min-width: 800px; border: 1px solid #e5e5e5; background-color: mediumseagreen}
+        .update-container{padding-top: 20px; max-width: 800px; text-align: center; min-width: 800px; border: 1px solid #e5e5e5; background-color: rgba(107, 201, 170, 0.3);}
         .update-container .head-title-wrap{margin-bottom: 3rem;}
         .update-container > div:not(:last-child){margin-bottom: 1rem;}
         .update-container .head-title-wrap .head-title {
@@ -25,7 +32,7 @@
         }
         .update-container .update-item{display: flex; flex-direction: row; padding: 0 2rem;}
         .update-container .update-item .title-wrap{padding: 8px; width: 200px;}
-        .update-container .update-item span{font-size: 1.125rem; position: relative; font-family: inherit; cursor:pointer; margin: 0; padding: 0; font-weight: 600;}
+        .update-container .update-item span{font-size: 1.125rem; position: relative; font-family: inherit; cursor:pointer; margin: 0; padding: 0; font-weight: 600; color: black;}
         .update-container .update-item input{
             border: 1px solid #ccc;
             outline: none;
@@ -75,142 +82,160 @@
             color: #fff;
             transition: 0.3s ease;
         }
-        .update-title{font-weight: 600; font-size: 1.3rem}
     </style>
-
 </head>
 <body>
-<div class = "update-title">
-    <span>상품관리</span>
-    <span> > </span>
-    <span>상품수정</span>
-</div>
+<div id="wrap">
+    <div class="manage_content">
+        <div class="left_box">
+            <th:block th:replace="include/adminHeader :: adminHeader"></th:block>
+        </div>
+        <script>
+            $('.slide_box .box > ul > li > a').on('click', function () {
+                $(this).next().slideToggle();
+            })
+        </script>
+        <div class="right_box">
+            <div class="logout_box">
+                <a href="javscript:;">로그아웃</a>
+            </div>
+            <div class="path_box">
+                <ul>
+                    <li>상품관리</li>
+                    <li>상품수정</li>
+                </ul>
+            </div>
+            <div class="content_box">
+                <form action="/product/update" method="post" enctype="multipart/form-data">
+                    <div class="update-container">
+                        <div class="head-title-wrap">
+                            <h2 class="head-title">상품수정</h2>
+                        </div>
+                        <input type="hidden" name="productId" th:value="${product.productId}">
+                        <input type="hidden" name="productStar" th:value="${product.productStar}">
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">상품이름</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="productName" th:value="${product.productName}">
+                            </div>
+                        </div>
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">카테고리</span>
+                            </div>
+                            <div class="input-wrap">
+                                <select id="categoryId" name="categoryId" class="select-input">
+                                    <option th:value="${product.categoryEntity.categoryId}">--수정사항 없음--</option>
+                                    <option th:each="category: ${categoryDTOList}" th:value="${category.categoryId}" th:utext="${category.categoryName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">상품 설명</span>
+                            </div>
+                            <div class="input-wrap">
+                                <textarea class="textarea-input" name="productDesc" th:text="${product.productDesc}"> [[${product.productDesc}]] </textarea>
+                            </div>
+                        </div>
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">설명파일추가</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input multiple type="file" name="productFile">
+                            </div>
+                        </div>
 
-<form action="/product/update" method="post" enctype="multipart/form-data">
-    <div class="update-container">
-        <div class="head-title-wrap">
-            <h2 class="head-title">상품수정</h2>
-        </div>
-        <input type="hidden" name="productId" th:value="${product.productId}">
-        <input type="hidden" name="productStar" th:value="${product.productStar}">
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">상품이름</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" name="productName" th:value="${product.productName}">
-            </div>
-        </div>
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">카테고리</span>
-            </div>
-            <div class="input-wrap">
-                <select id="categoryId" name="categoryId" class="select-input">
-                    <option th:value="${product.categoryEntity.categoryId}">--수정사항 없음--</option>
-                    <option th:each="category: ${categoryDTOList}" th:value="${category.categoryId}" th:utext="${category.categoryName}"></option>
-                </select>
-            </div>
-        </div>
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">상품 설명</span>
-            </div>
-            <div class="input-wrap">
-                <textarea class="textarea-input" name="productDesc" th:text="${product.productDesc}"> [[${product.productDesc}]] </textarea>
-            </div>
-        </div>
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">설명파일추가</span>
-            </div>
-            <div class="input-wrap">
-                <input multiple type="file" name="productFile">
-            </div>
-        </div>
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">현재 상품 상세파일</span>
+                            </div>
+                            <div class="input-wrap">
+                                <div th:each="productFile: ${product.productFilesEntityList}" >
+                                    <img th:src="@{|/upload/${productFile.productFileName}|}" width="100" height="100" alt="">
+                                    <button th:onclick="deleteFile([[${productFile.productFileId}]])">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">상품브랜드</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="productBrand" th:value="${product.productBrand}">
+                            </div>
+                        </div>
 
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">현재 상품 상세파일</span>
-            </div>
-            <div class="input-wrap">
-                <div th:each="productFile: ${product.productFilesEntityList}" >
-                    <img th:src="@{|/upload/${productFile.productFileName}|}" width="100" height="100" alt="">
-                    <button th:onclick="deleteFile([[${productFile.productFileId}]])">삭제</button>
-                </div>
-            </div>
-        </div>
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">상품브랜드</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" name="productBrand" th:value="${product.productBrand}">
-            </div>
-        </div>
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">상품정가</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="productOriginalPrice" id="productOriginalPrice" th:value="${product.productOriginalPrice}" th:onblur="calPrice()">
+                            </div>
+                        </div>
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">할인율</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="productDiscount" th:value="${product.productDiscount}" id="productDiscount" th:onblur="calPrice()">
+                            </div>
+                        </div>
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">회원가</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" id="productPrice" name="productPrice" th:value="${product.productPrice}">
+                            </div>
+                        </div>
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">수량</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="productQuantity" th:value="${product.productQuantity}" readonly>
+                            </div>
+                        </div>
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">썸네일변경</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="file" name="productThumbnailFile">
+                            </div>
+                        </div>
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">현재 썸네일</span>
+                            </div>
+                            <div class="input-wrap">
+                                <img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""> <br>
+                            </div>
+                        </div>
+                        <div class="update-item">
+                            <div class="title-wrap">
+                                <span class="title">상품상태</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="productStatus" th:value="${product.productStatus}" readonly><br>
+                            </div>
+                        </div>
+                        <div class="btn-wrap">
+                            <button type="submit" class="update-btn">수정</button>
+                        </div>
+                    </div>
 
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">상품정가</span>
+                </form>
+
             </div>
-            <div class="input-wrap">
-                <input type="text" name="productOriginalPrice" id="productOriginalPrice" th:value="${product.productOriginalPrice}" th:onblur="calPrice()">
-            </div>
-        </div>
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">할인율</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" name="productDiscount" th:value="${product.productDiscount}" id="productDiscount" th:onblur="calPrice()">
-            </div>
-        </div>
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">회원가</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" id="productPrice" name="productPrice" th:value="${product.productPrice}">
-            </div>
-        </div>
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">수량</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" name="productQuantity" th:value="${product.productQuantity}" readonly>
-            </div>
-        </div>
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">썸네일변경</span>
-            </div>
-            <div class="input-wrap">
-                <input type="file" name="productThumbnailFile">
-            </div>
-        </div>
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">현재 썸네일</span>
-            </div>
-            <div class="input-wrap">
-                <img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""> <br>
-            </div>
-        </div>
-        <div class="update-item">
-            <div class="title-wrap">
-                <span class="title">상품상태</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" name="productStatus" th:value="${product.productStatus}" readonly><br>
-            </div>
-        </div>
-        <div class="btn-wrap">
-            <button type="submit" class="update-btn">수정</button>
         </div>
     </div>
-
-</form>
+</div>
 
 </body>
 <script th:inline="javascript">
@@ -223,22 +248,21 @@
     }
 
     const deleteFile = (productFileId) => {
-      const productId = [[${product.productId}]];
+        const productId = [[${product.productId}]];
 
-      $.ajax({
-          type: "post",
-          url: "/product/deleteFile",
-          data: {
-              "productFileId": productFileId,
-          },
-          dataType:"text",
-          success: function (res){
-            location.href= "/product/update/" + productId;
-          }, error:function (){
-              alert("ajax실패");
-          }
-      })
+        $.ajax({
+            type: "post",
+            url: "/product/deleteFile",
+            data: {
+                "productFileId": productFileId,
+            },
+            dataType:"text",
+            success: function (res){
+                location.href= "/product/update/" + productId;
+            }, error:function (){
+                alert("ajax실패");
+            }
+        })
     }
-
 </script>
 </html>

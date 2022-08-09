@@ -39,53 +39,97 @@
 <div class="frame">
     <div class="center">
         <form action="/product/search/" method="get">
-            <input type="text" name="q" id="q" placeholder="상품명 검색" th:onblur="searchFind()">
-            <div id="recommend" class="invisible">
-                <div>최근 검색어</div>
-                <div id="recommend_item" class="item" th:each="search: ${searchList}">
-                    <span th:text="${search.searchName}" class="text" th:onclick="putSearch([[${search.searchName}]])"></span>
-                    <span th:text="${#temporals.format(search.searchCreatedTime, 'MM/dd')}" class="small align-self-end"></span>
-                    <span th:onclick="searchDelete([[${search.searchId}]])" class="small align-self-end">x</span>
+            <div th:if="${session.loginId}">
+                <input type="text" name="q" id="q" placeholder="상품명 검색">
+                <div id="recommend">
+                    <div id="recent_search">
+
+                    </div>
                 </div>
+            </div>
+            <div th:unless="${session.loginId}">
+                <input type="text" name="q" id="q1" placeholder="상품명 검색">
             </div>
             <input type="submit" value="검색">
         </form>
     </div>
 </div>
 
-<div class="container">
-    <table class="table">
-        <tr>
-            <th>검색아이디</th>
-            <th>검색명</th>
-        </tr>
-        <tr th:each="search: ${searchList}">
-            <td th:text="${search.searchId}"></td>
-            <td th:text="${search.searchName}"></td>
-        </tr>
-    </table>
-</div>
-
 </body>
 <script th:inline="javascript">
-    const inputBox = document.querySelector("input");
-    const recommendBox = document.querySelector("#recommend");
+    // const inputBox = document.querySelector("input");
+    // const recommendBox = document.querySelector("#recommend");
+    //
+    // inputBox.addEventListener("keyup", (e) => {
+    //     if (e.target.value.length > 0) {
+    //         recommendBox.classList.remove('invisible');
+    //     } else {
+    //         recommendBox.classList.add('invisible');
+    //     }
+    // })
 
-    inputBox.addEventListener("keyup", (e) => {
-        if (e.target.value.length > 0) {
-            recommendBox.classList.remove('invisible');
-        } else {
-            recommendBox.classList.add('invisible');
-        }
-    })
+    //
+    // const searchFind = () => {
+    //     const loginId = [[${session.loginId}]];
+    //     const recentSearch  =  document.getElementById("recent_search");
+    //
+    //     $.ajax({
+    //         method: 'post',
+    //         url: '/search/find',
+    //         data: {
+    //             'loginId': loginId,
+    //         },
+    //         dataType: 'json',
+    //         success: function (res) {
+    //
+    //             let output = "<div>최근 검색어</div>\n";
+    //
+    //             for (let i = 0; i < res.length; i++) {
+    //             output += "<div id=\"recommend_item\" class=\"item\">\n";
+    //             output += "<span class=\"text\" onclick=\'putSearch(" +'"' + res[i].searchName + '"'+")\'>" + res[i].searchName + "</span>\n";
+    //             output += "<span class=\"small align-self-end\">" + res[i].searchCreatedTime + "</span>\n";
+    //             output += "<span class=\"small align-self-end\" onclick=\'searchDelete("+res[i].searchId+")\'>x</span>\n";
+    //             output += "</div>";
+    //             }
+    //             recentSearch.innerHTML = output;
+    //
+    //             }, error: function () {
+    //             alert("에러입니다.");
+    //         }
+    //     })
+    // }
 
-    const putSearch = (searchName) => {
-        const recommendBox = document.querySelector("#recommend");
-        const inputBox = document.querySelector("input");
+    $("#q").mousedown(function() {
+        const loginId = [[${session.loginId}]];
+        const recentSearch  =  document.getElementById("recent_search");
 
-        inputBox.value = searchName;
-        recommendBox.classList.add('invisible');
-    }
+        $.ajax({
+            method: 'post',
+            url: '/search/find',
+            data: {
+                'loginId': loginId,
+            },
+            dataType: 'json',
+            success: function (res) {
+
+                let output = "<div>최근 검색어</div>\n";
+
+                for (let i = 0; i < res.length; i++) {
+                    output += "<div id=\"recommend_item\" class=\"item\">\n";
+                    output += "<span class=\"text\" onclick=\'putSearch(" +'"' + res[i].searchName + '"'+")\'>" + res[i].searchName + "</span>\n";
+                    output += "<span class=\"small align-self-end\">" + res[i].searchCreatedTime + "</span>\n";
+                    output += "<span class=\"small align-self-end\" onclick=\'searchDelete("+res[i].searchId+")\'>x</span>\n";
+                    output += "</div>";
+                }
+                recentSearch.innerHTML = output;
+
+            }, error: function () {
+                alert("에러입니다.");
+            }
+        })
+    });
+
+
 
     const searchDelete = (searchId) => {
         $.ajax({
@@ -102,6 +146,13 @@
         });
     };
 
+    const putSearch = (searchName) => {
+        const recommendBox = document.querySelector("#recommend");
+        const inputBox = document.querySelector("input");
+
+        inputBox.value = searchName;
+        recommendBox.classList.add('invisible');
+    }
 
 </script>
 </html>

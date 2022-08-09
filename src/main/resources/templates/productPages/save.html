@@ -1,23 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
+    <title>경진하소</title>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
+    <script src="/js/jquery.js"></script>
+
+    <!-- css 연결 -->
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
+
+    <!-- swiper 슬라이더 -->
+    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all"/>
+    <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
     <style>
         * {
             box-sizing: border-box;
         }
 
         .save-container {
+            padding-top: 20px;
             max-width: 800px;
             text-align: center;
             min-width: 800px;
             border: 1px solid #e5e5e5;
-            background-color: mediumseagreen
+            background-color: rgba(107, 201, 170, 0.3);
         }
 
         .save-container .head-title-wrap {
@@ -56,6 +65,7 @@
             margin: 0;
             padding: 0;
             font-weight: 600;
+            color: black;
         }
 
         .save-container .save-item input {
@@ -123,113 +133,132 @@
             color: #fff;
             transition: 0.3s ease;
         }
-        .save-title{font-weight: 600; font-size: 1.3rem}
+
     </style>
 </head>
 <body>
-<div class="save-title">
-    <span>상품관리</span>
-    <span> > </span>
-    <span>상품등록</span>
-</div>
+<div id="wrap">
+    <div class="manage_content">
+        <div class="left_box">
+            <th:block th:replace="include/adminHeader :: adminHeader"></th:block>
+        </div>
+        <script>
+            $('.slide_box .box > ul > li > a').on('click', function () {
+                $(this).next().slideToggle();
+            })
+        </script>
+        <div class="right_box">
+            <div class="logout_box">
+                <a href="javscript:;">로그아웃</a>
+            </div>
+            <div class="path_box">
+                <ul>
+                    <li>상품관리</li>
+                    <li>상품등록</li>
+                </ul>
+            </div>
+            <div class="content_box">
+                <form action="/product/save" method="post"
+                      enctype="multipart/form-data">
+                    <div class="save-container">
+                        <div class="head-title-wrap">
+                            <h2 class="head-title">상품 등록</h2>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">상품 이름</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="productName">
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">카테고리</span>
+                            </div>
+                            <div class="input-wrap">
+                                <select name="categoryId" class="select-input">
+                                    <option value=""> -- 선택 --</option>
+                                    <option th:each="category: ${categoryDTOList}" th:value="${category.categoryId}"
+                                            th:utext="${category.categoryName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">상품 설명</span>
+                            </div>
+                            <div class="input-wrap">
+                                <textarea class="textarea-input" name="productDesc"></textarea>
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title"></span>
+                            </div>
+                            <div class="input-wrap">
+                                <input multiple type="file" name="productFile">
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">상품 브랜드</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="productBrand">
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">상품 정가</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="productOriginalPrice" id="productOriginalPrice" th:onblur="calPrice()">
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">상품 할인율</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="productDiscount" id="productDiscount" th:onblur="calPrice()">
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">상품 회원가</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" id="productPrice" name="productPrice">
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">상품 수량</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="productQuantity">
+                            </div>
+                        </div>
 
-<form action="/product/save" method="post"
-      enctype="multipart/form-data">
-    <div class="save-container">
-        <div class="head-title-wrap">
-            <h2 class="head-title">상품 등록</h2>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">상품 이름</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" name="productName">
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">카테고리</span>
-            </div>
-            <div class="input-wrap">
-                <select name="categoryId" class="select-input">
-                    <option value=""> -- 선택 --</option>
-                    <option th:each="category: ${categoryDTOList}" th:value="${category.categoryId}"
-                            th:utext="${category.categoryName}"></option>
-                </select>
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">상품 설명</span>
-            </div>
-            <div class="input-wrap">
-                <textarea class="textarea-input" name="productDesc"></textarea>
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title"></span>
-            </div>
-            <div class="input-wrap">
-                <input multiple type="file" name="productFile">
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">상품 브랜드</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" name="productBrand">
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">상품 정가</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" name="productOriginalPrice" id="productOriginalPrice" th:onblur="calPrice()">
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">상품 할인율</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" name="productDiscount" id="productDiscount" th:onblur="calPrice()">
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">상품 회원가</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" id="productPrice" name="productPrice">
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">상품 수량</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" name="productQuantity">
-            </div>
-        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">상품 썸네일</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="file" name="productThumbnailFile">
+                            </div>
+                        </div>
 
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">상품 썸네일</span>
+                        <div class="btn-wrap">
+                            <button type="submit" class="save-btn">등록</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="input-wrap">
-                <input type="file" name="productThumbnailFile">
-            </div>
-        </div>
-
-        <div class="btn-wrap">
-            <button type="submit" class="save-btn">등록</button>
         </div>
     </div>
-</form>
+</div>
 
 </body>
 <script th:inline="javascript">

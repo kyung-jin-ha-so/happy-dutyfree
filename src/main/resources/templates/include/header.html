@@ -1,4 +1,5 @@
 <th:block th:fragment="header">
+    <!--    최근검색어 클릭시 안보이게 하기 위함-->
     <header>
         <div id="wrap">
             <!-- header -->
@@ -46,9 +47,20 @@
                     </div>
                     <div class="center_box">
                         <form action="/product/search/" method="get" name="searchForm" id="searchForm">
-                            <div class="input_box">
-                                <input type="text" name="q" id="q" placeholder="상품명 검색">
-                                <a href="#"><img src="/img/input_click.png" id="search" alt=""></a>
+                            <div th:if="${session.loginId}">
+                                <div class="input_box">
+                                    <input type="text" name="q" id="q" placeholder="상품명 검색">
+                                    <div id="recommend">
+                                        <div id="recent_search"></div>
+                                    </div>
+                                    <a href="#"><img src="/img/input_click.png" id="search" alt=""></a>
+                                </div>
+                            </div>
+                            <div th:unless="${session.loginId}">
+                                <div class="input_box">
+                                    <input type="text" name="q" placeholder="상품명 검색">
+                                    <a href="#"><img src="/img/input_click.png" alt=""></a>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -62,4 +74,104 @@
             </div>
         </div>
     </header>
+
+    <script !src="">
+
+        $("#search").click(function () {
+            $("#searchForm").submit();
+        });
+
+        $(document).ready(function () {
+
+            const exchangeRate = document.getElementById("rate");
+            let exchange = "";
+
+            var myHeaders = new Headers();
+            myHeaders.append("apikey", "");
+
+            var requestOptions = {
+                method: 'GET',
+                redirect: 'follow',
+                headers: myHeaders
+            };
+
+            fetch("https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=1", requestOptions)
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    exchangeRate.innerHTML = json["result"].toFixed(2);
+                    exchange = json["result"];
+                })
+                .catch(error => console.log('error', error));
+        });
+
+        //최근 검색어 창 띄우는 함수
+        $("#q").mousedown(function () {
+            const recommendBox = document.querySelector("#recommend");
+            const loginId = [[${session.loginId}]];
+            const recentSearch = document.getElementById("recent_search");
+            recommendBox.classList.remove('invisible');
+
+            $.ajax({
+                method: 'post',
+                url: '/search/find',
+                data: {
+                    'loginId': loginId,
+                },
+                dataType: 'json',
+                success: function (res) {
+
+                    let output = "<div>최근 검색어</div>\n";
+
+                    for (let i = 0; i < res.length; i++) {
+                        output += "<div id=\"recommend_item\" class=\"item\">\n";
+                        output += "<span class=\"text\" onclick=\'putSearch(" + '"' + res[i].searchName + '"' + ")\'>" + res[i].searchName + "</span>\n";
+                        output += "<div class=\"right\">\n"
+                        output += "<span class=\"small align-self-end\">" + res[i].searchCreatedTime + "</span>\n";
+                        output += "<span class=\"small align-self-end btn\" onclick=\'searchDelete(" + res[i].searchId + ")\'>X</span>\n";
+                        output += "</div>";
+                        output += "</div>";
+
+                    }
+                    recentSearch.innerHTML = output;
+
+                }, error: function () {
+                    alert("에러입니다.");
+                }
+            })
+        });
+
+        //최근 검색어 삭제하는 함수
+        const searchDelete = (searchId) => {
+            $.ajax({
+                method: "post",
+                url: "/search/delete",
+                data: {"searchId": searchId},
+                dataType: "text",
+                success: function (res) {
+                    console.log(res);
+                    location.reload();
+                }, error: function () {
+                    alert("ajax 오류")
+                }
+            });
+        };
+
+        //최근 검색어 클릭시 검색창에 넣어지는 함수
+        const putSearch = (searchName) => {
+            const recommendBox = document.querySelector("#recommend");
+            const inputBox = document.querySelector("input");
+
+            inputBox.value = searchName;
+            recommendBox.classList.add('invisible');
+        }
+
+        // 검색창에서 마우스 포인터가 요소 밖으로 나갈때 최근 목록 사라짐
+        // $("#q").blur(function (){
+        //     const recommendBox = document.querySelector("#recommend");
+        //     recommendBox.classList.add('invisible');
+        // });
+
+    </script>
 </th:block>
