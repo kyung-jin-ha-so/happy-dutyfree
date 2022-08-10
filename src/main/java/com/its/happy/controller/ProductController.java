@@ -31,13 +31,11 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final ReviewService reviewService;
     private final ProductFilesService productFilesService;
     private final CartService cartService;
     private final CategoryService categoryService;
     private final ExchangeRateService exchangeRateService;
-    private final PointService pointService;
-    private final CouponService couponService;
+    private final MemberService memberService;
 
     @GetMapping("/save")
     public String saveForm(Model model) {
@@ -269,13 +267,8 @@ public class ProductController {
         model.addAttribute("likeList", likeDTOList);
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
-        List<PointDTO> pointDTOList = pointService.findByPoint(memberId);
-        model.addAttribute("pointList",pointDTOList);
-        List<CouponMemberDTO> couponMemberDTOList  = couponService.findByMyCoupon(memberId);
-        model.addAttribute("myCoupon", couponMemberDTOList);
-        System.out.println("ProductController.likeList");
-        System.out.println("couponMemberDTOList = " + couponMemberDTOList);
-        System.out.println("pointDTOList = " + pointDTOList);
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member", memberDTO);
         return "/productPages/likeList";
     }
 
