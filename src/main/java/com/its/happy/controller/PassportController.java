@@ -1,6 +1,8 @@
 package com.its.happy.controller;
 
+import com.its.happy.dto.MemberDTO;
 import com.its.happy.dto.PassportDTO;
+import com.its.happy.service.MemberService;
 import com.its.happy.service.PassportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,11 +20,14 @@ import javax.servlet.http.HttpSession;
 public class PassportController {
 
     private final PassportService passportService;
+    private final MemberService memberService;
 
     @GetMapping("/save-form")
     public String saveForm(Model model, HttpSession session) {
         Long loginId = (Long) session.getAttribute("loginId");
         PassportDTO passportDTO = passportService.findByLoginId(loginId);
+        MemberDTO memberDTO = memberService.findById(loginId);
+        model.addAttribute("member", memberDTO);
         if(passportDTO == null) {
             return "/passportPages/save";
         } else {

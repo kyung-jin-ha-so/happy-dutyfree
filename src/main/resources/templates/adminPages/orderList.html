@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>경진하소</title>
+    <script src="/js/jquery.js"></script>
+
+    <!-- css 연결 -->
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all" />
+
+    <!-- swiper 슬라이더 -->
+    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all" />
+    <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <style>
+
+        table {
+            width: 100%;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+        }
+
+        th {
+            border-bottom: 1px solid #444444;
+            padding: 10px;
+            text-align: center;
+            background-color: lightgray;
+            color:#222;
+        }
+
+        td {
+            border-bottom: 1px solid #444444;
+            padding: 10px;
+            text-align: center;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <div class="manage_content">
+        <div class="left_box">
+            <div class="logo_box">
+                <!-- img_size 150*50 -->
+                <a href="/">
+                    <!-- 						<img src="" alt=""> -->
+                </a>
+                <p>ADMIN PAGE</p>
+            </div>
+            <div class="slide_box">
+                <div class="box">
+                    <ul>
+                        <li>
+                            <a href="javscript:;">회원 관리</a>
+                            <ul class="depth02">
+                                <li><a href="javscript:;">회원 목록 조회</a></li>
+                                <li><a href="javscript:;">1:1 채팅 관리</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <ul>
+                        <li>
+                            <a href="javscript:;">상품 관리</a>
+                            <ul class="depth02">
+                                <li><a href="javscript:;">상품 등록</a></li>
+                                <li><a href="javscript:;">상품 목록 조회</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <ul>
+                        <li>
+                            <a href="javscript:;">이벤트 게시판 관리</a>
+                            <ul class="depth02">
+                                <li><a href="javscript:;">이벤트 등록</a></li>
+                                <li><a href="javscript:;">이벤트 목록 조회</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <ul>
+                        <li>
+                            <a href="javscript:;">매출 관리</a>
+                            <ul class="depth02">
+                                <li><a href="javscript:;">일별 매출</a></li>
+                                <li><a href="javscript:;">월별 매출</a></li>
+                                <li><a href="/admin/orderList">판매 내역</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="box">
+                    <ul>
+                        <li>
+                            <a href="javscript:;">쿠폰 관리</a>
+                            <ul class="depth02">
+                                <li><a href="javscript:;">쿠폰 등록</a></li>
+                                <li><a href="javscript:;">쿠폰 목록 조회</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <script>
+            $('.slide_box .box > ul > li > a').on('click', function(){
+                $(this).next().slideToggle();
+            })
+        </script>
+        <div class="right_box">
+            <div class="logout_box">
+                <a href="javscript:;">로그아웃</a>
+            </div>
+            <div class="path_box">
+                <ul>
+                    <li>매출관리</li>
+                    <li>판매내역</li>
+                </ul>
+            </div>
+            <div class="content_box">
+                <table>
+                    <colgroup>
+                        <col style="width:10%">
+                        <col style="width:10%">
+                        <col style="width:10%">
+                        <col style="width:20%">
+                        <col style="width:10%">
+                        <col style="width:10%">
+                        <col style="width:10%">
+                        <col style="width:10%">
+                        <col style="width:10%">
+                    </colgroup>
+                    <tr>
+                        <th>주문번호</th>
+                        <th>회원번호</th>
+                        <th>쿠폰번호</th>
+                        <th>주문 일시</th>
+                        <th>최종 결제 원화</th>
+                        <th>최종 결제 달러</th>
+                        <th>사용 적립금</th>
+                        <th>상세 조회</th>
+                        <th>주문 상태</th>
+                    </tr>
+                    <tr th:each="order: ${orderList}">
+                        <td th:text="${order.orderId}"></td>
+                        <td th:text="${order.memberId}"></td>
+                        <td th:text="${order.couponMemberId}"></td>
+                        <td th:text="${order.orderCreatedTime}"></td>
+                        <td th:text="${order.orderWon}"></td>
+                        <td th:text="${order.orderUsd}"></td>
+                        <td th:text="${order.pointUseValue}"></td>
+                        <td><a style="color: #0d6efd" th:href="@{|/admin/orderProductList/${order.orderId}|}">조회</a></td>
+                        <td th:text="${order.orderStatus}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
