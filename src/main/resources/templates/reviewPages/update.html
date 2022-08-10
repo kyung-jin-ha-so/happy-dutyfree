@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <style>
         #rateForm fieldset {
             display: inline-block;
@@ -21,7 +21,7 @@
         }
 
         #rateForm label {
-            font-size: 3em;
+            font-size: 2em;
             color: transparent;
             text-shadow: 0 0 0 #f0f0f0;
         }
@@ -53,23 +53,20 @@
 <body>
 
 <form action="/review/update" class="mb-3" name="rateForm" id="rateForm" method="post">
-    <h2>후기 수정하기</h2>
+    <h1>후기 수정하기</h1>
+    <input type="hidden" name="reviewId" th:value="${review.reviewId}">
+    <input type="hidden" name="productId" th:value="${review.productEntity.productId}">
+    <input type="hidden" name="memberId" th:value="${review.memberEntity.memberId}">
 
-<!--        <input type="hidden" name="reviewId" th:text="${review.reviewId}">-->
-<!--        <input type="hidden" name="productId" th:text="${review}">-->
-    <!--    <input type="hidden" name="memberId" th:text="${orderId}">-->
-    <!--    <input type="hidden" name="orderId" th:text="${memberId}">-->
-
-    <!--    <span class="fw-bold">상품명:</span>-->
-<!--        <p th:text="${product}"></p>-->
     <div class="mb-3">
-        <span class="fw-bold">상품명:</span> <span>캉골모자</span>
+        <span class="fw-bold">상품명:</span>
+        <span th:text="${review.productEntity.productName}"></span>
     </div>
 
     <div class="input-group">
         <span class="text-bold align-self-start fw-bold">상품 후기: </span>
         <textarea class="col-auto form-control" type="text" id="reviewContents" name="reviewContents"
-                  placeholder="상품 후기를 남겨주세요"></textarea>
+                  placeholder="${review.reviewContents}">[[${review.reviewContents}]]</textarea>
     </div>
     <div>
         <span class="text-bold align-self-start fw-bold">상품 별점: </span>
@@ -86,8 +83,7 @@
                 for="rate5">★</label>
         </fieldset>
     </div>
-    <input type="submit" class="btn btn-primary" value="후기작성">
-
+    <input type="submit" class="btn btn-primary" value="후기수정">
 </form>
 </body>
 </html>

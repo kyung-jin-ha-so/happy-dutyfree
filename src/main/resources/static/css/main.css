@@ -69,10 +69,10 @@
 .mypage_content .left_box .box a{font-size:16px; letter-spacing:-0.045em; color:#666; font-weight:400; padding-left:10px; position:relative; box-sizing:border-box; display:block;}
 .mypage_content .left_box .box a:after{content:'-'; position:absolute; left:0; top:0;}
 /* right_box 내용 삽입후 삭제 */
-.mypage_content .right_box{display:inline-block; vertical-align:top; background:white; width:845px; height:800px;}
+/*.mypage_content .right_box{display:inline-block; vertical-align:top; background:#000; width:845px; height:800px;}*/
 /* right_box 내용 삽입후 삭제 */
 /* right_box 내용 삽입후 주석풀어주세요 */
-/*.mypage_content .right_box{display:inline-block; vertical-align:top;  width:845px; padding-top:30px;}*/
+.mypage_content .right_box{display:inline-block; vertical-align:top;  width:845px; padding-top:30px;}
 
 .manage_content .left_box{display:inline-block; vertical-align:top; width:300px; background: #b8f8f8; padding:0 0 400px;
 }
