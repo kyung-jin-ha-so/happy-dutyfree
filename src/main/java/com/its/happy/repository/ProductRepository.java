@@ -18,4 +18,5 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     List<ProductEntity> findByProductDiscountGreaterThanEqual(Long discount);
 
     long countByCategoryEntityCategoryId(Long categoryId);
+    long countAllByProductNameContaining(String q);
 }

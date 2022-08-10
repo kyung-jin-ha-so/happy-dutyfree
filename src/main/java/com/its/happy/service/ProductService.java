@@ -280,6 +280,10 @@ public class ProductService {
         productRepository.save(productEntity);
 
     }
+
+    public long countSearch(String q) {
+        return productRepository.countAllByProductNameContaining(q);
+    }
 }
 
 

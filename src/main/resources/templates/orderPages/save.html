@@ -194,7 +194,7 @@
         <th>적립금</th>
         <td>
             보유 적립금: <span
-                th:text="${#numbers.formatInteger(#aggregates.sum(session.member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span><br>
+                th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span><br>
             사용 가능한 적립금(총 주문 금액의 10%): <span
                 th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * session.exchangeRate * 0.1, 1, 'COMMA')} + '원'"></span><br>
             <input id="inputPoint" type="text" onchange="inputPoint()" value="0">원
