@@ -210,7 +210,10 @@
         <p>정상가</p>
         <p>회원가</p>
         <p>수량</p>
-        <div>
+        <div th:if="${product.productQuantity == 0}">
+            품절 상품입니다.
+        </div>
+        <div th:unless="${product.productQuantity == 0}">
             <input type="button" class="btn btn-secondary mt-15" onclick="addToCart()" value="장바구니"
                    style="width: 250px">
         </div>
@@ -232,7 +235,10 @@
             <input type="text" id="productQty" value="1" readonly="readonly" style="text-align:center; width: 100px" class="inline"/>
             <a href="javascript:;" class="inline" onclick="qtyCount('plus')">+</a>
         </div>
-        <div class="fw-bold text-lg-start fs-5 mt-2">
+        <div th:if="${product.productQuantity == 0}">
+
+        </div>
+        <div class="fw-bold text-lg-start fs-5 mt-2" th:unless="${product.productQuantity == 0}">
             <input type="button" class="btn btn-danger d-grid gap-2 mt-20" onclick="addToOrder()" value="주문하기"
                    style="width: 250px">
         </div>
