@@ -163,7 +163,9 @@ public class OrderController {
         System.out.println("orderId = " + orderId);
         OrderDTO orderDTO = orderService.findById(orderId);
         model.addAttribute("order", orderDTO);
-
+        Long memberId = orderDTO.getMemberId();
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member", memberDTO);
         return "/orderPages/detail";
     }
 

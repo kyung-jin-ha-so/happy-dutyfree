@@ -77,6 +77,37 @@
     <button type="submit">재주문하기</button>
 </form>
 
+<h3>고객정보 및 출국정보</h3>
+<table>
+    <tr>
+        <th>영문이름</th>
+        <td th:text="${member.passportEntity.passportName}"></td>
+        <th>여권번호</th>
+        <td th:text="${member.passportEntity.passportNumber}"></td>
+    </tr>
+    <tr>
+        <th>생년월일</th>
+        <td th:text="${member.memberBirth}"></td>
+        <th>여권만료일</th>
+        <td th:text="${member.passportEntity.passportDate}"></td>
+    </tr>
+    <tr>
+        <th>휴대폰번호</th>
+        <td th:text="${member.memberMobile}"></td>
+        <th>출국일</th>
+        <td th:text="${#temporals.createDate(order.orderDepartureEntity.orderDepartureDate, 'yyyyMMdd')}"></td>
+    </tr>
+    <tr>
+        <th>이메일</th>
+        <td th:text="${member.memberEmail}"></td>
+        <th>출발지(편명)</th>
+        <td th:text="${order.orderDepartureEntity.orderDepartureAirport + '(' + order.orderDepartureEntity.orderDepartureNumber + ')'}"></td>
+    </tr>
+</table>
+
+<h3>결제정보</h3>
+결제금액: <span th:text="${'$' + order.orderUsd + '(' + order.orderWon + '원)'}"></span><br>
+<button type="button" th:onclick="location.href='/order/list';">목록</button>
 </body>
 <script th:inline="javascript">
     const saveReview = (id) => {

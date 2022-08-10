@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <style>
         * {
             box-size: border-box;
@@ -51,10 +55,18 @@
             padding: 5px;
             border: 1px solid #ccc;
         }
+        .search-container{
+            width: 100%;
+            display: flex;
+            margin: 0;
+            padding: 2rem 10rem;
+        }
     </style>
 </head>
 <body>
-<div style="margin: 15px;">
+<th:block th:replace="include/header :: header"></th:block>
+
+<div class="search-container">
     <form action="/event/search" method="get">
         <input type="text" name="q" placeholder="이벤트 검색">
         <input type="submit" value="검색">
