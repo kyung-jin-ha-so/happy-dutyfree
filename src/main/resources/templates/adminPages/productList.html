@@ -76,8 +76,8 @@
             <col style="width:10%">
             <col style="width:10%">
             <col style="width:10%">
-            <col style="width:10%">
             <col style="width:20%">
+            <col style="width:10%">
           </colgroup>
           <tr>
             <th scope="col">상품번호</th>
@@ -85,9 +85,10 @@
             <th scope="col">상품할인가</th>
             <th scope="col">상품수량</th>
             <th scope="col">상품상태</th>
-            <th scope="col">수정</th>
             <th scope="col">상태변경</th>
             <th scope="col">수량수정</th>
+            <th scope="col">수정</th>
+
           </tr>
           <tr th:each="product: ${productList}">
             <td th:text="${product.productId}"></td>
@@ -95,7 +96,6 @@
             <td th:text="'$'+${product.productPrice}"></td>
             <td th:text="${product.productQuantity}"></td>
             <td th:text="${product.productStatus}"></td>
-            <td><a th:href="@{|/product/update/${product.productId}|}" th:text="수정"></a></td>
             <td th:if="${product.productStatus.toString().equals('판매중')}">
               <a th:href="@{|/product/statusClose/${product.productId}|}" th:text="판매중지"></a>
             </td>
@@ -113,6 +113,7 @@
                 <input type="submit" value="수량변경">
               </form>
             </td>
+            <td><a th:href="@{|/product/update/${product.productId}|}" th:text="수정"></a></td>
           </tr>
         </table>
 
