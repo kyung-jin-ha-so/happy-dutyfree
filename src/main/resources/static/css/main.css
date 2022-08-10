@@ -76,8 +76,8 @@
 
 .manage_content .left_box{display:inline-block; vertical-align:top; width:300px; background: #b8f8f8; padding:0 0 400px;}
 /* logo img삽입후 삭제 */
-/*.manage_content .left_box .logo_box{width:160px; margin:50px auto; text-align:Center;}*/
-/*.manage_content .left_box .logo_box a{display:block; width:160px; height:75px; background:#000;}*/
+.manage_content .left_box .logo_box{width:160px; margin:50px auto; text-align:Center;}
+.manage_content .left_box .logo_box a{display:block; width:160px; height:75px; background:#000;}
 /* logo img삽입후 삭제 */
 /* logo img삽입후 주석풀어주세요 */
 .manage_content .left_box .logo_box a{display:block;}
