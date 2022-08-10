@@ -80,8 +80,6 @@ public class MemberController {
         if(loginResult != null){
             session.setAttribute("loginEmail",loginResult.getMemberEmail());
             session.setAttribute("loginId",loginResult.getMemberId());
-            session.setAttribute("loginName",loginResult.getMemberName());
-            session.setAttribute("loginTier",loginResult.getMemberTier());
             return "main";
         } else {
             return "/memberPages/login";
@@ -102,8 +100,6 @@ public class MemberController {
     public String logout(HttpSession session){
         session.removeAttribute("loginId");
         session.removeAttribute("loginEmail");
-        session.removeAttribute("loginName");
-        session.removeAttribute("loginTier");
         return "redirect:/";
     }
 
