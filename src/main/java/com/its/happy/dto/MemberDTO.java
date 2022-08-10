@@ -27,16 +27,16 @@ public class MemberDTO {
     private String memberKakaoId;
     private String memberTier;
     private LocalDateTime memberCreatedTime;
-//    private List<PointEntity> pointEntityList;
-//    private PassportEntity passportEntity;
-//    private List<ReviewEntity> reviewEntityList;
-//    private List<SearchEntity> searchEntityList;
-//    private List<LikeEntity> likeEntityList;
-//    private List<CartEntity> cartEntityList;
-//    private List<OrderEntity> orderEntityList;
-//    private List<OrderDepartureEntity> orderDepartureEntityList;
-//    private List<CouponMemberEntity> couponMemberEntityList;
-//    private List<DepartureEntity> departureEntityList;
+    private List<PointEntity> pointEntityList;
+    private PassportEntity passportEntity;
+    private List<ReviewEntity> reviewEntityList;
+    private List<SearchEntity> searchEntityList;
+    private List<LikeEntity> likeEntityList;
+    private List<CartEntity> cartEntityList;
+    private List<OrderEntity> orderEntityList;
+    private List<OrderDepartureEntity> orderDepartureEntityList;
+    private List<CouponMemberEntity> couponMemberEntityList;
+    private List<DepartureEntity> departureEntityList;
 
 
     public static MemberDTO toMemberDTO(MemberEntity memberEntity) {
@@ -50,16 +50,16 @@ public class MemberDTO {
         memberDTO.setMemberKakaoId(memberEntity.getMemberKakaoId());
         memberDTO.setMemberTier(memberEntity.getMemberTier());
         memberDTO.setMemberCreatedTime(memberEntity.getCreatedTime());
-//        memberDTO.setPointEntityList(memberEntity.getPointEntityList());
-//        memberDTO.setPassportEntity(memberEntity.getPassportEntity());
-//        memberDTO.setReviewEntityList(memberEntity.getReviewEntityList());
-//        memberDTO.setSearchEntityList(memberEntity.getSearchEntityList());
-//        memberDTO.setLikeEntityList(memberEntity.getLikeEntityList());
-//        memberDTO.setCartEntityList(memberEntity.getCartEntityList());
-//        memberDTO.setOrderEntityList(memberEntity.getOrderEntityList());
-//        memberDTO.setOrderDepartureEntityList(memberEntity.getOrderDepartureEntityList());
-//        memberDTO.setCouponMemberEntityList(memberEntity.getCouponMemberEntityList());
-//        memberDTO.setDepartureEntityList(memberEntity.getDepartureEntityList());
+        memberDTO.setPointEntityList(memberEntity.getPointEntityList());
+        memberDTO.setPassportEntity(memberEntity.getPassportEntity());
+        memberDTO.setReviewEntityList(memberEntity.getReviewEntityList());
+        memberDTO.setSearchEntityList(memberEntity.getSearchEntityList());
+        memberDTO.setLikeEntityList(memberEntity.getLikeEntityList());
+        memberDTO.setCartEntityList(memberEntity.getCartEntityList());
+        memberDTO.setOrderEntityList(memberEntity.getOrderEntityList());
+        memberDTO.setOrderDepartureEntityList(memberEntity.getOrderDepartureEntityList());
+        memberDTO.setCouponMemberEntityList(memberEntity.getCouponMemberEntityList());
+        memberDTO.setDepartureEntityList(memberEntity.getDepartureEntityList());
         return memberDTO;
     }
 

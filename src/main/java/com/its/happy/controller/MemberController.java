@@ -48,11 +48,12 @@ public class MemberController {
         return emailResult;
     }
 
-    // 비밀번호찾기시 이메일 확인 후 DTO 넘겨주기
+    // 비밀번호찾기시 이메일 확인
     @PostMapping("/email-check")
-    public @ResponseBody MemberDTO emailCheck(@RequestParam String memberEmail){
-        MemberDTO memberDTO= memberService.emailCheck(memberEmail);
-        return memberDTO;
+    public @ResponseBody String emailCheck(@RequestParam String memberEmail){
+        String memberId = memberService.emailCheck(memberEmail).getMemberId()+"";
+        System.out.println(memberId);
+        return memberId;
     }
 
     // 핸드폰번호 중복체크
@@ -77,7 +78,8 @@ public class MemberController {
             session.setAttribute("loginEmail",loginResult.getMemberEmail());
             session.setAttribute("loginId",loginResult.getMemberId());
             session.setAttribute("loginName",loginResult.getMemberName());
-            return "index";
+            session.setAttribute("loginTier",loginResult.getMemberTier());
+            return "main";
         } else {
             return "/memberPages/login";
         }
@@ -95,7 +97,10 @@ public class MemberController {
     // 로그아웃 구현
     @GetMapping("/logout")
     public String logout(HttpSession session){
-        session.invalidate();
+        session.removeAttribute("loginId");
+        session.removeAttribute("loginEmail");
+        session.removeAttribute("loginName");
+        session.removeAttribute("loginTier");
         return "redirect:/";
     }
 
@@ -104,6 +109,7 @@ public class MemberController {
     public @ResponseBody String sendSMS(@RequestParam String memberMobile) throws CoolsmsException {
         return memberService.sendSMS(memberMobile);
     }
+
 
     //아이디찾기 화면 이동
     @GetMapping("/findEmail")
@@ -118,6 +124,14 @@ public class MemberController {
         String mobileResult = memberService.mobileCheck(memberMobile);
         return mobileResult;
     }
+
+    // 비밀번호 찾기 - 해당 이메일, 핸드폰번호가 맞는지 확인
+    @PostMapping("/mobile-email-check")
+    public @ResponseBody String emailMobileCheck(@RequestParam String memberId,@RequestParam String memberMobile){
+        String result = memberService.emailMobileCheck(memberId,memberMobile);
+        return result;
+    }
+
 
 
     // 핸드폰 인증 완료시 해당 전화번호를 가지고 있는 이메일 보여주기

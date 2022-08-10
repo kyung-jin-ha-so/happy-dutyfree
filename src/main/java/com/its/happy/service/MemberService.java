@@ -249,6 +249,25 @@ public class MemberService {
     }
 
 
+    // 비밀번호찾기 - 멤버아이디랑 해당 멤버아이디의 핸드폰번호가 일치하는지 확인
+    public String emailMobileCheck(String memberId, String memberMobile) {
+        //스트링으로 받은 멤버아이디 형변환
+        Long longMemberId = Long.valueOf(memberId);
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberMobile(memberMobile);
+        if(optionalMemberEntity.isPresent()){
+            Long result = optionalMemberEntity.get().getMemberId();
+            if(result == longMemberId){
+                return "OK";
+            }else {
+                return "NO";
+            }
+        }else {
+            return "NO";
+        }
+
+
+
+    }
 }
 
 
