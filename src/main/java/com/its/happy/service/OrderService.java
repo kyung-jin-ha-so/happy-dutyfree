@@ -1,10 +1,7 @@
 package com.its.happy.service;
 
-import com.its.happy.dto.DepartureDTO;
-import com.its.happy.dto.MemberDTO;
 import com.its.happy.dto.OrderDTO;
 import com.its.happy.entity.CouponMemberEntity;
-import com.its.happy.entity.DepartureEntity;
 import com.its.happy.entity.MemberEntity;
 import com.its.happy.entity.OrderEntity;
 import com.its.happy.repository.CouponMemberRepository;
@@ -42,17 +39,48 @@ public class OrderService {
         }
 
 
-
-
         return null;
     }
 
     public List<OrderDTO> findByMemberId(Long memberId) {
-        List<OrderEntity> orderEntityList = orderRepository.findByMemberEntity_MemberId(memberId);
+        List<OrderEntity> orderEntityList = orderRepository.findByMemberEntityMemberId(memberId);
         List<OrderDTO> orderDTOList = new ArrayList<>();
         for (OrderEntity o :
                 orderEntityList) {
-            orderDTOList.add(OrderDTO.toDTO(o));
+            if (o.getCouponMemberEntity() != null) {
+                orderDTOList.add(OrderDTO.toDTO(o));
+            } else {
+                orderDTOList.add(OrderDTO.toDTO2(o));
+            }
+        }
+        return orderDTOList;
+    }
+
+    public OrderDTO findById(Long orderId) {
+        Optional<OrderEntity> optionalOrderEntity = orderRepository.findById(orderId);
+        if (optionalOrderEntity.isPresent()) {
+            OrderEntity orderEntity = optionalOrderEntity.get();
+            if (orderEntity.getCouponMemberEntity() != null) {
+                return OrderDTO.toDTO(orderEntity);
+            } else {
+                return OrderDTO.toDTO2(orderEntity);
+            }
+        }
+        return null;
+    }
+
+    public List<OrderDTO> findAll() {
+        List<OrderEntity> orderEntityList = orderRepository.findAll();
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        for (OrderEntity o :
+                orderEntityList) {
+            if (o.getCouponMemberEntity() != null) {
+                OrderDTO orderDTO = OrderDTO.toDTO(o);
+                orderDTOList.add(orderDTO);
+            } else {
+                OrderDTO orderDTO = OrderDTO.toDTO2(o);
+                orderDTOList.add(orderDTO);
+            }
         }
         return orderDTOList;
     }

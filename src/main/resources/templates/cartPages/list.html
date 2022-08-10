@@ -7,64 +7,9 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
 </head>
 <style>
-    .membership-container {
-        display: flex;
-        max-width: 1000px;
-        height: 150px;
-        border: 1px solid #e5e5e5;
-        background-color: rgba(107, 201, 170, 0.3);
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    .myTier-container {
-        display: inline-block;
-        margin: 0;
-        padding: 0;
-        width: 200px;
-        height: 100%;
-        background-color: pink;
-    }
-
-    .detail-container {
-        display: inline-block;
-        width: 800px;
-        height: 100%;
-        background-color: yellowgreen;
-    }
-
-    .contents-container {
-        display: flex;
-        height: 50px;
-        background-color: #b6d4fe;
-    }
-
-    .point-container {
-        display: inline-block;
-        width: 50%;
-        height: 100%;
-        background-color: #3dd5f3;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .coupon-container {
-        display: inline-block;
-        width: 50%;
-        height: 100%;
-        list-style: none;
-        background-color: #20c997;
-        margin: 0;
-        padding: 0;
-    }
-
-    .myPage-container {
-        display: flex;
-    }
-
     table {
         width: 1000px;
         border-top: 1px solid #444444;
@@ -122,8 +67,7 @@
 </style>
 
 <body>
-<h2>장바구니</h2>
-
+<th:block th:replace="include/header :: header"></th:block>
 <!--회원 등급, 포인트, 쿠폰 표기 div-->
 <div class="pay_box">
     <div class="top_box">
@@ -147,27 +91,34 @@
             <p>해피 멤버십</p>
             <div class="logo_box">
                 <img src="" alt="">
-                <span>브론즈</span>
+                <span th:text="${member.memberTier}"></span>
             </div>
         </div>
         <div class="right_box">
             <div class="txt_box">
-                <p>민소희님께서 즉시 받으실 수 있는 쇼핑 혜택입니다.</p>
+                <p th:text="${session.loginName}+ '님께서 즉시 받으실 수 있는 쇼핑 혜택입니다.'"></p>
             </div>
             <ul>
                 <li>
+                    <div th:each="point : ${pointList}">
                     <p>적립금</p>
-                    <span>2,000원</span>
+                    <span th:text="${point.pointValue}"></span>
+                    </div>
                 </li>
                 <li>
                     <p>할인쿠폰</p>
-                    <span>2개</span>
+                    <span class="totalCoupon"></span>
                 </li>
             </ul>
         </div>
     </div>
 </div>
-
+<div th:each="coupon: ${myCoupon}">
+    <div class="coupon_info_td">
+        <input type="hidden" class="individual_totalCoupon_input"
+               th:value="${#lists.size('coupon')}">
+    </div>
+</div>
 <table>
     <tr>
         <!-- 체크박스 전체 여부 -->
@@ -207,7 +158,7 @@
         <td>
             <button th:onclick="'minusBtn(' + ${cart.cartId} + ')'" class="minus_btn"> -</button>
             <input type="text" class="quantity_input" th:id="${cart.cartId}" th:value="${cart.cartQty}"
-                   style="width: 50px;">
+                   style="width: 50px; text-align: center">
             <button th:onclick="'plusBtn(' + ${cart.cartId} + ')'" class="plus_btn"> +</button>
         </td>
         <td><span th:text="|$${cart.cartQty*cart.productPrice}|"></span><br>
@@ -229,6 +180,7 @@
         <button class="order_btn">주문하기</button>
     </div>
 </div>
+
 </body>
 <script th:inline="javascript" th:each="cart: ${cartList}">
     //상품수량 수정 (더하기)
@@ -316,43 +268,47 @@
     });
     //주문페이지로 이동
     $(".order_btn").on("click", function () {
-        let form_contents = '';
-        let orderNumber = 0;
-        $(".cart_info_td").each(function (index, element) {
-            if ($(element).find(".individual_cart_checkbox").is(":checked") === true) {	//체크여부
-                let cartId = $(element).find(".individual_cartId_input").val();
-                let cartQty = $(element).find(".individual_cartQty_input").val();
-                let productId = $(element).find(".individual_productId_input").val();
-                let productId_input = "<input name='carts[" + orderNumber + "].productId' type='hidden' value='" + productId + "'>";
-                let memberId = $(element).find(".individual_memberId_input").val();
-                let productName = $(element).find(".individual_productName_input").val();
-                let productOriginalPrice = $(element).find(".individual_productOriginalPrice_input").val();
-                let productDiscount = $(element).find(".individual_productDiscount_input").val();
-                let productPrice = $(element).find(".individual_productPrice_input").val();
-                let productThumbnail = $(element).find(".individual_productThumbnail_input").val();
+        if ([[${passport}]] != null) {
+            let form_contents = '';
+            let orderNumber = 0;
+            $(".cart_info_td").each(function (index, element) {
+                if ($(element).find(".individual_cart_checkbox").is(":checked") === true) {	//체크여부
+                    let cartId = $(element).find(".individual_cartId_input").val();
+                    let cartQty = $(element).find(".individual_cartQty_input").val();
+                    let productId = $(element).find(".individual_productId_input").val();
+                    let productId_input = "<input name='carts[" + orderNumber + "].productId' type='hidden' value='" + productId + "'>";
+                    let memberId = $(element).find(".individual_memberId_input").val();
+                    let productName = $(element).find(".individual_productName_input").val();
+                    let productOriginalPrice = $(element).find(".individual_productOriginalPrice_input").val();
+                    let productDiscount = $(element).find(".individual_productDiscount_input").val();
+                    let productPrice = $(element).find(".individual_productPrice_input").val();
+                    let productThumbnail = $(element).find(".individual_productThumbnail_input").val();
 
-                let cartId_input = "<input name='carts[" + orderNumber + "].cartId' type='hidden' value='" + cartId + "'>";
-                form_contents += cartId_input;
-                let cartQty_input = "<input name='carts[" + orderNumber + "].cartQty' type='hidden' value='" + cartQty + "'>";
-                form_contents += cartQty_input;
-                form_contents += productId_input;
-                let memberId_input = "<input name='carts[" + orderNumber + "].memberId' type='hidden' value='" + memberId + "'>";
-                form_contents += memberId_input;
-                let productName_input = "<input name='carts[" + orderNumber + "].productName' type='hidden' value='" + productName + "'>";
-                form_contents += productName_input;
-                let productOriginalPrice_input = "<input name='carts[" + orderNumber + "].productOriginalPrice' type='hidden' value='" + productOriginalPrice + "'>";
-                form_contents += productOriginalPrice_input;
-                let productDiscount_input = "<input name='carts[" + orderNumber + "].productDiscount' type='hidden' value='" + productDiscount + "'>";
-                form_contents += productDiscount_input;
-                let productPrice_input = "<input name='carts[" + orderNumber + "].productPrice' type='hidden' value='" + productPrice + "'>";
-                form_contents += productPrice_input;
-                let productThumbnail_input = "<input name='carts[" + orderNumber + "].productThumbnail' type='hidden' value='" + productThumbnail + "'>";
-                form_contents += productThumbnail_input;
-                orderNumber += 1;
-            }
-        });
-        $(".order_form").html(form_contents);
-        $(".order_form").submit();
+                    let cartId_input = "<input name='carts[" + orderNumber + "].cartId' type='hidden' value='" + cartId + "'>";
+                    form_contents += cartId_input;
+                    let cartQty_input = "<input name='carts[" + orderNumber + "].cartQty' type='hidden' value='" + cartQty + "'>";
+                    form_contents += cartQty_input;
+                    form_contents += productId_input;
+                    let memberId_input = "<input name='carts[" + orderNumber + "].memberId' type='hidden' value='" + memberId + "'>";
+                    form_contents += memberId_input;
+                    let productName_input = "<input name='carts[" + orderNumber + "].productName' type='hidden' value='" + productName + "'>";
+                    form_contents += productName_input;
+                    let productOriginalPrice_input = "<input name='carts[" + orderNumber + "].productOriginalPrice' type='hidden' value='" + productOriginalPrice + "'>";
+                    form_contents += productOriginalPrice_input;
+                    let productDiscount_input = "<input name='carts[" + orderNumber + "].productDiscount' type='hidden' value='" + productDiscount + "'>";
+                    form_contents += productDiscount_input;
+                    let productPrice_input = "<input name='carts[" + orderNumber + "].productPrice' type='hidden' value='" + productPrice + "'>";
+                    form_contents += productPrice_input;
+                    let productThumbnail_input = "<input name='carts[" + orderNumber + "].productThumbnail' type='hidden' value='" + productThumbnail + "'>";
+                    form_contents += productThumbnail_input;
+                    orderNumber += 1;
+                }
+            });
+            $(".order_form").html(form_contents);
+            $(".order_form").submit();
+        } else {
+            alert("여권정보 등록 후 주문 가능합니다.")
+        }
     });
     //장바구니 개별삭제
     const deleteCart = (cartId) => {

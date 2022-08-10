@@ -170,10 +170,6 @@
             </select>
         </td>
     </tr>
-    <tr>
-        <th>남기실말씀</th>
-        <td><textarea style="resize: none"></textarea></td>
-    </tr>
 </table>
 
 <h2>할인정보</h2>
@@ -197,10 +193,10 @@
     <tr>
         <th>적립금</th>
         <td>
-            보유 적립금:
-            <span th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span><br>
-            사용 가능한 적립금(총 주문 금액의 10%):
-            <span th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * session.exchangeRate * 0.1, 1, 'COMMA')} + '원'"></span><br>
+            보유 적립금: <span
+                th:text="${#numbers.formatInteger(#aggregates.sum(session.member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span><br>
+            사용 가능한 적립금(총 주문 금액의 10%): <span
+                th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * session.exchangeRate * 0.1, 1, 'COMMA')} + '원'"></span><br>
             <input id="inputPoint" type="text" onchange="inputPoint()" value="0">원
             <input type="checkbox" id="useAll" onclick="useAll()">전액사용
         </td>
@@ -258,7 +254,7 @@
         <!--        모든 할인(인터넷할인, 적립금, 쿠폰)-->
         <td>총 할인금액</td>
         <td id="dcUsdText"
-            th:text="'$ ' + ${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}"></td>
+            th:text="'$ ' + ${#numbers.formatInteger(#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty]), 1, 'COMMA')}"></td>
         <input id="dcUsd" type="hidden"
                th:value="${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}">
         <td id="dcWonText"
@@ -619,13 +615,11 @@
                 "orderDepartureNumber": departureNumber,
             },
             dataType: "json",
-            success: function (result) {
-                alert("성공");
-                location.href = "/order/";
+            success: function () {
+                location.href = "/order/list";
             },
             error: function () {
-                alert("어디가 틀렸을까");
-                location.href = "/order/";
+                location.href = "/order/list";
             }
         });
     }

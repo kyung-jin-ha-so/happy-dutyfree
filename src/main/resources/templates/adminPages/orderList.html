@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<h2>주문 내역</h2>
+<table>
+    <tr>
+        <th>주문번호</th>
+        <th>회원번호</th>
+        <th>쿠폰번호</th>
+        <th>주문 일시</th>
+        <th>최종 결제 원화</th>
+        <th>최종 결제 달러</th>
+        <th>사용 적립금</th>
+        <th>상세 조회</th>
+        <th>주문 상태</th>
+    </tr>
+    <tr th:each="order: ${orderList}">
+        <td th:text="${order.orderId}"></td>
+        <td th:text="${order.memberId}"></td>
+        <td th:text="${order.couponMemberId}"></td>
+        <td th:text="${order.orderCreatedTime}"></td>
+        <td th:text="${order.orderWon}"></td>
+        <td th:text="${order.orderUsd}"></td>
+        <td th:text="${order.pointUseValue}"></td>
+        <td><a th:href="@{|/admin/orderProductList/${order.orderId}|}">조회</a></td>
+        <td th:text="${order.orderStatus}"></td>
+    </tr>
+</table>
+</body>
+</html>
