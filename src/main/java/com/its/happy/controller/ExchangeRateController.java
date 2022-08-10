@@ -26,28 +26,29 @@ public class ExchangeRateController {
     // 매일 오전 9시에 환율이 환율테이블로 날짜와 환율이 들어갈 예정
     // api Key가 있어야 실행됨
 
-//    @Scheduled(cron = "0 0 9 * * ?", zone = "Asia/Seoul") // 매일 25분에 실행
-//    public void cronRun() throws JSONException, IOException {
-//        exchangeRate();
-//    }
-//
-//    @GetMapping("/find")
-//    public void exchangeRate() throws IOException, JSONException {
-//        OkHttpClient client = new OkHttpClient().newBuilder().build();
-//
-//        Request request = new Request.Builder()
-//                .url("https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=1")
-//                .addHeader("apikey", "")
-//                //value에 api키가 들어갈 예정
-//                .method("GET", null)
-//                .build();
-//
-//        Response response = client.newCall(request).execute();
-//        String jsonData = response.body().string();
-//        JSONObject Jobject = new JSONObject(jsonData);
-//        String exchangeS = Jobject.getString("result");
-//        double exchange = Double.parseDouble(exchangeS);
-//        System.out.println("exchange = " + exchange);
-//        exchangeRateService.save(exchange);
-//    }
+    @Scheduled(cron = "0 0 9 * * ?", zone = "Asia/Seoul")
+    public void cronRun() throws JSONException, IOException {
+        exchangeRate();
+    }
+
+    @GetMapping("/find")
+    public void exchangeRate() throws IOException, JSONException {
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+
+        //value에 카카오워크로 전달한 api키를 넣어주시고 실행시켜주세요
+        Request request = new Request.Builder()
+                .url("https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=1")
+                .addHeader("apikey", "")
+                //value에 api키가 들어갈 예정
+                .method("GET", null)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        String jsonData = response.body().string();
+        JSONObject Jobject = new JSONObject(jsonData);
+        String exchangeS = Jobject.getString("result");
+        double exchange = Double.parseDouble(exchangeS);
+        System.out.println("exchange = " + exchange);
+        exchangeRateService.save(exchange);
+    }
 }

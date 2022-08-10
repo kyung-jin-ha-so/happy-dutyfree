@@ -96,27 +96,19 @@
         </div>
         <div class="right_box">
             <div class="txt_box">
-                <p th:text="${session.loginName}+ '님께서 즉시 받으실 수 있는 쇼핑 혜택입니다.'"></p>
+                <p th:text="${member.memberName}+ '님께서 즉시 받으실 수 있는 쇼핑 혜택입니다.'"></p>
             </div>
             <ul>
                 <li>
-                    <div th:each="point : ${pointList}">
                     <p>적립금</p>
-                    <span th:text="${point.pointValue}"></span>
-                    </div>
+                    <span th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span>
                 </li>
                 <li>
                     <p>할인쿠폰</p>
-                    <span class="totalCoupon"></span>
+                    <span th:text="${#lists.size(member.couponMemberEntityList.?[couponStatus=='사용 전'])} + '개'"></span>
                 </li>
             </ul>
         </div>
-    </div>
-</div>
-<div th:each="coupon: ${myCoupon}">
-    <div class="coupon_info_td">
-        <input type="hidden" class="individual_totalCoupon_input"
-               th:value="${#lists.size('coupon')}">
     </div>
 </div>
 <table>
@@ -134,8 +126,8 @@
     </tr>
     <tr th:each="cart : ${cartList}">
         <td class="cart_info_td">
-            <input type="hidden" class="individual_totalPrice_input"
-                   th:value="${exchangeRateDTO.exchangeRate*cart.productPrice*cart.cartQty}"></div>
+            <input type="hidden" class="individual_totalPrice_input" th:value="${exchangeRateDTO.exchangeRate*cart.productPrice*cart.cartQty}">
+            <input type="hidden" class="individual_totalDollar_input" th:value="${cart.productPrice*cart.cartQty}">
             <input type="checkbox" class="individual_cart_checkbox input_size_20" checked="checked">
             <input type="hidden" class="individual_cartId_input" th:value="${cart.cartId}">
             <input type="hidden" class="individual_productId_input" th:value="${cart.productId}">
@@ -180,6 +172,7 @@
         <button class="order_btn">주문하기</button>
     </div>
 </div>
+
 </body>
 <script th:inline="javascript" th:each="cart: ${cartList}">
     //상품수량 수정 (더하기)
@@ -248,7 +241,7 @@
             if ($(element).find(".individual_cart_checkbox").is(":checked") === true) {	//체크여부
                 // 총 가격
                 totalPrice += parseFloat($(element).find(".individual_totalPrice_input").val());
-                totalPriceDollar += parseInt($(element).find(".individual_productPrice_input").val());
+                totalPriceDollar += parseInt($(element).find(".individual_totalDollar_input").val());
             }
         });
         $(".totalDollar").text("주문금액: $" + totalPriceDollar.toLocaleString());
@@ -314,17 +307,5 @@
         location.href = "/cart/delete/" + cartId;
     }
     const loginId = [[${session.loginId}]];
-    $(document).ready(function () {
-        totalInfo();
-    });
-
-    function totalInfo() {
-        let totalPrice = 0;
-        $(".coupon_info_td").each(function (index, element) {
-            totalPrice += parseFloat($(element).find(".individual_totalCoupon_input").val());
-        });
-        $(".totalCoupon").text(totalPrice.toLocaleString() + "개");
-    }
-
 </script>
 </html>
