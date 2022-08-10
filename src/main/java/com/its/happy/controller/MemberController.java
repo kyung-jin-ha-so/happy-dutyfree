@@ -1,7 +1,9 @@
 package com.its.happy.controller;
 
 import com.its.happy.dto.MemberDTO;
+import com.its.happy.entity.CouponMemberEntity;
 import com.its.happy.entity.MemberEntity;
+import com.its.happy.entity.PointEntity;
 import com.its.happy.service.MemberService;
 import com.its.happy.service.PointService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 
 @Controller
