@@ -39,9 +39,9 @@ ul{overflow: hidden}
 .search .center_box a{display:block; position:absolute; right:20px; top:50%; transform:translateY(-50%);}
 /* img삽입후 주석풀고 .search .left_box .logo a는 삭제해주세요 */
 .search .right_box{display:inline-block; vertical-align:middle; width:225px;}
-/*.search .right_box a{display:block;}*/
-/*.search .right_box a img{width:100%;}*/
-.search .right_box a{width:100%; display:block; background:#000; height:80px;}
+.search .right_box a{display:block;}
+.search .right_box a img{width:100%;}
+/*.search .right_box a{width:100%; display:block; background:#000; height:80px;}*/
 /*=========================================================
 	footer
 ==========================================================*/

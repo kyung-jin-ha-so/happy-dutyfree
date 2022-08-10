@@ -41,13 +41,13 @@
             <ul>
                 <li>
                     <p><b>할인쿠폰 </b>(개)</p>
-<!--                    <span th:text="${#lists.size(member.couponMemberEntityList.?[couponStatus=='사용 전'])} + '개'"></span>-->
+                    <span th:text="${#lists.size(member.couponMemberEntityList.?[couponStatus=='사용 전'])} + '개'"></span>
 
                     <!--                    <span>0</span>-->
                 </li>
                 <li>
                     <p><b>적립금 </b>(원)</p>
-<!--                    <span th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span><br>-->
+                    <span th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span><br>
 <!--                    <span th:text="${member.memberEmail}+'원'"></span><br>-->
 
 <!--                    <span>0</span>-->
