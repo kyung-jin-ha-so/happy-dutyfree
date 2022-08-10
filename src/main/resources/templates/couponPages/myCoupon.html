@@ -120,12 +120,6 @@
                         <li>하나의 주문 건에 하나의 쿠폰만 사용가능합니다.</li>
                         <li>결제 시 쿠폰을 적용하지 않으면 할인이 적용되지 않습니다.</li>
                         <br>
-                        <div th:each="coupon: ${myCoupon}">
-                            <div class="coupon_info_td">
-                                <input type="hidden" class="individual_totalCoupon_input"
-                                       th:value="${#lists.size('coupon')}">
-                            </div>
-                        </div>
                     </ul>
                     <span class="total"></span>
                 </div>
@@ -160,6 +154,7 @@
             totalPrice += parseFloat($(element).find(".individual_totalCoupon_input").val());
         });
         $(".total").text(loginId + "님께서 보유하신 할인 쿠폰은 총 " + totalPrice.toLocaleString() + "개 입니다.");
+        $(".totalCoupon").text(totalPrice.toLocaleString() + "개");
     }
 </script>
 </html>

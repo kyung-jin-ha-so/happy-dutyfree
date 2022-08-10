@@ -547,6 +547,7 @@
             document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - inputPointWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
         } else if (couponMemberId != null && couponValueWon > finalWon) { // 쿠폰 선택 and 최종결제금액이 쿠폰금액보다 작음
             alert("쿠폰 금액이 최종 결제 금액보다 큽니다.")
+            $("#selectCoupon option:eq(0)").prop("selected", true);
         } else { // '선택'을 선택
             // 쿠폰 사용 표현
             document.getElementById("useCoupon").innerHTML = (-couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
