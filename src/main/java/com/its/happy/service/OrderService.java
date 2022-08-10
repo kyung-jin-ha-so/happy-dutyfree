@@ -39,8 +39,6 @@ public class OrderService {
         }
 
 
-
-
         return null;
     }
 
@@ -69,5 +67,21 @@ public class OrderService {
             }
         }
         return null;
+    }
+
+    public List<OrderDTO> findAll() {
+        List<OrderEntity> orderEntityList = orderRepository.findAll();
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        for (OrderEntity o :
+                orderEntityList) {
+            if (o.getCouponMemberEntity() != null) {
+                OrderDTO orderDTO = OrderDTO.toDTO(o);
+                orderDTOList.add(orderDTO);
+            } else {
+                OrderDTO orderDTO = OrderDTO.toDTO2(o);
+                orderDTOList.add(orderDTO);
+            }
+        }
+        return orderDTOList;
     }
 }
