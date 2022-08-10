@@ -24,7 +24,7 @@
         <td th:text="${order.orderId}"></td>
         <td th:text="${order.orderCreatedTime}"></td>
         <td>
-            <a th:href="@{|/order/detail/${order.orderId}|}" th:text="${order.orderProductEntityList.get(0).productName + '외' + (order.orderProductEntityList.size() - 1) + '개'}"></a>
+            <a th:href="@{|/order/detail/${order.orderId}|}">야호</a>
         </td>
         <td th:text="${'$' + order.orderUsd + '(' + order.orderWon + '원)'}"></td>
         <td th:text="${order.orderStatus}"></td>
