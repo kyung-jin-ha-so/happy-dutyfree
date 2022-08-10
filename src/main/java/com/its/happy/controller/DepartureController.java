@@ -3,7 +3,9 @@ package com.its.happy.controller;
 import com.its.happy.api.ApiExplorer;
 import com.its.happy.dto.DepartureDTO;
 import com.its.happy.dto.FlightDTO;
+import com.its.happy.dto.MemberDTO;
 import com.its.happy.service.DepartureService;
+import com.its.happy.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,17 +26,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DepartureController {
     private final DepartureService departureService;
+    private final MemberService memberService;
 
     @GetMapping("/")
     public String findAll(Model model, HttpSession session) {
         Long loginId = (Long) session.getAttribute("loginId");
         List<DepartureDTO> departureDTOList = departureService.findAllByLoginId(loginId);
         model.addAttribute("departureList", departureDTOList);
+        MemberDTO memberDTO = memberService.findById(loginId);
+        model.addAttribute("member", memberDTO);
         return "departurePages/list";
     }
 
     @GetMapping("/save-form")
-    public String saveForm() {
+    public String saveForm(Model model, HttpSession session) {
+        Long loginId = (Long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(loginId);
+        model.addAttribute("member", memberDTO);
         return "/departurePages/save";
     }
 
@@ -47,9 +55,12 @@ public class DepartureController {
     }
 
     @GetMapping("/update-form/{id}")
-    public String saveForm(@PathVariable Long id, Model model) {
+    public String saveForm(@PathVariable Long id, Model model, HttpSession session) {
         DepartureDTO departureDTO = departureService.findById(id);
         model.addAttribute("departure", departureDTO);
+        Long loginId = (Long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(loginId);
+        model.addAttribute("member", memberDTO);
         return "/departurePages/update";
     }
 
