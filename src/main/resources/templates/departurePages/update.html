@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>출국 정보 수정</title>
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-
     <!-- JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
             crossorigin="anonymous"></script>
-
     <!--    datepicker-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -20,105 +20,248 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
           rel="stylesheet">
+    <style>
+        input {
+            width: 100%;
+            padding: 10px 20px;
+            box-sizing: border-box;
+            display: inline-block;
+        }
+
+        select {
+            width: 32%;
+            padding: 10px;
+            box-sizing: border-box;
+            display: inline-block;
+        }
+
+        input.width25 {
+            width: 24.3%
+        }
+
+        input.width50 {
+            width: 49.5%
+        }
+
+        input[type="submit"] {
+            background: #222;
+            color: #fff;
+            margin-top: 30px;
+            height: 50px;
+            padding: 0;
+        }
+
+        .right_box h1 {
+            font-size: 34px;
+            letter-spacing: -0.04em;
+            color: #222;
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            padding-bottom: 20px;
+        }
+
+        .right_box table {
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .right_box table tr {
+            border-bottom: 1px solid #aaa;
+        }
+
+        .right_box table th {
+            background: #f5f5f5;
+            padding: 10px 0;
+            color: #000;
+            font-size: 16px;
+        }
+
+        .right_box table td {
+            text-align: left;
+            padding: 10px 20px;
+            box-sizing: border-box;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
     <script th:src="@{/js/datepicker.js}"></script>
 </head>
 <body>
-<h2>save.html</h2>
-<form action="/departure/save" method="post">
-    <input type="hidden" th:value="${departure.departureId}" name="departureId">
-    출국장소
-    <select name="departureAirport" th:value="${departure.departureAirport}">
-        <option value="">선택하세요</option>
-        <option th:selected="${departure.departureAirport}=='ICN'" value="ICN">인천공항</option>
-        <option th:selected="${departure.departureAirport}=='GMP'" value="GMP">김포공항</option>
-        <option th:selected="${departure.departureAirport}=='PUS'" value="PUS">김해공항</option>
-    </select><br>
-    출국일시
-    <input type="text" id="datepicker" name="departureDate" th:value="${departure.departureDate}"><br>
-    편명
-    <input type="text" name="departureNumber" th:value="${departure.departureNumber}">
-    <a class="btn btn-primary" data-bs-toggle="modal" id="searchBtn" href="#exampleModalToggle" role="button"
-       hidden></a>
-    <a class="btn btn-primary" onclick="airportCheck()" role="button">편명 검색</a><br>
-    직항/경유 여부
-    <div th:if="${departure.departureFeature.toString().equals('직항')}">
-        <input type="radio" name="departureFeature" value="직항" checked="checked">직항
-        <input type="radio" name="departureFeature" value="경유">경유<br>
-    </div>
-    <div th:if="${departure.departureFeature.toString().equals('경유')}">
-        <input type="radio" name="departureFeature" value="직항">직항
-        <input type="radio" name="departureFeature" value="경유" checked="checked">경유<br>
-    </div>
-    도착지
-    <select name="arrivalAirport" th:value="${departure.arrivalRegion}">
-        <option value="">선택</option>
-        <option th:selected="${departure.arrivalRegion}=='캐나다'" value="캐나다">캐나다</option>
-        <option th:selected="${departure.arrivalRegion}=='중국'" value="중국">중국</option>
-        <option th:selected="${departure.arrivalRegion}=='미국, 호주 이외의 모든 국가'" value="미국, 호주 이외의 모든 국가">미국, 호주 이외의 모든 국가</option>
-        <option th:selected="${departure.arrivalRegion}=='미국/괌/사이판'" value="미국/괌/사이판">미국/괌/사이판</option>
-        <option th:selected="${departure.arrivalRegion}=='호놀룰루/버진아일랜드'" value="호놀룰루/버진아일랜드">호놀룰루/버진아일랜드</option>
-        <option th:selected="${departure.arrivalRegion}=='호주'" value="호주">호주</option>
-        <option th:selected="${departure.arrivalRegion}=='대한민국(무착륙관광비행)'" value="대한민국(무착륙관광비행)">대한민국(무착륙관광비행)</option>
-    </select><br>
-    <input type="submit" value="확인">
-    <input type="button" value="취소" onclick="cancel()">
-</form>
-
-<!--     modal-->
-<div class="modal fade modal-lg" id="exampleModalToggle" aria-hidden="true"
-     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">항공편명 선택</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<th:block th:replace="include/header :: header"></th:block>
+<th:block th:replace="include/myPageHeader :: myPageHeader"></th:block>
+<div id="wrap">
+    <!-- mypage content -->
+    <div class="mypage_content">
+        <div class="left_box">
+            <div class="tit">
+                <p>MY행복</p>
             </div>
-            <div class="modal-body">
-                <input type="radio" class="btn-check" name="selectAirline" id="KE" autocomplete="off">
-                <label class="btn btn-primary" for="KE">대한항공</label>
-
-                <input type="radio" class="btn-check" name="selectAirline" id="OZ" autocomplete="off">
-                <label class="btn btn-primary" for="OZ">아시아나항공</label>
-
-                <input type="radio" class="btn-check" name="selectAirline" id="7C" autocomplete="off">
-                <label class="btn btn-primary" for="7C">제주항공</label>
-
-                <input type="radio" class="btn-check" name="selectAirline" id="LJ" autocomplete="off">
-                <label class="btn btn-primary" for="LJ">진에어항공</label>
+            <div class="box">
+                <p>나의 주문 내역</p>
+                <a href="javascript:;">주문내역</a>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="flightNext" data-bs-target="#exampleModalToggle2"
-                        data-bs-toggle="modal"
-                        onclick="flightList(this.name, this.value, this.accessKey)">다음
-                </button>
+            <div class="box">
+                <p>나의 쇼핑 혜택</p>
+                <a href="/coupon/myCouponList">할인쿠폰</a>
+                <a href="javascript:;">적립금</a>
+            </div>
+            <div class="box">
+                <p>나의 쇼핑 컨텐츠</p>
+                <a href="/product/likeList">찜상품</a>
+                <a th:href="@{|/review/findByMemberId/${session.loginId}|}">나의 후기</a>
+                <a href="javascript:;">1:1 채팅</a>
+            </div>
+            <div class="box">
+                <p>나의 회원 정보</p>
+                <a href="javascript:;">기본 정보 관리</a>
+                <a href="javascript:;">여권 정보 관리</a>
+                <a href="/departure/">출국 정보 관리</a>
+                <a href="javascript:;">비밀번호 변경</a>
+                <a href="javascript:;">회원 탈퇴</a>
             </div>
         </div>
-    </div>
-</div>
-<div class="modal fade modal-lg" id="exampleModalToggle2" aria-hidden="true"
-     aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel2">항공편명 선택</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="flight-list">
+        <div class="right_box" style="width: 840px;">
+            <!-- 내용삽입자리 -->
+           <h1>출국 정보 수정</h1>
+                <table>
+                    <colgroup>
+                        <col style="width:25%;">
+                        <col style="width:75%;">
+                    </colgroup>
+                    <tr>
+                        <th>출국장소</th>
+                        <td>
+                            <select name="departureAirport" th:value="${departure.departureAirport}">
+                                <option value="">선택하세요</option>
+                                <option th:selected="${departure.departureAirport}=='ICN'" value="ICN">인천공항</option>
+                                <option th:selected="${departure.departureAirport}=='GMP'" value="GMP">김포공항</option>
+                                <option th:selected="${departure.departureAirport}=='PUS'" value="PUS">김해공항</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>출국일시</th>
+                        <td>
+                            <input type="text" id="datepicker" name="departureDate"
+                                   th:value="${departure.departureDate}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>편명</th>
+                        <td>
+                            <input type="text" name="departureNumber" th:value="${departure.departureNumber}"
+                                   class="width50">
+                            <a class="btn btn-primary" data-bs-toggle="modal" id="searchBtn" href="#exampleModalToggle"
+                               role="button"
+                               hidden></a>
+                            <a class="btn btn-primary" onclick="airportCheck()" role="button">편명 검색</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>직항/경유 여부</th>
+                        <td>
+                            <div th:if="${departure.departureFeature.toString().equals('직항')}">
+                                <input type="radio" name="departureFeature" value="직항" checked="checked"
+                                       class="width25">직항
+                                <input type="radio" name="departureFeature" value="경유" class="width25">경유
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>도착지</th>
+                        <td>
+                            <select name="arrivalRegion" th:value="${departure.arrivalRegion}">
+                                <option value="">선택</option>
+                                <option th:selected="${departure.arrivalRegion}=='캐나다'" value="캐나다">캐나다</option>
+                                <option th:selected="${departure.arrivalRegion}=='중국'" value="중국">중국</option>
+                                <option th:selected="${departure.arrivalRegion}=='미국, 호주 이외의 모든 국가'"
+                                        value="미국, 호주 이외의 모든 국가">미국, 호주 이외의 모든 국가
+                                </option>
+                                <option th:selected="${departure.arrivalRegion}=='미국/괌/사이판'" value="미국/괌/사이판">미국/괌/사이판
+                                </option>
+                                <option th:selected="${departure.arrivalRegion}=='호놀룰루/버진아일랜드'" value="호놀룰루/버진아일랜드">
+                                    호놀룰루/버진아일랜드
+                                </option>
+                                <option th:selected="${departure.arrivalRegion}=='호주'" value="호주">호주</option>
+                                <option th:selected="${departure.arrivalRegion}=='대한민국(무착륙관광비행)'" value="대한민국(무착륙관광비행)">
+                                    대한민국(무착륙관광비행)
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <input type="submit" value="확인">
+                <input type="button" value="취소" onclick="cancel()">
+                </form>
+
+                <!--     modal-->
+                <div class="modal fade modal-lg" id="exampleModalToggle" aria-hidden="true"
+                     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalToggleLabel">항공편명 선택</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="radio" class="btn-check" name="selectAirline" id="KE" autocomplete="off">
+                                <label class="btn btn-primary" for="KE">대한항공</label>
+
+                                <input type="radio" class="btn-check" name="selectAirline" id="OZ" autocomplete="off">
+                                <label class="btn btn-primary" for="OZ">아시아나항공</label>
+
+                                <input type="radio" class="btn-check" name="selectAirline" id="7C" autocomplete="off">
+                                <label class="btn btn-primary" for="7C">제주항공</label>
+
+                                <input type="radio" class="btn-check" name="selectAirline" id="LJ" autocomplete="off">
+                                <label class="btn btn-primary" for="LJ">진에어항공</label>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" id="flightNext" data-bs-target="#exampleModalToggle2"
+                                        data-bs-toggle="modal"
+                                        onclick="flightList(this.name, this.value, this.accessKey)">다음
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">이전
-                </button>
-            </div>
+                <div class="modal fade modal-lg" id="exampleModalToggle2" aria-hidden="true"
+                     aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalToggleLabel2">항공편명 선택</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="flight-list">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" data-bs-target="#exampleModalToggle"
+                                        data-bs-toggle="modal">이전
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
+    <!-- mypage content -->
+
+    <!-- footer -->
+
+    <!-- footer// -->
 </div>
+<!--html 인클루드시 사용 -->
 </body>
 <script th:src="@{/js/flight.js}"></script>
 <script>
+    // 항공권 등록 취소(마이페이지 이동)
     const cancel = () => {
-        location.href = "/member/mypage"
+        location.href = "/index"
     }
 </script>
 </html>
