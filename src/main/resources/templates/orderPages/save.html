@@ -170,10 +170,6 @@
             </select>
         </td>
     </tr>
-    <tr>
-        <th>남기실말씀</th>
-        <td><textarea style="resize: none"></textarea></td>
-    </tr>
 </table>
 
 <h2>할인정보</h2>
@@ -198,7 +194,7 @@
         <th>적립금</th>
         <td>
             보유 적립금: <span
-                th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span><br>
+                th:text="${#numbers.formatInteger(#aggregates.sum(session.member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span><br>
             사용 가능한 적립금(총 주문 금액의 10%): <span
                 th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * session.exchangeRate * 0.1, 1, 'COMMA')} + '원'"></span><br>
             <input id="inputPoint" type="text" onchange="inputPoint()" value="0">원
@@ -258,7 +254,7 @@
         <!--        모든 할인(인터넷할인, 적립금, 쿠폰)-->
         <td>총 할인금액</td>
         <td id="dcUsdText"
-            th:text="'$ ' + ${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}"></td>
+            th:text="'$ ' + ${#numbers.formatInteger(#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty]), 1, 'COMMA')}"></td>
         <input id="dcUsd" type="hidden"
                th:value="${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}">
         <td id="dcWonText"
@@ -547,6 +543,7 @@
             document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - inputPointWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
         } else if (couponMemberId != null && couponValueWon > finalWon) { // 쿠폰 선택 and 최종결제금액이 쿠폰금액보다 작음
             alert("쿠폰 금액이 최종 결제 금액보다 큽니다.")
+            $("#selectCoupon option:eq(0)").prop("selected", true);
         } else { // '선택'을 선택
             // 쿠폰 사용 표현
             document.getElementById("useCoupon").innerHTML = (-couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
