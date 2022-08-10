@@ -42,8 +42,15 @@ public class ReviewService {
         return reviewDTOList;
     }
 
-    public void deleteById(Long reviewId) {
+    public void deleteById(Long reviewId, Long productId) {
         reviewRepository.deleteById(reviewId);
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
+        Double starAvg = reviewRepository.findAvg(productId);
+        if(optionalProductEntity.isPresent()){
+            ProductEntity productEntity = optionalProductEntity.get();
+            productEntity.setProductStar(starAvg);
+            productRepository.save(productEntity);
+        }
     }
 
     public void save(ReviewDTO reviewDTO, Long memberId, Long productId, Long orderId) {
@@ -60,6 +67,28 @@ public class ReviewService {
                     reviewRepository.save(ReviewEntity.toSaveEntity(reviewDTO, memberEntity, productEntity, orderEntity));
                 }
             }
+        }
+        Double starAvg = reviewRepository.findAvg(productId);
+        if(optionalProductEntity.isPresent()){
+            ProductEntity productEntity = optionalProductEntity.get();
+            productEntity.setProductStar(starAvg);
+            productRepository.save(productEntity);
+        }
+    }
+
+    public void update(ReviewDTO updateReviewDTO, Long productId) {
+        Optional<ReviewEntity> optionalReviewEntity = reviewRepository.findById(updateReviewDTO.getReviewId());
+        if(optionalReviewEntity.isPresent()){
+            ReviewEntity reviewEntity = optionalReviewEntity.get();
+            ReviewEntity updatedReview = ReviewEntity.toUpdate(updateReviewDTO, reviewEntity.getProductEntity(), reviewEntity.getMemberEntity(), reviewEntity.getOrderEntity());
+            reviewRepository.save(updatedReview);
+        }
+        Optional<ProductEntity> optionalProductEntity = productRepository.findById(productId);
+        Double starAvg = reviewRepository.findAvg(productId);
+        if(optionalProductEntity.isPresent()){
+            ProductEntity productEntity = optionalProductEntity.get();
+            productEntity.setProductStar(starAvg);
+            productRepository.save(productEntity);
         }
     }
 }
