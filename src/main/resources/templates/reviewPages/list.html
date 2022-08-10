@@ -1,75 +1,147 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-    <style>
+	<title>경진하소</title>
+	<meta charset="UTF-8">
 
-        table , th, td{
-            border: solid 1px  black;
-        }
+	<script src="/js/jquery.js"></script>
 
-        th{
-            background-color: gray;
-        }
+	<!-- css 연결 -->
+	<link rel="stylesheet" href="/css/layout.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/basic.css" type="text/css" media="all" />
 
-        .review_head{
-            width: 700px;
-            height: 100px;
-            align: center;
-            margin: auto auto 2.5rem;
-        }
+	<!-- swiper 슬라이더 -->
+	<link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all" />
+	<script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+	<style>
+		.review_footer{
+			background-color: #bfbfbf;
+			width: 845px;
+			padding-bottom: 10px;
+			color: black;
+			padding-left: 5px;
+		}
+		.review_footer p{padding-top: 10px}
+		.right_box h1{font-size:34px; letter-spacing:-0.04em; color:#222; font-weight:bold; border-bottom:1px solid #000; padding-bottom:20px;}
+		.right_box table{width:100%; margin-top:30px; margin-bottom: 15px}
+		.right_box table tr{border-bottom:1px solid #aaa;}
+		.right_box table tr a{color: black; font-size: 16px;}
+		.right_box table th{background:#f5f5f5; padding:10px 0; color:#000; font-size:16px;}
+		.right_box table td{text-align:left; padding:10px 20px; box-sizing:border-box; font-size:16px; color:#333;}
 
-        .review_footer{
-            background-color: #bfbfbf;
-            margin:auto;
-            padding-top: 15px;
-            width: 700px;
-        }
-
-        .review_title{
-            width: 700px;
-            font-weight: bold;
-            margin: auto auto 2.5rem;
-        }
-    </style>
+	</style>
 </head>
 <body>
-<div >
-<h2 class="review_title" >나의 후기</h2>
-</div>
-<table border="1" class="review_head">
-    <tr align="center">
-        <th>상품명</th>
-        <th>평점</th>
-        <th>상품평</th>
-        <th>구매여부</th>
-        <th>작성일</th>
-        <th>수정 / 삭제</th>
-    </tr>
-    <tr>
-        <td>상품</td>
-        <td>상품</td>
-        <td>상품</td>
-        <td>상품</td>
-        <td>상품</td>
-        <td align="center"><a href="#">수정</a> / <a href="#">삭제</a> </td>
-    </tr>
-    <tr th:each="review: ${reviewList}">
-        <td th:text="${review.productEntity.productName}"></td>
-        <td th:text="${review.reviewStar}"></td>
-        <td th:text="${review.orderEntity.orderStatus}"></td>
-        <td th:text="${review.getReviewCreatedTime()}"></td>
-        <td align="center"><a th:href="@{|/review/update/${review.reviewId}|}">수정</a> / <a th:href="@{|/review/delete/${review.reviewId}|}">삭제</a></td>
-    </tr>
-</table>
+<th:block th:replace="include/header :: header"></th:block>
+	<div id="wrap">
+			<div class="sub_visual_tab">
+				<ul>
+					<li><a href="/">홈</a></li>
+					<li><a href="/myPageMain">Mypage</a></li>
+					<li><a th:href="@{|/review/findByMemberId/${session.loginId}|}">나의후기</a></li>
+				</ul>
+			</div>
+			<div class="sub_visual">
+				<div class="top_box">
+					<!-- img_size 100*70 -->
+					<div class="img_box">
+					<!-- <img src="" alt=""> -->
+					</div>
+					<div class="txt_box">
+						<p><b>OOO님 </b>브론즈</p>
+						<span>온라인멤버십 <b>최대 10% </b>할인혜택을 받으실 수 있습니다.</span>
+					</div>
+				</div>
+				<div class="bot_box">
+					<ul>
+						<li>
+							<p><b>할인쿠폰 </b>(개)</p>
+							<span>0</span>
+						</li>
+						<li>
+							<p><b>적립금 </b>(원)</p>
+							<span>0</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!-- sub_visual -->
 
-<div class="review_footer">
-    <p class="fw-bold">고객님이 작성해 주시는 상품평은 다른 분들께 소중한 정보가 됩니다.</p>
-    <p class="small">상품에 무관한 내용이나 미풍양속에 위배되는 상품후기는 관리자의 판단하에 삭제될 수 있습니다.</p>
-</div>
+			<!-- mypage content -->
+			<div class="mypage_content">
+				<div class="left_box">
+					<div class="tit">
+						<p>MY행복</p>
+					</div>
+					<div class="box">
+						<p>나의 주문 내역</p>
+						<a href="javascript:;">주문내역</a>
+					</div>
+					<div class="box">
+						<p>나의 쇼핑 혜택</p>
+						<a href="javascript:;">할인쿠폰</a>
+						<a href="javascript:;">적립금</a>
+					</div>
+					<div class="box">
+						<p>나의 쇼핑 컨텐츠</p>
+						<a href="javascript:;">찜상품</a>
+						<a th:href="@{|/review/findByMemberId/${session.loginId}|}">나의 후기</a>
+						<a href="javascript:;">1:1 채팅</a>
+					</div>
+					<div class="box">
+						<p>나의 회원 정보</p>
+						<a href="javascript:;">기본 정보 관리</a>
+						<a href="javascript:;">여권 정보 관리</a>
+						<a href="javascript:;">출국 정보 관리</a>
+						<a href="javascript:;">비밀번호 변경</a>
+						<a href="javascript:;">회원 탈퇴</a>
+					</div>
+				</div>
+				<div class="right_box">
 
+					<h1>나의 후기</h1>
+
+					<table class="review_head">
+						<colgroup>
+							<col style="width:20%">
+							<col style="width:5%">
+							<col style="width:35%">
+							<col style="width:10%">
+							<col style="width:15%">
+							<col style="width:15%">
+						</colgroup>
+						<tr align="center">
+							<th>상품명</th>
+							<th>별점</th>
+							<th>상품평</th>
+							<th>구매여부</th>
+							<th>작성일</th>
+							<th>수정 / 삭제</th>
+						</tr>
+						<tr th:each="review: ${reviewList}">
+							<td><a th:href="@{|/product/detail/${review.productEntity.productId}|}" th:text="${review.productEntity.productName}"></a></td>
+							<td th:text="${review.reviewStar}"></td>
+							<td th:text="${review.reviewContents}"></td>
+							<td th:text="${review.orderEntity.orderStatus}"></td>
+							<td th:text="${#temporals.format(review.reviewCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+							<td align="center"><a th:href="@{|/review/update/${review.reviewId}|}">수정</a> / <a th:href="@{|/review/delete/${review.reviewId}/?productId=${review.productEntity.productId}|}">삭제</a></td>
+						</tr>
+					</table>
+
+					<div class="review_footer">
+						<p class="fw-bold">고객님이 작성해 주시는 상품평은 다른 분들께 소중한 정보가 됩니다.</p>
+						<p class="small">상품에 무관한 내용이나 미풍양속에 위배되는 상품후기는 관리자의 판단하에 삭제될 수 있습니다.</p>
+					</div>
+
+				</div>
+			</div>
+			<!-- mypage content -->
+		
+		<!-- footer -->
+		
+		<!-- footer// -->
+	</div>
+	<!--html 인클루드시 사용 -->
 </body>
 </html>
