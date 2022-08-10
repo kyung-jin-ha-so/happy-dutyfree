@@ -3,54 +3,15 @@
 <head>
 	<title>경진하소</title>
 	<meta charset="UTF-8">
-
 	<script src="/js/jquery.js"></script>
-
-	<!-- css 연결 -->
 	<link rel="stylesheet" href="/css/layout.css" type="text/css" media="all" />
 	<link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />
 	<link rel="stylesheet" href="/css/basic.css" type="text/css" media="all" />
-
-	<!-- swiper 슬라이더 -->
-	<link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all" />
-	<script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
-
 </head>
 <body>
 <th:block th:replace="include/header :: header"></th:block>
+<th:block th:replace="include/myPageHeader :: myPageHeader"></th:block>
 	<div id="wrap">
-			<div class="sub_visual_tab">
-				<ul>
-					<li><a href="/">홈</a></li>
-					<li><p>Mypage</p></li>
-				</ul>
-			</div>
-			<div class="sub_visual">
-				<div class="top_box">
-					<!-- img_size 100*70 -->
-					<div class="img_box">
-					<!-- <img src="" alt=""> -->
-					</div>
-					<div class="txt_box">
-						<p><b>OOO님 </b>브론즈</p>
-						<span>온라인멤버십 <b>최대 10% </b>할인혜택을 받으실 수 있습니다.</span>
-					</div>
-				</div>
-				<div class="bot_box">
-					<ul>
-						<li>
-							<p><b>할인쿠폰 </b>(개)</p>
-							<span>0</span>
-						</li>
-						<li>
-							<p><b>적립금 </b>(원)</p>
-							<span>0</span>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<!-- sub_visual -->
-
 			<!-- mypage content -->
 			<div class="mypage_content">
 				<div class="left_box">

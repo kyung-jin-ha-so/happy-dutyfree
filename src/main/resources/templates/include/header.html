@@ -2,15 +2,19 @@
     <!--    최근검색어 클릭시 안보이게 하기 위함-->
     <header>
         <div id="wrap">
+            <div th:text="${session.loginEmail}"></div>
             <!-- header -->
             <div id="haeder">
                 <div class="gnb">
                     <ul>
-                        <li><a href="javascript:;">로그인</a></li>
-                        <li><a href="javascript:;">회원가입</a></li>
-                        <li><a href="javascript:;">MY행복</a></li>
-                        <li><a href="javascript:;">장바구니</a></li>
-                        <li><a href="javascript:;">오늘의 환율 1$ = <b id="rate" th:text="${session.exchangeRate}"></b>원</a>
+                        <li><a href="/member/login">로그인</a></li>
+                        <li><a href="/member/save">회원가입</a></li>
+                        <li><a href="/myPageMain">MY행복</a></li>
+                        <li><a href="/cart/cartList">장바구니</a></li>
+                        <li><a href="/member/logout">로그아웃</a></li>
+                        <li><a href="/index">인덱스</a></li>
+                        <li><a href="/adminMain">관리자페이지</a></li>
+                        <li><a href="javascript:;">오늘의 환율 1$ = <b id="rate" th:text="${session.exchangeRate}"></b>원</a></li>
                         </li>
                     </ul>
                 </div>
@@ -67,7 +71,7 @@
                     <!-- img_size 225 * 80 -->
                     <div class="right_box">
                         <a href="javascript:;">
-                            <!-- <img src="" alt=""> -->
+                            <img src="/img/event_banner.png" alt="">
                         </a>
                     </div>
                 </div>
