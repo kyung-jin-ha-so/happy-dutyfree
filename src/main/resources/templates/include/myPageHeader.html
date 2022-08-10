@@ -13,19 +13,19 @@
                 <!-- <img src="" alt=""> -->
             </div>
             <div class="txt_box">
-                <p><b>OOO님 </b>브론즈</p>
-                <span>온라인멤버십 <b>최대 10% </b>할인혜택을 받으실 수 있습니다.</span>
+                <p style="font-weight: bold" th:text="${member.memberName + '님 ' + member.memberTier}"></p>
+                <span>온라인멤버는 <b>다양한 </b>할인혜택을 받으실 수 있습니다.</span>
             </div>
         </div>
         <div class="bot_box">
             <ul>
                 <li>
                     <p><b>할인쿠폰 </b>(개)</p>
-                    <span>개</span>
+                    <span th:text="${#lists.size(member.couponMemberEntityList.?[couponStatus=='사용 전'])} + '개'"></span>
                 </li>
                 <li>
                     <p><b>적립금 </b>(원)</p>
-                    <span>개</span>
+                    <span th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span>
                 </li>
             </ul>
         </div>

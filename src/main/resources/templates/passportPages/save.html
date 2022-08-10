@@ -1,28 +1,140 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>경진하소</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+
+    <script src="/js/jquery.js"></script>
+
+    <!-- css 연결 -->
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all" />
+
+    <!-- swiper 슬라이더 -->
+    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all" />
+    <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+
     <style>
-        input {
-            display: block;
+        .container-01 {
+            width: 900px;
+        }
+
+        .container-02 {
+            width: 100%;
+            border-bottom: 2px solid darkgrey;
+        }
+
+        table {
+            width: 100%;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+        }
+
+        th {
+            border-bottom: 1px solid #444444;
+            padding: 10px;
+            text-align: center;
+            background-color: lightgray;
+        }
+
+        td {
+            border-bottom: 1px solid #444444;
+            padding: 10px;
+            text-align: center;
         }
     </style>
+
 </head>
 <body>
-<h2>save.html</h2>
-<form action="/passport/save" method="post">
-여권번호<input type="text" name="passportNumber">
-여권만료일<input type="text" name="passportDate">
-영문이름 <input type="text" name="passportName">
-<input type="submit" value="확인">
-</form>
-<input type="button" value="취소" onclick="cancel()">
+<th:block th:replace="include/header :: header"></th:block>
+<div id="wrap">
+    <div class="sub_visual_tab">
+        <ul>
+            <li><a href="/">홈</a></li>
+            <li><p>Mypage</p></li>
+        </ul>
+    </div>
+    <div class="sub_visual">
+        <div class="top_box">
+            <!-- img_size 100*70 -->
+            <div class="img_box">
+                <!-- <img src="" alt=""> -->
+            </div>
+            <div class="txt_box">
+                <p><b>OOO님 </b>브론즈</p>
+                <span>온라인멤버십 <b>최대 10% </b>할인혜택을 받으실 수 있습니다.</span>
+            </div>
+        </div>
+        <div class="bot_box">
+            <ul>
+                <li>
+                    <p><b>할인쿠폰 </b>(개)</p>
+                    <span>0</span>
+                </li>
+                <li>
+                    <p><b>적립금 </b>(원)</p>
+                    <span>0</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- sub_visual -->
+
+    <!-- mypage content -->
+    <div class="mypage_content">
+        <div class="left_box">
+            <div class="tit">
+                <p>MY행복</p>
+            </div>
+            <div class="box">
+                <p>나의 주문 내역</p>
+                <a href="javascript:;">주문내역</a>
+            </div>
+            <div class="box">
+                <p>나의 쇼핑 혜택</p>
+                <a href="/coupon/myCouponList">할인쿠폰</a>
+                <a href="javascript:;">적립금</a>
+            </div>
+            <div class="box">
+                <p>나의 쇼핑 컨텐츠</p>
+                <a href="/product/likeList">찜상품</a>
+                <a th:href="@{|/review/findByMemberId/${session.loginId}|}">나의 후기</a>
+                <a href="javascript:;">1:1 채팅</a>
+            </div>
+            <div class="box">
+                <p>나의 회원 정보</p>
+                <a href="javascript:;">기본 정보 관리</a>
+                <a href="javascript:;">여권 정보 관리</a>
+                <a href="javascript:;">출국 정보 관리</a>
+                <a href="javascript:;">비밀번호 변경</a>
+                <a href="javascript:;">회원 탈퇴</a>
+            </div>
+        </div>
+        <div class="right_box">
+            <!-- 내용삽입자리 -->
+            <form action="/passport/save" method="post">
+                여권번호<input type="text" name="passportNumber">
+                여권만료일<input type="text" name="passportDate">
+                영문이름 <input type="text" name="passportName">
+                <input type="submit" value="확인">
+            </form>
+            <input type="button" value="취소" onclick="cancel()">
+        </div>
+    </div>
+    <!-- mypage content -->
+
+    <!-- footer -->
+
+    <!-- footer// -->
+</div>
+<!--html 인클루드시 사용 -->
 </body>
 <script>
     const cancel = () => {
-      location.href = "/member/mypage"
+        location.href = "/member/mypage"
     }
 </script>
 </html>
