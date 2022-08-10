@@ -543,7 +543,6 @@
             document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - inputPointWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
         } else if (couponMemberId != null && couponValueWon > finalWon) { // 쿠폰 선택 and 최종결제금액이 쿠폰금액보다 작음
             alert("쿠폰 금액이 최종 결제 금액보다 큽니다.")
-            $("#selectCoupon option:eq(0)").prop("selected", true);
         } else { // '선택'을 선택
             // 쿠폰 사용 표현
             document.getElementById("useCoupon").innerHTML = (-couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
@@ -580,7 +579,7 @@
             console.log("function 진입")
             if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
                 console.log("rsp.success" + rsp.success)
-                alert("결제완료")
+                alert("완료" + rsp.imp_uid + rsp.merchant_uid)
                 save();
             } else {
                 alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);

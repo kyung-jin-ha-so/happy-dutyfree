@@ -234,6 +234,8 @@ public class ProductController {
         if(startPage == 0 || endPage == 0){
             startPage = 1; endPage = 1;
         }
+        long count = productService.countSearch(q);
+        model.addAttribute("count", count);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("q", q);
