@@ -50,7 +50,10 @@ public class HomeController {
     }
 
     @GetMapping("/myPageMain")
-    public String myPageMain(){
+    public String myPageMain(HttpSession session,Model model){
+        Long memberId = (Long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
         return "myPages/main";
     }
 
