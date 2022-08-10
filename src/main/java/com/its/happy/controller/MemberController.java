@@ -235,7 +235,10 @@ public class MemberController {
 
     // 회원탈퇴 페이지 이동
     @GetMapping("/deleteMyselfForm")
-    public String deleteMyselfForm(){
+    public String deleteMyselfForm(HttpSession session, Model model){
+        Long memberId = (Long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
         return "/memberPages/deleteMyself";
     }
 
