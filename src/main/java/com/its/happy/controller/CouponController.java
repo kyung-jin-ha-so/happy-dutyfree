@@ -2,8 +2,10 @@ package com.its.happy.controller;
 
 import com.its.happy.dto.CouponDTO;
 import com.its.happy.dto.CouponMemberDTO;
+import com.its.happy.dto.MemberDTO;
 import com.its.happy.dto.PointDTO;
 import com.its.happy.service.CouponService;
+import com.its.happy.service.MemberService;
 import com.its.happy.service.PointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +23,7 @@ import java.util.List;
 @RequestMapping("/coupon")
 public class CouponController {
     private final CouponService couponService;
-    private final PointService pointService;
+    private final MemberService memberService;
 
     //쿠폰 저장 페이지 이동
     @GetMapping("/saveForm")
@@ -64,8 +66,8 @@ public class CouponController {
         Long memberId = (Long) session.getAttribute("loginId");
         List<CouponMemberDTO> couponMemberDTOList  = couponService.findByMyCoupon(memberId);
         model.addAttribute("myCoupon", couponMemberDTOList);
-        List<PointDTO> pointDTOList = pointService.findByPoint(memberId);
-        model.addAttribute("pointList",pointDTOList);
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member", memberDTO);
         return "/couponPages/myCoupon";
     }
     //쿠폰 수정 화면 요청
