@@ -89,13 +89,21 @@ public class CartService {
     public CartDTO save2(CartDTO cartDTO) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(cartDTO.getMemberId());
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(cartDTO.getProductId());
-        int cartQty = cartDTO.getCartQty();
         if (optionalMemberEntity.isPresent()) {
             if (optionalProductEntity.isPresent()) {
                 MemberEntity memberEntity = optionalMemberEntity.get();
                 ProductEntity productEntity = optionalProductEntity.get();
-                return CartDTO.toCartDTO(cartRepository.save(CartEntity.toCartEntity(cartQty, productEntity, memberEntity)));
+                return CartDTO.toCartDTO(cartRepository.save(CartEntity.toCartEntity2(cartDTO, memberEntity, productEntity)));
             }
+        }
+        return null;
+    }
+
+    public CartDTO findByMemberEntityMemberId(Long productId, Long memberId) {
+        Optional<CartEntity> optionalCartEntity = cartRepository.findByProductEntity_ProductIdAndMemberEntity_MemberId(productId, memberId);
+        if(optionalCartEntity.isPresent())  {
+            CartEntity cartEntity = optionalCartEntity.get();
+            return CartDTO.toCartDTO(cartEntity);
         }
         return null;
     }
