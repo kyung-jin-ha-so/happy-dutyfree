@@ -39,7 +39,7 @@ public class PassportController {
     public String save(@ModelAttribute PassportDTO passportDTO, HttpSession session) {
         Long loginId = (Long) session.getAttribute("loginId");
         passportService.save(passportDTO, loginId);
-        return "/index";
+        return "redirect:/myPageMain";
     }
 
     @PostMapping("/findByLoginId")

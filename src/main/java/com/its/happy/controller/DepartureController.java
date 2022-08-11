@@ -51,7 +51,7 @@ public class DepartureController {
         Long loginId = (Long) session.getAttribute("loginId");
         System.out.println("departureDTO = " + departureDTO);
         departureService.save(departureDTO, loginId);
-        return "/index";
+        return "redirect:/departure/";
     }
 
     @GetMapping("/update-form/{id}")

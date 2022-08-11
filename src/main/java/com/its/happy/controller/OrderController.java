@@ -159,6 +159,8 @@ public class OrderController {
     @GetMapping("/list")
     public String list(Model model, HttpSession session) {
         Long loginId = (Long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(loginId);
+        model.addAttribute("member", memberDTO);
         List<OrderDTO> orderDTOList = orderService.findByMemberId(loginId);
         model.addAttribute("orderList", orderDTOList);
         System.out.println("orderDTOList = " + orderDTOList);
