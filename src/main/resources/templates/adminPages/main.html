@@ -16,17 +16,30 @@
 	<script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-<th:block th:replace="include/adminHeader :: adminHeader"></th:block>
-				<div class="path_box">
-					<ul>
-						<li>상품관리</li>
-						<li>상품등록</li>
-					</ul>
-				</div>
-				<div class="content_box">
-				</div>
-			</div>
-		</div>
-	</div>
+<div id="wrap">
+    <div class="manage_content">
+        <div class="left_box">
+            <th:block th:replace="include/adminHeader :: adminHeader"></th:block>
+        </div>
+        <script>
+            $('.slide_box .box > ul > li > a').on('click', function () {
+                $(this).next().slideToggle();
+            })
+        </script>
+        <div class="right_box">
+            <div class="logout_box">
+                <a href="javscript:;">로그아웃</a>
+            </div>
+            <div class="path_box">
+                <ul>
+                    <li>상품관리</li>
+                    <li>상품등록</li>
+                </ul>
+            </div>
+            <div class="content_box">
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

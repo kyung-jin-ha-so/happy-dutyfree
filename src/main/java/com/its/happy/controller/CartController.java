@@ -52,7 +52,7 @@ public class CartController {
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         MemberDTO memberDTO = memberService.findById(memberId);
-        model.addAttribute("member",memberDTO);
+        model.addAttribute("member", memberDTO);
         PassportDTO passportDTO = passportService.findByLoginId(memberId);
         model.addAttribute("passport", passportDTO);
         return "cartPages/list";

@@ -171,6 +171,17 @@
             recommendBox.classList.add('invisible');
         }
 
+        //검색창에 글씨 쓰면 최근 검색어 사라짐
+        const inputBox = document.querySelector("input");
+        const recommendBox = document.querySelector("#recommend");
+
+        inputBox.addEventListener("keyup", (e) => {
+            if (e.target.value.length > 0) {
+                recommendBox.classList.add('invisible');
+            } else {
+                recommendBox.classList.remove('invisible');
+            }
+        })
         // 검색창에서 마우스 포인터가 요소 밖으로 나갈때 최근 목록 사라짐
         // $("#q").blur(function (){
         //     const recommendBox = document.querySelector("#recommend");

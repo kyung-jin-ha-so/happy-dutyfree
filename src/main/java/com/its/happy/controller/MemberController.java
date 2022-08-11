@@ -109,7 +109,6 @@ public class MemberController {
         return memberService.sendSMS(memberMobile);
     }
 
-
     //아이디찾기 화면 이동
     @GetMapping("/findEmail")
     public String findEmailForm(){
