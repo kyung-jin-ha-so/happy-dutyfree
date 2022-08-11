@@ -190,15 +190,7 @@
         inputBox.value = searchName;
         recommendBox.classList.add('invisible');
     }
-    function goCart(){
-        const loginId = [[${session.loginId}]];
-        console.log(loginId);
-        if(loginId == null){
-            alert("로그인 후 이용 가능합니다.");
-        } else {
-            location.href="/cart/cartList";
-        }
-    }
+
 </script>
 
 </html>
