@@ -15,13 +15,15 @@ ul{overflow: hidden}
 .invisible {
     display: none;
 }
-#recent_search{background:#fff; font-size:16px; color:#222; font-weight:700; padding:10px 10px;}
-#recent_search #recommend_item{padding-top:10px}
+#recent_search{background:#fff; font-size:16px; color:#222; font-weight:700; padding:10px 10px;border: solid silver 1px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px}
+#recent_search #recommend_item{padding-top:10px; padding-bottom: 5px;}
+#recent_search #recommend_item:hover {background: #efefef; border-radius: 10px}
 #recent_search #recommend_item:after{content:''; display:block; clear:both;}
 #recent_search .right{float:right}
-#recent_search span.text{font-size:15px; color:#222; font-weight: 700}
+#recent_search span.text{font-size:15px; color:#222; font-weight: 700; cursor: pointer;}
+#recent_search .search-icon{cursor: pointer; margin-right: 10px; margin-left: 10px}
 #recent_search span.align-self-end{font-size:15px; color:#666; font-weight: 400}
-#recent_search span.btn{cursor:pointer;}
+#recent_search span.btn{cursor:pointer; margin-right: 10px; border:none;}
 .search .left_box{display:inline-block; vertical-align:middle; margin-right:100px;}
 .search .left_box .logo{width:160px;}
 /* img삽입후 주석풀고 .search .left_box .logo a는 삭제해주세요 */
