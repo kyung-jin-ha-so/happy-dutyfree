@@ -191,7 +191,7 @@ public class MemberService {
     }
 
     // 카카오톡 로그인
-    public String getAccessToken(String authorize_code) {
+    public String getAccessToken(String code) {
         String access_Token = "";
         String refresh_Token = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
@@ -211,7 +211,7 @@ public class MemberService {
             sb.append("grant_type=authorization_code");
             sb.append("&client_id="+"a88489884189e052d191c60987e50cab");
             sb.append("&redirect_uri=http://localhost:8080/memeber/kakaoLogin");
-            sb.append("&code=" + authorize_code);
+            sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
 
