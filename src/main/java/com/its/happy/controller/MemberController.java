@@ -80,7 +80,7 @@ public class MemberController {
         if(loginResult != null){
             session.setAttribute("loginEmail",loginResult.getMemberEmail());
             session.setAttribute("loginId",loginResult.getMemberId());
-            return "main";
+            return "/";
         } else {
             return "/memberPages/login";
         }
@@ -108,7 +108,6 @@ public class MemberController {
     public @ResponseBody String sendSMS(@RequestParam String memberMobile) throws CoolsmsException {
         return memberService.sendSMS(memberMobile);
     }
-
 
     //아이디찾기 화면 이동
     @GetMapping("/findEmail")
@@ -235,7 +234,10 @@ public class MemberController {
 
     // 회원탈퇴 페이지 이동
     @GetMapping("/deleteMyselfForm")
-    public String deleteMyselfForm(){
+    public String deleteMyselfForm(HttpSession session, Model model){
+        Long memberId = (Long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
         return "/memberPages/deleteMyself";
     }
 
