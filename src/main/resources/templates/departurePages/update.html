@@ -122,7 +122,8 @@
         </div>
         <div class="right_box" style="width: 840px;">
             <!-- 내용삽입자리 -->
-           <h1>출국 정보 수정</h1>
+            <h1>출국 정보 수정</h1>
+            <form action="/departure/save" method="post">
                 <table>
                     <colgroup>
                         <col style="width:25%;">
@@ -190,63 +191,63 @@
                         </td>
                     </tr>
                 </table>
-                <input type="submit" value="확인">
+                <input type="submit" value="수정">
                 <input type="button" value="취소" onclick="cancel()">
-                </form>
+            </form>
 
-                <!--     modal-->
-                <div class="modal fade modal-lg" id="exampleModalToggle" aria-hidden="true"
-                     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalToggleLabel">항공편명 선택</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <input type="radio" class="btn-check" name="selectAirline" id="KE" autocomplete="off">
-                                <label class="btn btn-primary" for="KE">대한항공</label>
+            <!--     modal-->
+            <div class="modal fade modal-lg" id="exampleModalToggle" aria-hidden="true"
+                 aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalToggleLabel">항공편명 선택</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="radio" class="btn-check" name="selectAirline" id="KE" autocomplete="off">
+                            <label class="btn btn-primary" for="KE">대한항공</label>
 
-                                <input type="radio" class="btn-check" name="selectAirline" id="OZ" autocomplete="off">
-                                <label class="btn btn-primary" for="OZ">아시아나항공</label>
+                            <input type="radio" class="btn-check" name="selectAirline" id="OZ" autocomplete="off">
+                            <label class="btn btn-primary" for="OZ">아시아나항공</label>
 
-                                <input type="radio" class="btn-check" name="selectAirline" id="7C" autocomplete="off">
-                                <label class="btn btn-primary" for="7C">제주항공</label>
+                            <input type="radio" class="btn-check" name="selectAirline" id="7C" autocomplete="off">
+                            <label class="btn btn-primary" for="7C">제주항공</label>
 
-                                <input type="radio" class="btn-check" name="selectAirline" id="LJ" autocomplete="off">
-                                <label class="btn btn-primary" for="LJ">진에어항공</label>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-primary" id="flightNext" data-bs-target="#exampleModalToggle2"
-                                        data-bs-toggle="modal"
-                                        onclick="flightList(this.name, this.value, this.accessKey)">다음
-                                </button>
-                            </div>
+                            <input type="radio" class="btn-check" name="selectAirline" id="LJ" autocomplete="off">
+                            <label class="btn btn-primary" for="LJ">진에어항공</label>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" id="flightNext" data-bs-target="#exampleModalToggle2"
+                                    data-bs-toggle="modal"
+                                    onclick="flightList(this.name, this.value, this.accessKey)">다음
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="modal fade modal-lg" id="exampleModalToggle2" aria-hidden="true"
-                     aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalToggleLabel2">항공편명 선택</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+            </div>
+            <div class="modal fade modal-lg" id="exampleModalToggle2" aria-hidden="true"
+                 aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalToggleLabel2">항공편명 선택</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="flight-list">
                             </div>
-                            <div class="modal-body">
-                                <div id="flight-list">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-primary" data-bs-target="#exampleModalToggle"
-                                        data-bs-toggle="modal">이전
-                                </button>
-                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" data-bs-target="#exampleModalToggle"
+                                    data-bs-toggle="modal">이전
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
     </div>
     <!-- mypage content -->
@@ -261,7 +262,7 @@
 <script>
     // 항공권 등록 취소(마이페이지 이동)
     const cancel = () => {
-        location.href = "/index"
+        location.href = "/myPageMain"
     }
 </script>
 </html>

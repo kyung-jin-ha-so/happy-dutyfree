@@ -80,7 +80,7 @@ public class MemberController {
         if(loginResult != null){
             session.setAttribute("loginEmail",loginResult.getMemberEmail());
             session.setAttribute("loginId",loginResult.getMemberId());
-            return "/";
+            return "redirect:/";
         } else {
             return "/memberPages/login";
         }
