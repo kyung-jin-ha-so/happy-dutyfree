@@ -80,19 +80,27 @@ public class MemberController {
         if(loginResult != null){
             session.setAttribute("loginEmail",loginResult.getMemberEmail());
             session.setAttribute("loginId",loginResult.getMemberId());
-            return "/";
+            return "redirect:/";
         } else {
             return "/memberPages/login";
         }
     }
 
-    //카카오 간편로그인
-    @RequestMapping(value="/kakaoLogin",produces="application/json",method= {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String kakaoLogin(@RequestParam("code") String code){
-        String access_Token = memberService.getAccessToken(code);
-        System.out.println("controller access_token : " + access_Token);
-        return "index";
+    // 카카오 로그인
+    @GetMapping("/kakaoLogin")
+    public String kakaoLogin(@RequestParam("id") String membeerKakaoId, Model model,
+                             HttpSession session){
+        MemberDTO memberDTO = memberService.kakaoLogin(membeerKakaoId);
+        if(memberDTO != null){
+            session.setAttribute("loginId",memberDTO.getMemberId());
+            session.setAttribute("loginEmail",memberDTO.getMemberEmail());
+            return "redirect:/";
+        }
+        model.addAttribute("kakaoId",membeerKakaoId);
+        return "/memberPages/kakaoSave";
     }
+
+
 
 
     // 로그아웃 구현
