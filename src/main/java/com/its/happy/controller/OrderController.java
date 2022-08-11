@@ -57,31 +57,39 @@ public class OrderController {
         Long loginId = (Long) session.getAttribute("loginId");
         MemberDTO memberDTO = memberService.findById(loginId);
         model.addAttribute("member", memberDTO);
-
-        // html과 save메서드를 두 개 만들지 않기 위한 작업
-        // 상품 정보를 장바구니에 담는 과정
-        CartDTO cartDTO = new CartDTO();
-        cartDTO.setProductId(productId);
-        cartDTO.setCartQty(orderQty);
-        cartDTO.setMemberId(loginId);
-        CartDTO findCartDTO = cartService.save2(cartDTO);
-
-        // 리턴받은 findCartDTO의 필드를 productDTO의 정보로 채움
-        ProductDTO productDTO = productService.findById(productId);
-        findCartDTO.setProductName(productDTO.getProductName());
-        findCartDTO.setProductOriginalPrice(productDTO.getProductOriginalPrice());
-        findCartDTO.setProductDiscount(productDTO.getProductDiscount());
-        findCartDTO.setProductPrice(productDTO.getProductPrice());
-        findCartDTO.setProductThumbnail(productDTO.getProductThumbnail());
-        System.out.println("productDTO = " + productDTO);
-
-        // 만든 DTO를 리스트에 담고 session, model
-        List<CartDTO> cartDTOList = new ArrayList<>();
-        cartDTOList.add(findCartDTO);
-        session.setAttribute("cartDTOList", cartDTOList); // save 메서드에서 쓰기 위해 session
-        model.addAttribute("cartList", cartDTOList);
-
-        return "/orderPages/save";
+        // 바로구매 하려는 상품이 장바구니에 있는지 확인
+        CartDTO cartDTO = cartService.findByMemberEntityMemberId(productId, loginId);
+        if(cartDTO != null) { // 장바구니에 있으므로 수량만 변경
+            System.out.println("if");
+            cartDTO.setCartQty(orderQty);
+            CartDTO findCartDTO = cartService.save2(cartDTO);
+            // 만든 DTO를 리스트에 담고 session, model
+            List<CartDTO> cartDTOList = new ArrayList<>();
+            cartDTOList.add(findCartDTO);
+            session.setAttribute("cartDTOList", cartDTOList); // save 메서드에서 쓰기 위해 session
+            model.addAttribute("cartList", cartDTOList);
+            return "/orderPages/save";
+        } else { // 장바구니에 없으므로 새롭게 장바구니에 담기
+            System.out.println("else");
+            CartDTO cartDTO1 = new CartDTO();
+            cartDTO1.setProductId(productId);
+            cartDTO1.setCartQty(orderQty);
+            cartDTO1.setMemberId(loginId);
+            CartDTO findCartDTO = cartService.save2(cartDTO1);
+            // 리턴받은 findCartDTO의 필드를 productDTO의 정보로 채움
+            ProductDTO productDTO = productService.findById(productId);
+            findCartDTO.setProductName(productDTO.getProductName());
+            findCartDTO.setProductOriginalPrice(productDTO.getProductOriginalPrice());
+            findCartDTO.setProductDiscount(productDTO.getProductDiscount());
+            findCartDTO.setProductPrice(productDTO.getProductPrice());
+            findCartDTO.setProductThumbnail(productDTO.getProductThumbnail());
+            // 만든 DTO를 리스트에 담고 session, model
+            List<CartDTO> cartDTOList = new ArrayList<>();
+            cartDTOList.add(findCartDTO);
+            session.setAttribute("cartDTOList", cartDTOList); // save 메서드에서 쓰기 위해 session
+            model.addAttribute("cartList", cartDTOList);
+            return "/orderPages/save";
+        }
     }
 
     @PostMapping("/save")
