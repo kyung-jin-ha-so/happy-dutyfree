@@ -10,7 +10,7 @@
                         <li><a href="/member/login">로그인</a></li>
                         <li><a href="/member/save">회원가입</a></li>
                         <li><a href="/myPageMain">MY행복</a></li>
-                        <li><a href="/cart/cartList">장바구니</a></li>
+                        <li><a href="javascript:;" onclick="goCart()">장바구니</a></li>
                         <li><a href="/member/logout">로그아웃</a></li>
                         <li><a href="/index">인덱스</a></li>
                         <li><a href="/adminMain">관리자페이지</a></li>
@@ -182,6 +182,23 @@
                 recommendBox.classList.remove('invisible');
             }
         })
+        // 검색창에서 마우스 포인터가 요소 밖으로 나갈때 최근 목록 사라짐
+        // $("#q").blur(function (){
+        //     const recommendBox = document.querySelector("#recommend");
+        //     recommendBox.classList.add('invisible');
+        // });
+    </script>
+    <script th:inline="javascript">
+        function goCart() {
+            const loginId = [[${session.loginId}]];
+            console.log(loginId);
+            if (loginId == null) {
+                alert("로그인 후 이용 가능합니다.");
+            } else {
+                location.href = "/cart/cartList";
+            }
+        }
+
 
     </script>
 </th:block>
