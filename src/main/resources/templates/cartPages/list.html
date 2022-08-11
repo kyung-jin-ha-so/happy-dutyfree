@@ -244,11 +244,11 @@
             if ($(element).find(".individual_cart_checkbox").is(":checked") === true) {	//체크여부
                 // 총 가격
                 totalPrice += parseFloat($(element).find(".individual_totalPrice_input").val());
-                totalPriceDollar += parseInt($(element).find(".individual_totalDollar_input").val());
+                totalPriceDollar += parseFloat($(element).find(".individual_totalDollar_input").val());
             }
         });
         $(".totalDollar").text("주문금액: $" + totalPriceDollar.toLocaleString());
-        $(".totalWon").text("총금액: " + totalPrice.toLocaleString() + "원");
+        $(".totalWon").text("총금액: " + Math.round(totalPrice).toLocaleString() + "원");
     }
 
     //체크박스 전체 선택
