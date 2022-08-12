@@ -1,8 +1,10 @@
 package com.its.happy.service;
 
 import com.its.happy.dto.CartDTO;
+import com.its.happy.dto.OrderDTO;
 import com.its.happy.entity.CartEntity;
 import com.its.happy.entity.MemberEntity;
+import com.its.happy.entity.OrderEntity;
 import com.its.happy.entity.ProductEntity;
 import com.its.happy.repository.CartRepository;
 import com.its.happy.repository.MemberRepository;
@@ -99,13 +101,23 @@ public class CartService {
         return null;
     }
 
-    public CartDTO findByMemberEntityMemberId(Long productId, Long memberId) {
+    public CartDTO findByProductIdMemberId(Long productId, Long memberId) {
         Optional<CartEntity> optionalCartEntity = cartRepository.findByProductEntity_ProductIdAndMemberEntity_MemberId(productId, memberId);
-        if(optionalCartEntity.isPresent())  {
+        if (optionalCartEntity.isPresent()) {
             CartEntity cartEntity = optionalCartEntity.get();
             return CartDTO.toCartDTO(cartEntity);
         }
         return null;
+    }
+
+    public List<CartDTO> findByMemberId(Long memberId) {
+        List<CartEntity> cartEntityList = cartRepository.findByMemberEntity_MemberId(memberId);
+        List<CartDTO> cartDTOList = new ArrayList<>();
+        for (CartEntity c :
+                cartEntityList) {
+            cartDTOList.add(CartDTO.toCartDTO(c));
+        }
+        return cartDTOList;
     }
 }
 

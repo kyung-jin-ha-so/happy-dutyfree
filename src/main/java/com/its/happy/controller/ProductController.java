@@ -49,7 +49,7 @@ public class ProductController {
                        @ModelAttribute CategoryDTO categoryDTO) throws IOException {
         Long savedId = productService.save(productDTO, categoryDTO);
         productService.fileSave(savedId, multipartFileList);
-        return "index";
+        return "redirect:/";
     }
 
     @GetMapping("/")
@@ -170,7 +170,6 @@ public class ProductController {
         Long memberId = (Long) session.getAttribute("loginId");
         LikeDTO likeDTO = productService.findByLike(productId, memberId);
         model.addAttribute("like", likeDTO);
-        System.out.println("likeDTO = " + likeDTO);
         CartDTO cartDTO = cartService.findByCart(productId, memberId);
         model.addAttribute("cart", cartDTO);
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
@@ -208,7 +207,7 @@ public class ProductController {
                          @ModelAttribute CategoryDTO categoryDTO) throws IOException {
         Long updatedId = productService.update(productDTO, categoryDTO);
         productService.fileSave(updatedId, multipartFileList);
-        return "index";
+        return "redirect:/";
     }
 
     @PostMapping("/deleteFile")
@@ -219,13 +218,15 @@ public class ProductController {
     }
 
     @GetMapping("/search/")
-    public String search(@RequestParam("q") String q, @PageableDefault(page = 1) Pageable pageable, Model model, HttpSession session){
+    public String search(@RequestParam("q") String q,
+                         @RequestParam(name = "del", defaultValue = "nd",required = false) String del,
+                         @PageableDefault(page = 1) Pageable pageable, Model model, HttpSession session){
         Long loginId = (Long) session.getAttribute("loginId");
         Page<ProductDTO> productList = null;
         if(loginId != null){
-            productList = productService.findSearch(pageable, q, loginId);
+            productList = productService.findSearch(pageable, q, loginId, del);
         } else {
-            productList = productService.findSearchWithoutId(pageable,q);
+            productList = productService.findSearchWithoutId(pageable,q, del);
         }
         model.addAttribute("productList", productList);
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();

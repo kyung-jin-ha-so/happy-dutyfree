@@ -1,19 +1,19 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>경진하소</title>
-    <meta charset="UTF-8">
+	<title>경진하소</title>
+	<meta charset="UTF-8">
 
-    <script src="/js/jquery.js"></script>
+	<script src="/js/jquery.js"></script>
 
-    <!-- css 연결 -->
-    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
+	<!-- css 연결 -->
+	<link rel="stylesheet" href="/css/layout.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/basic.css" type="text/css" media="all" />
 
-    <!-- swiper 슬라이더 -->
-    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all"/>
-    <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+	<!-- swiper 슬라이더 -->
+	<link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all" />
+	<script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
 <div id="wrap">
@@ -32,11 +32,18 @@
             </div>
             <div class="path_box">
                 <ul>
-                    <li>상품관리</li>
-                    <li>상품등록</li>
+                    <li>행복 면세점 매출현황</li>
                 </ul>
             </div>
+
             <div class="content_box">
+                <h1 style="color: black;">오늘의 매출</h1>
+                <h1  style="color: black;" th:text="${#numbers.formatInteger(todayRev, 3, 'COMMA')} + '원'"></h1>
+
+                <div class="logo">
+                        <img src="/img/logo.jpg" width="300" height="200" alt="">
+                </div>
+
             </div>
         </div>
     </div>

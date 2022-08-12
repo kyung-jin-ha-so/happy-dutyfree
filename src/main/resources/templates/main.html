@@ -4,16 +4,14 @@
     <title>경진하소</title>
     <meta charset="UTF-8">
 
-    <script src="/js/jquery.js"></script>
-
+    <script src="js/jquery.js"></script>
     <!-- css 연결 -->
-    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
-
+    <link rel="stylesheet" href="css/layout.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="css/main.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="css/basic.css" type="text/css" media="all"/>
     <!-- swiper 슬라이더 -->
-    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all"/>
-    <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="css/swiper.min.css" type="text/css" media="all"/>
+    <script src="js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
 
     <!--    최근검색어 클릭시 안보이게 하기 위함-->
     <style>
@@ -37,6 +35,7 @@
         <!-- main_visual -->
         <div class="main_visual">
             <ul class="swiper-wrapper">
+                <!-- img_size 1200*500 -->
                 <li class="swiper-slide">
                      <img src="/img/every.jpg" alt="">
                 </li>
@@ -107,30 +106,6 @@
         $("#searchForm").submit();
     });
 
-    $(document).ready(function () {
 
-        const exchangeRate = document.getElementById("rate");
-        let exchange = "";
-
-        var myHeaders = new Headers();
-        myHeaders.append("apikey", "");
-
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow',
-            headers: myHeaders
-        };
-
-        fetch("https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=1", requestOptions)
-            .then(response => {
-                return response.json();
-            })
-            .then(json => {
-                exchangeRate.innerHTML = json["result"].toFixed(2);
-                exchange = json["result"];
-            })
-            .catch(error => console.log('error', error));
-    });
 </script>
-
 </html>
