@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
-<!--    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>-->
-<!--    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>-->
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="/js/jquery.js"></script>
@@ -74,11 +72,13 @@
 </div>
 
 <div class="nav product_list_head align-self-start" style="background-color: gray">
+<!--    총 상품 갯수-->
     <div class="nav justify-content-start">
         <span class="nav-item count">총</span>
         <span class="nav-item count count_color" th:utext="${count}"></span>
         <span class="nav-item count">개</span>
     </div>
+<!--    목록 출력 방식 변경-->
     <ul class="nav" style="margin-left: auto;" th:if="${categoryId}">
         <li class="nav-item"><a class="nav-link active" th:href="@{|/product/${categoryId}/|}">최신순</a></li>
         <li class="nav-item nav-bar">|</li>
@@ -88,6 +88,7 @@
         <li class="nav-item nav-bar">|</li>
         <li class="nav-item"><a class="nav-link" th:href="@{|/product/star/${categoryId}/|}">별점순</a></li>
         <li class="nav-item nav-bar">|</li>
+<!--        페이지당 상품 갯수 변경-->
         <li class="nav-item nav-select">
             <select name="pageLimit" id="pageLimit" th:onchange="pageChange()">
                 <option value="1">페이지당 개수</option>
@@ -99,43 +100,6 @@
         </li>
     </ul>
 </div>
-
-<!--<div th:if="${categoryId}">-->
-<!--    <a th:href="@{|/product/${categoryId}/|}">높은 가격순</a>-->
-<!--    <a th:href="@{|/product/highPrice/${categoryId}/|}">높은 가격순</a>-->
-<!--    <a th:href="@{|/product/lowPrice/${categoryId}/|}">낮은 가격순</a>-->
-<!--    <a th:href="@{|/product/star/${categoryId}/|}">별점순</a>-->
-<!--</div>-->
-
-<div>
-</div>
-
-<!--<div class="container">-->
-<!--    <table class="table table-hover">-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th scope="col">상품번호</th>-->
-<!--            <th scope="col">상품썸네일</th>-->
-<!--            <th scope="col">상품이름</th>-->
-<!--            <th scope="col">상품별점</th>-->
-<!--            <th scope="col">상품원가</th>-->
-<!--            <th scope="col">상품인터넷가격</th>-->
-<!--            <th scope="col">원화</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr th:each="product: ${productList}">-->
-<!--            <td th:text="${product.productId}"></td>-->
-<!--            <td><img th:src="@{|/upload/${product.productThumbnail}|}" width="100" height="100" alt=""></td>-->
-<!--            <td><a th:href="@{|/product/detail/${product.productId}|}" th:text="${product.productName}">이름</a></td>-->
-<!--            <td th:text="${product.productStar}"></td>-->
-<!--            <td th:text="|$${product.productOriginalPrice}|"></td>-->
-<!--            <td th:text="|$${product.productPrice}|"></td>-->
-<!--            <td th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원'"></td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-<!--</div>-->
 
 <div class="row row-cols-1 row-cols-md-5 g-4 product_card">
     <div class="col" th:each="product: ${productList}">
@@ -314,7 +278,6 @@
             </a>
         </li>
     </ul>
-
     <ul class="pagination justify-content-center" th:if="${sort.toString().equals('search')}">
         <li class="page-item">
             <a class="page-link" th:href="@{|/product/search/?q=${q}&?page=1|}">
@@ -348,8 +311,10 @@
         </li>
     </ul>
 </div>
+
 </body>
 <script th:inline="javascript">
+<!--    페이지당 상품 갯수 변경 함수-->
     const pageChange = () => {
         const pageLimit = document.getElementById("pageLimit").value;
         const categoryId = [[${categoryId}]];
