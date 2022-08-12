@@ -11,7 +11,7 @@
 #haeder ul li:last-of-type a:after{display:none;}
 /* search_box */
 .search{position:relative; z-index:100;}
-ul{overflow: hidden}
+.search ul{overflow: hidden}
 .invisible {
     display: none;
 }
