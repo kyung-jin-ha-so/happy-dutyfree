@@ -107,30 +107,7 @@
         $("#searchForm").submit();
     });
 
-    $(document).ready(function () {
 
-        const exchangeRate = document.getElementById("rate");
-        let exchange = "";
-
-        var myHeaders = new Headers();
-        myHeaders.append("apikey", "");
-
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow',
-            headers: myHeaders
-        };
-
-        fetch("https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=1", requestOptions)
-            .then(response => {
-                return response.json();
-            })
-            .then(json => {
-                exchangeRate.innerHTML = json["result"].toFixed(2);
-                exchange = json["result"];
-            })
-            .catch(error => console.log('error', error));
-    });
 </script>
 
 </html>
