@@ -28,7 +28,7 @@ public class AdminController {
 
     @GetMapping("productList/")
     public String productFindAll(@PageableDefault(page = 1) Pageable pageable,
-                                 @RequestParam(defaultValue = "2", required = false) int pageLimit, Model model) {
+                                 @RequestParam(defaultValue = "5", required = false) int pageLimit, Model model) {
         Page<ProductDTO> productList = productService.findAll(pageable, pageLimit);
         model.addAttribute("productList", productList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;

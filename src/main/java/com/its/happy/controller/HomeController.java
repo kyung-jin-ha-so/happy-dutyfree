@@ -9,10 +9,7 @@ import com.its.happy.entity.ProductEntity;
 import com.its.happy.repository.CategoryRepository;
 import com.its.happy.repository.ExchangeRateRepository;
 import com.its.happy.repository.ProductRepository;
-import com.its.happy.service.CategoryService;
-import com.its.happy.service.ExchangeRateService;
-import com.its.happy.service.MemberService;
-import com.its.happy.service.ProductService;
+import com.its.happy.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +28,7 @@ public class HomeController {
 
     private final ExchangeRateService exchangeRateService;
     private final MemberService memberService;
+    private final OrderService orderService;
 
     @GetMapping("/index")
     public String index(){
@@ -58,9 +56,10 @@ public class HomeController {
     }
 
     @GetMapping("/adminMain")
-    public String adminMain(){
+    public String adminMain(Model model){
+        double todayRevenue = orderService.findTodayRevenue();
+        model.addAttribute("todayRev", todayRevenue);
         return "adminPages/main";
     }
-
 
 }

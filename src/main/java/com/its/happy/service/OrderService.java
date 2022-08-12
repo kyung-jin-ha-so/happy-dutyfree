@@ -10,7 +10,11 @@ import com.its.happy.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,5 +87,19 @@ public class OrderService {
             }
         }
         return orderDTOList;
+    }
+
+//    오늘의 매출 계산
+    public double findTodayRevenue() {
+        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0,0,0));
+        LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+
+        List<OrderEntity> orderEntityList = orderRepository.findAllByCreatedTimeBetween(startDatetime, endDatetime);
+        double sum = 0;
+        for (OrderEntity order: orderEntityList) {
+            sum += order.getOrderWon();
+        }
+        System.out.println(sum);
+        return sum;
     }
 }
