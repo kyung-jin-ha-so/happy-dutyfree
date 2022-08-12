@@ -13,7 +13,7 @@ $(function () {
         , dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'] //달력의 요일 부분 텍스트
         , dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'] //달력의 요일 부분 Tooltip 텍스트
         , minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-        , maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)
+        , maxDate: "+1Y" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)
     });
 
     //input을 datepicker로 선언
@@ -23,9 +23,7 @@ $(function () {
     $('#datepicker').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
 
     //return날짜를 depart날짜보다 앞으로 설정 못하게, depart날짜를 과거 선택 못하게
-    $('#datepicker').datepicker();
     $('#datepicker').datepicker('option', 'minDate', '0');
-    $('#datepicker').datepicker("option", "maxDate", $("#datepicker2").val());
     $('#datepicker').datepicker("option", "onClose", function (selectedDate) {
     });
 });

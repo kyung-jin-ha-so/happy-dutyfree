@@ -12,7 +12,8 @@
             <div class="img_box">
             </div>
             <div class="txt_box">
-                <p style="font-weight: bold" th:text="${member.memberName + '님 ' + member.memberTier}"></p>
+                <label style="font-weight: bold;font-size: xx-large; color: black" th:text="${member.memberName + '님'}"></label>
+                <label th:text="${member.memberTier}" style="font-size: large; font-weight: bold"></label>
                 <span>온라인멤버는 <b>다양한 </b>할인혜택을 받으실 수 있습니다.</span>
             </div>
         </div>
