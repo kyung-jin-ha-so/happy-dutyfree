@@ -567,7 +567,7 @@
             "                        <th>작성시간</th>\n" +
             "                    </tr>\n";
 
-        for (let i = 0; i < productReviewArray.length; i++) {
+        for (let i = productReviewArray.length-1; i > -1 ; i--) {
             output += "<tr>";
             output += "<td>" + productReviewArray[i].reviewId + "</td>"
             output += "<td>" + productReviewArray[i].reviewMemberName + "</td>"
