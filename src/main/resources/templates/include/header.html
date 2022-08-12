@@ -29,7 +29,7 @@
                         <!-- logo img_size 133 * 57 -->
                         <div class="logo">
                             <a href="/">
-                                <img src="/img/logo.jpg" alt="">
+                                <img src="/img/logo2.jpg" alt="">
                             </a>
                         </div>
 
@@ -185,6 +185,23 @@
                 recommendBox.classList.remove('invisible');
             }
         })
+        // 검색창에서 마우스 포인터가 요소 밖으로 나갈때 최근 목록 사라짐
+        // $("#q").blur(function (){
+        //     const recommendBox = document.querySelector("#recommend");
+        //     recommendBox.classList.add('invisible');
+        // });
+    </script>
+    <script th:inline="javascript">
+        function goCart() {
+            const loginId = [[${session.loginId}]];
+            console.log(loginId);
+            if (loginId == null) {
+                alert("로그인 후 이용 가능합니다.");
+            } else {
+                location.href = "/cart/cartList";
+            }
+        }
+
 
     </script>
 
