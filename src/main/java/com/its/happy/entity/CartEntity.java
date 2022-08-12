@@ -44,4 +44,13 @@ public class CartEntity {
         cartEntity.setCartQty(cartDTO.getCartQty());
         return cartEntity;
     }
+
+    public static CartEntity toCartEntity2(CartDTO cartDTO, MemberEntity memberEntity, ProductEntity productEntity) {
+        CartEntity cartEntity = new CartEntity();
+        cartEntity.setCartId(cartDTO.getCartId());
+        cartEntity.setCartQty(cartDTO.getCartQty());
+        cartEntity.setMemberEntity(memberEntity);
+        cartEntity.setProductEntity(productEntity);
+        return cartEntity;
+    }
 }

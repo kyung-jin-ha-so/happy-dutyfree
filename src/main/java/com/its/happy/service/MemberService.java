@@ -216,12 +216,7 @@ public class MemberService {
         }else {
             return "NO";
         }
-
-
-
     }
-
-
 }
 
 

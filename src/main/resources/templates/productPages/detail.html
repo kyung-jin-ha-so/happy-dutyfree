@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
         a {
             text-decoration: none;
         }
@@ -107,6 +112,7 @@
             height: 50px;
             padding-top: 10px;
             font-weight: bolder;
+            cursor: pointer;
         }
 
         .tab_area_head_list a {
@@ -169,8 +175,25 @@
         .product_detail_thumb img {
             width: 100%;
         }
-        input.inline{display:inline-block; vertical-align:middle;}
-        a.inline{display:inline-block; vertical-align:middle; width:30px; height:30px; background:#222; color:#fff; font-size:16px; letter-spacing:-0.04em; font-weight:400; line-height:25px; text-align:center;}
+
+        input.inline {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        a.inline {
+            display: inline-block;
+            vertical-align: middle;
+            width: 30px;
+            height: 30px;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            letter-spacing: -0.04em;
+            font-weight: 400;
+            line-height: 25px;
+            text-align: center;
+        }
 
     </style>
 </head>
@@ -194,7 +217,59 @@
 <div class="row product_detail mb-4">
     <div class="col-5 product_detail_thumb">
         <div><img th:src="@{|/upload/${product.productThumbnail}|}" width="400" height="300" alt=""></div>
-        <div><span th:text="'상품 만족도 ' + ${product.productStar}"></span></div>
+        <!--        상품 별점 표시 줄-->
+        <div id="star_area">
+            <span th:text="'상품 만족도 ' + ${product.productStar}"></span>
+            <span th:if="${product.productStar >= 1}">
+                    <i class="bi bi-star-fill"></i>
+                </span>
+            <span th:unless="${product.productStar >= 1}">
+                    <i th:if="${product.productStar >= 0.5}" class="bi bi-star-half"></i>
+                    <span th:unless="${product.productStar >= 0.5}">
+                    <i th:if="${product.productStar >= 0}" class="bi bi-star"></i>
+                    </span>
+                </span>
+
+            <span th:if="${product.productStar >= 2}">
+                    <i class="bi bi-star-fill"></i>
+                </span>
+            <span th:unless="${product.productStar >= 2}">
+                    <i th:if="${product.productStar >= 1.5}" class="bi bi-star-half"></i>
+                    <span th:unless="${product.productStar >= 1.5}">
+                    <i th:if="${product.productStar >= 0}" class="bi bi-star"></i>
+                    </span>
+                </span>
+
+            <span th:if="${product.productStar >= 3}">
+                    <i class="bi bi-star-fill"></i>
+                </span>
+            <span th:unless="${product.productStar >= 3}">
+                    <i th:if="${product.productStar >= 2.5}" class="bi bi-star-half"></i>
+                    <span th:unless="${product.productStar >= 2.5}">
+                    <i th:if="${product.productStar >= 0}" class="bi bi-star"></i>
+                    </span>
+                </span>
+
+            <span th:if="${product.productStar >= 4}">
+                    <i class="bi bi-star-fill"></i>
+                </span>
+            <span th:unless="${product.productStar >= 4}">
+                    <i th:if="${product.productStar >= 3.5}" class="bi bi-star-half"></i>
+                    <span th:unless="${product.productStar >= 3.5}">
+                    <i th:if="${product.productStar >= 0}" class="bi bi-star"></i>
+                    </span>
+                </span>
+            <span th:if="${product.productStar >= 5}">
+                    <i class="bi bi-star-fill"></i>
+                </span>
+            <span th:unless="${product.productStar >= 5}">
+                    <i th:if="${product.productStar >= 4.5}" class="bi bi-star-half"></i>
+                    <span th:unless="${product.productStar >= 4.5}">
+                    <i th:if="${product.productStar >= 0}" class="bi bi-star"></i>
+                    </span>
+                </span>
+        </div>
+        <!--        상품 찜하기-->
         <div style="font-size: small" class="text-sm-end">
             <span th:if="${like == null}">
                 <i class="bi bi-heart" onclick="saveWish()"></i>
@@ -206,6 +281,7 @@
             </span>
         </div>
     </div>
+    <!--        수량이 0일시 장바구니/바로주문 버튼 없어지고 품절관련 텍스트 출력-->
     <div class="col-3 fw-bold text-lg-start fs-5 mt-5">
         <p>정상가</p>
         <p>회원가</p>
@@ -218,6 +294,7 @@
                    style="width: 250px">
         </div>
     </div>
+
     <div class="col fw-bold text-lg-start fs-5 mt-5">
         <p>
             <STRIKE th:text="|$${product.productOriginalPrice} |"></STRIKE>
@@ -232,7 +309,8 @@
 
         <div class="qty_btn">
             <a href="javascript:;" class="inline" onclick="qtyCount('minus')">-</a>
-            <input type="text" id="productQty" value="1" readonly="readonly" style="text-align:center; width: 100px" class="inline"/>
+            <input type="text" id="productQty" value="1" readonly="readonly" style="text-align:center; width: 100px"
+                   class="inline"/>
             <a href="javascript:;" class="inline" onclick="qtyCount('plus')">+</a>
         </div>
         <div th:if="${product.productQuantity == 0}">
@@ -243,18 +321,18 @@
                    style="width: 250px">
         </div>
     </div>
+
 </div>
-
+<!--상세 내용 tab으로 변경 -->
 <div class="tab_area">
-
     <div class="tab_area_head">
-        <div class="tab_area_head_list checked" id="tab1_area">
+        <div class="tab_area_head_list checked" id="tab1_area" th:onclick="tap1Info()">
             <a href="javascript:;" th:onclick="tap1Info()">상품정보</a>
         </div>
-        <div class="tab_area_head_list unchecked" id="tab2_area">
+        <div class="tab_area_head_list unchecked" id="tab2_area" th:onclick="tap2Info()">
             <a href="javascript:;" th:onclick="tap2Info()">상품평</a>
         </div>
-        <div class="tab_area_head_list unchecked" id="tab3_area">
+        <div class="tab_area_head_list unchecked" id="tab3_area" th:onclick="tap3Info()">
             <a href="javascript:;" th:onclick="tap3Info()">교환/환불/AS안내</a>
         </div>
     </div>
@@ -271,6 +349,8 @@
 </div>
 
 </body>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
 <script th:inline="javascript">
     function saveWish() {
         if ([[${session.loginEmail}]] == null) {
@@ -390,7 +470,29 @@
     function addToOrder() {
         const productId = [[${product.productId}]];
         const orderQty = document.getElementById("productQty").value;
-        location.href = "/order/save-form2?orderQty=" + orderQty + "&productId=" + productId;
+        const loginId = [[${session.loginId}]]
+
+        if (loginId == null) {
+            alert("로그인 후 이용할실 수 있습니다.");
+            location.href = "/member/login";
+        } else if ([[${session.loginEmail}]] != null) {
+            $.ajax({
+                method: "post",
+                url: "/passport/findByLoginId",
+                data: {"loginId": loginId},
+                dataType: "text",
+                success: function (res) {
+                    if (res == "ok") {
+                        location.href = "/order/save-form2?orderQty=" + orderQty + "&productId=" + productId;
+                    } else {
+                        alert("여권정보 필요");
+                    }
+                }, error: function () {
+                    alert("뭔가 이상");
+                }
+            })
+
+        }
     }
 
     const tap1Info = () => {
@@ -428,6 +530,18 @@
     const tap2Info = () => {
         let tabCont = document.getElementById("tab_cont");
         let productStar = [[${product.productStar}]];
+        let productReviewArray = new Array();
+        let productReview = new Object();
+
+        /*[# th:each="review : ${product.reviewEntityList}"]*/
+        productReview = {};
+        productReview.reviewId = /*[[${review.reviewId}]]*/;
+        productReview.reviewContents = /*[[${review.reviewContents}]]*/;
+        productReview.reviewMemberName = /*[[${review.memberEntity.memberName}]]*/;
+        productReview.reviewStar = /*[[${review.reviewStar}]]*/;
+        productReview.reviewCreatedTime = /*[[${review.getCreatedTime()}]]*/;
+        productReviewArray.push(productReview);
+        /*[/]*/
 
         $("#tab2_area").removeClass('unchecked');
         $("#tab2_area").addClass('checked');
@@ -437,13 +551,13 @@
         $("#tab1_area").addClass('unchecked');
         $("#tab3_area").addClass('unchecked');
 
-        tabCont.innerHTML = "<div class=\"tab_cont tap2\" id=\"tap2\" style=\"display: block; padding-top: 30px\">\n" +
+        let output = "<div class=\"tab_cont tap2\" id=\"tap2\" style=\"display: block; padding-top: 30px\">\n" +
             "            <div id=\"average\">\n" +
             "                <p>이 상품의 평균 만족도는 <span style=\"color:red; font-size: 40px\">" + productStar + "</span> 점 입니다.</p>\n" +
             "            </div>\n" +
             "\n" +
             "            <div class=\"review_head\">\n" +
-            "                <p style=\"font-weight: bolder; align-self: start\">상품 후기</p>\n" +
+            "                <p style=\"font-weight: bolder; align-self: start\"></p>\n" +
             "                <table class=\"table\">\n" +
             "                    <tr>\n" +
             "                        <th>번호</th>\n" +
@@ -451,17 +565,22 @@
             "                        <th>작성내용</th>\n" +
             "                        <th>별점</th>\n" +
             "                        <th>작성시간</th>\n" +
-            "                    </tr>\n" +
-            "                    <tr th:each=\"productReview: ${product.reviewEntityList}\">\n" +
-            "                        <td th:text=\"${productReview.reviewId}\"></td>\n" +
-            "                        <td th:text=\"${productReview.memberEntity.memberId}\"></td>\n" +
-            "                        <td th:text=\"${productReview.reviewContents}\"></td>\n" +
-            "                        <td th:text=\"${productReview.reviewStar}\"></td>\n" +
-            "                        <td th:text=\"${productReview.getCreatedTime()}\"></td>\n" +
-            "                    </tr>\n" +
-            "                </table>\n" +
-            "            </div>\n" +
-            "        </div>\n"
+            "                    </tr>\n";
+
+        for (let i = 0; i < productReviewArray.length; i++) {
+            output += "<tr>";
+            output += "<td>" + productReviewArray[i].reviewId + "</td>"
+            output += "<td>" + productReviewArray[i].reviewMemberName + "</td>"
+            output += "<td>" + productReviewArray[i].reviewContents + "</td>"
+            output += "<td>" + productReviewArray[i].reviewStar + "</td>"
+            output += "<td>" + moment(productReviewArray[i].reviewCreatedTime).format("YYYY-MM-DD HH:mm:ss") + "</td>"
+            output += "</tr>";
+        }
+        output += "</table>\n" +
+            "</div>\n" +
+            "</div>\n"
+
+        tabCont.innerHTML = output;
     }
 
     const tap3Info = () => {

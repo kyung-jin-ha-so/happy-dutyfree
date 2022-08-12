@@ -55,8 +55,8 @@
                             <div th:if="${session.loginId}">
                                 <div class="input_box">
                                     <input type="text" name="q" id="q" placeholder="상품명 검색">
-                                    <div id="recommend">
-                                        <div id="recent_search"></div>
+                                    <div id="recommend" class="invisible">
+                                        <div id="recent_search" ></div>
                                     </div>
                                     <a href="#"><img src="/img/input_click.png" id="search" alt=""></a>
                                 </div>
@@ -79,36 +79,13 @@
             </div>
         </div>
     </header>
-
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <script !src="">
 
+        //검색버튼 클릭시 검색
         $("#search").click(function () {
             $("#searchForm").submit();
-        });
-
-        $(document).ready(function () {
-
-            const exchangeRate = document.getElementById("rate");
-            let exchange = "";
-
-            var myHeaders = new Headers();
-            myHeaders.append("apikey", "");
-
-            var requestOptions = {
-                method: 'GET',
-                redirect: 'follow',
-                headers: myHeaders
-            };
-
-            fetch("https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=1", requestOptions)
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    exchangeRate.innerHTML = json["result"].toFixed(2);
-                    exchange = json["result"];
-                })
-                .catch(error => console.log('error', error));
         });
 
         //최근 검색어 창 띄우는 함수
@@ -126,15 +103,18 @@
                 },
                 dataType: 'json',
                 success: function (res) {
+                    const recommendBox = document.querySelector("#recommend");
+                    recommendBox.classList.remove('invisible');
 
                     let output = "<div>최근 검색어</div>\n";
 
                     for (let i = 0; i < res.length; i++) {
                         output += "<div id=\"recommend_item\" class=\"item\">\n";
+                        output += "<i class=\"bi bi-search search-icon\" onclick=\'putSearch(" + '"' + res[i].searchName + '"' + ")\'></i>"
                         output += "<span class=\"text\" onclick=\'putSearch(" + '"' + res[i].searchName + '"' + ")\'>" + res[i].searchName + "</span>\n";
                         output += "<div class=\"right\">\n"
-                        output += "<span class=\"small align-self-end\">" + res[i].searchCreatedTime + "</span>\n";
-                        output += "<span class=\"small align-self-end btn\" onclick=\'searchDelete(" + res[i].searchId + ")\'>X</span>\n";
+                        output += "<span class=\" align-self-end\">" + moment(res[i].searchCreatedTime).format("MM-DD") + "</span>\n";
+                        output += "<span class=\" align-self-end btn\" onclick=\'searchDelete(" + res[i].searchId + ")\'>X</span>\n";
                         output += "</div>";
                         output += "</div>";
 
@@ -160,7 +140,7 @@
                 }, error: function () {
                     alert("ajax 오류")
                 }
-            });
+        });
         };
 
         //최근 검색어 클릭시 검색창에 넣어지는 함수
@@ -201,5 +181,20 @@
         }
 
 
+    </script>
+
+    <script th:inline="javascript">
+        //비로그인시 장바구니 접근 불가
+        function goCart() {
+            console.log("함수 들어옴");
+            const loginId = [[${session.loginId}]];
+            console.log(loginId);
+            if (loginId == null) {
+                alert("로그인 후 이용 가능합니다.");
+                location.href = "/member/login";
+            } else {
+                location.href = "/cart/cartList";
+            }
+        }
     </script>
 </th:block>

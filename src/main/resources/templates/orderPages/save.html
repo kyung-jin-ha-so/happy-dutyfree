@@ -37,7 +37,9 @@
         <th>구매금액</th>
     </tr>
     <tr th:each="cart: ${cartList}">
-        <td th:src="@{|/upload/${cart.productThumbnail}|}" th:text="${cart.productName}"></td>
+        <td>
+            <span th:src="@{|/upload/${cart.productThumbnail}|}" width="100" height="100"></span>
+            <span th:text="${cart.productName}"></span></td>
         <td>
             <span style="text-decoration: line-through; font-weight: bold"
                   th:text="'$ ' + ${cart.productOriginalPrice}"></span><br>

@@ -18,19 +18,6 @@ import java.util.List;
 public class SearchController {
 
     private final SearchService searchService;
-    private final MemberService memberService;
-
-
-    @GetMapping("/find")
-    public String searchFind(HttpSession session, Model model) {
-//        Long loginId = (Long) session.getAttribute("loginId");
-//        if (loginId == null) {
-//            return "redirect:/member/login";
-//        }
-//        List<SearchDTO> searchList = searchService.findByMemberId(loginId);
-//        model.addAttribute("searchList", searchList);
-        return "/searchPages/list";
-    }
 
     @PostMapping("/find")
     public @ResponseBody List<SearchDTO> searchFind(@RequestParam Long loginId) {
