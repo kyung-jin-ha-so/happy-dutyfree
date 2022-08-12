@@ -19,15 +19,224 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
           rel="stylesheet">
-
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
     <script th:src="@{/js/datepicker.js}"></script>
+    <style>
+        table {
+            width: 1000px;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+        }
+
+        th {
+            border-bottom: 1px solid #444444;
+            padding: 10px;
+            text-align: center;
+            background-color: lightgray;
+        }
+
+        td {
+            border-bottom: 1px solid #444444;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .totalPrice-container {
+            width: 1200px;
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .content_btn_section {
+            margin: 0 auto;
+            display: block;
+            width: 200px;
+            text-align: center;
+            margin-bottom: 100px;
+            height: 50px;
+        }
+
+        .content_btn_section button {
+            width: 100%;
+            height: 100%;
+            background: #84dccd;
+            color: #fff;
+            border: 0;
+            outline: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .wrap {
+            width: 1200px;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pay_box {
+            font-size: 0;
+            /*letter-spacing: -4px;*/
+            width: 1200px;
+            margin: 0 auto 50px;
+        }
+
+        .pay_box .top_box {
+            border =
+            bottom: 1px solid #666;
+        }
+
+        .pay_box .top_box ul li {
+            display: inline-block;
+            vertical-align: top;
+            width: 32%;
+            text-align: center;
+        }
+
+        .pay_box .top_box ul li p {
+            font-size: 20px;
+            letter-spacing: -0.04em;
+            color: #222;
+            font-weight: bold;
+        }
+
+        .pay_box .top_box ul li.on p {
+            color: #f60;
+        }
+
+        .pay_box .bot_box .left_box {
+            display: inline-block;
+            vertical-align: top;
+            width: 30%;
+            background: #f5f5f5;
+            height: 300px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .pay_box .bot_box .left_box p {
+            font-size: 24px;
+            letter-spacing: -0.04em;
+            color: #222;
+            font-weight: bold;
+            padding-bottom: 50px;
+        }
+
+        .pay_box .bot_box .left_box .logo_box {
+            text-align: center;
+        }
+
+        .pay_box .bot_box .left_box .logo_box span {
+            font-size: 20px;
+            letter-spacing: -0.04em;
+            color: #444;
+            font-weight: 400
+        }
+
+        .pay_box .bot_box .right_box {
+            display: inline-block;
+            vertical-align: top;
+            width: 70%;
+            background: #aaa;
+            height: 300px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .pay_box .bot_box .right_box .txt_box {
+            border-bottom: 1px solid #666;
+        }
+
+        .pay_box .bot_box .right_box .txt_box p {
+            font-size: 24px;
+            letter-spacing: -0.04em;
+            color: #222;
+            font-weight: bold
+        }
+
+        .pay_box .bot_box .right_box ul li {
+            display: inline-block;
+            vertical-align: top;
+            width: 50%;
+            border-right: 1px solid #666;
+            box-sizing: border-box;
+            text-align: center;
+            padding-top: 50px;
+            height: 200px;
+        }
+
+        .pay_box .bot_box .right_box ul li:last-of-type {
+            border-right: 0;
+        }
+
+        .pay_box .bot_box .right_box ul li p {
+            font-size: 22px;
+            letter-spacing: -0.04em;
+            color: #222;
+            font-weight: bold
+        }
+
+        .pay_box .bot_box .right_box ul li span {
+            display: block;
+            font-size: 18px;
+            letter-spacing: -0.04em;
+            color: #444;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-<h2>test.html</h2>
-
-해피멤버쉽: <label th:text="${member.memberTier}"></label><br>
-<span th:text="${member.memberName}"></span>님 께서 즉시 받으실 수 있는 쇼핑 혜택입니다.<br>
-할인쿠폰: <span th:text="${#lists.size(member.couponMemberEntityList.?[couponStatus=='사용 전'])} + '개'"></span>
+<th:block th:replace="include/header :: header"></th:block>
+<!--회원 등급, 포인트, 쿠폰 표기 div-->
+<div class="pay_box" style="padding-top: 30px">
+    <div class="top_box">
+        <ul>
+            <li>
+                <img src="" alt="">
+                <p>STEP01 장바구니</p>
+            </li>
+            <li class="on">
+                <img src="" alt="">
+                <p>STEP02 주문/결제정보</p>
+            </li>
+            <li>
+                <img src="" alt="">
+                <p>STEP03 결제완료</p>
+            </li>
+        </ul>
+    </div>
+    <div class="bot_box">
+        <div class="left_box">
+            <p>해피 멤버십</p>
+            <div class="logo_box">
+                <img src="" alt="">
+                <span th:text="${member.memberTier}"></span>
+            </div>
+        </div>
+        <div class="right_box">
+            <div class="txt_box">
+                <p th:text="${member.memberName}+ '님께서 즉시 받으실 수 있는 쇼핑 혜택입니다.'"></p>
+            </div>
+            <ul>
+                <li>
+                    <p>적립금</p>
+                    <span th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span>
+                </li>
+                <li>
+                    <p>할인쿠폰</p>
+                    <span th:text="${#lists.size(member.couponMemberEntityList.?[couponStatus=='사용 전'])} + '개'"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 <table>
     <tr>
         <th>상품명</th>
@@ -37,25 +246,26 @@
         <th>구매금액</th>
     </tr>
     <tr th:each="cart: ${cartList}">
-        <td>
+        <td style="text-align: center">
             <span th:src="@{|/upload/${cart.productThumbnail}|}" width="100" height="100"></span>
             <span th:text="${cart.productName}"></span></td>
-        <td>
+        <td style="text-align: center">
             <span style="text-decoration: line-through; font-weight: bold"
                   th:text="'$ ' + ${cart.productOriginalPrice}"></span><br>
             <span style="color: red; font-weight: bold" th:text="'$ ' + ${cart.productPrice}"></span>
         </td>
-        <td th:text="${cart.cartQty}"></td>
-        <td th:text="${cart.productDiscount} + '%'"></td>
-        <td>
+        <td style="text-align: center" th:text="${cart.cartQty}"></td>
+        <td style="text-align: center" th:text="${cart.productDiscount} + '%'"></td>
+        <td style="text-align: center">
             <span style="color: red; font-weight: bold" th:text="'$ ' + ${cart.productPrice * cart.cartQty}"></span><br>
             <span style="color: gray; font-size: small"
                   th:text="'(' + ${#numbers.formatInteger(cart.productPrice * cart.cartQty * session.exchangeRate, 1, 'COMMA') } + '원)'"></span>
         </td>
     </tr>
 </table>
-
-<h2>고객정보</h2>
+<div class="pay_box" style="margin-top: 30px">
+    <h2>고객정보</h2>
+</div>
 <table>
     <thead>
     <tr>
@@ -82,52 +292,57 @@
     </tr>
     </tbody>
 </table>
-
-<h2>출국정보</h2>
-<div class="dropdown">
-    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
-            data-bs-auto-close="outside">
-        나의 출국 예정일 불러오기
-    </button>
-    <form class="dropdown-menu p-4">
-        <div class="mb-3">
-            <label class="form-label">나의 출국정보</label>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">
-                아래 출국정보를 선택하시면, 해당 정보로 자동 입력 됩니다.<br>
-                출국정보는 MY신라 > 출국정보관리에서 등록/수정이 가능합니다.
-            </label>
-        </div>
-        <div class="mb-3">
-            <table>
-                <tr>
-                    <th>선택</th>
-                    <th>출국일시</th>
-                    <th>출발공항</th>
-                    <th>도착지</th>
-                </tr>
-                <tr th:each="departure: ${member.departureEntityList}">
-                    <td><input type="radio" name="departureRadio" th:attrappend="id=${departureStat.index}"></td>
-                    <td th:text="${departure.departureDate}" th:id="${'departureDate' + departureStat.index}"></td>
-                    <td th:text="${departure.departureAirport}"
-                        th:id="${'departureAirport' + departureStat.index}"></td>
-                    <td th:text="${departure.arrivalRegion}" th:id="${'arrivalRegion' + departureStat.index}"></td>
-                    <td th:text="${departure.departureNumber}" th:id="${'departureNumber' + departureStat.index}"
-                        hidden></td>
-                    <td th:text="${departure.departureFeature}" th:id="${'departureFeature' + departureStat.index}"
-                        hidden></td>
-                </tr>
-            </table>
-        </div>
-    </form>
+<div class="pay_box" style="margin-top: 30px">
+    <h2>출국정보</h2>
+    <div class="dropdown">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                data-bs-auto-close="outside">
+            나의 출국 예정일 불러오기
+        </button>
+        <form class="dropdown-menu p-4" id="myDropdown">
+            <div class="mb-3">
+                <label class="form-label">나의 출국정보</label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">
+                    아래 출국정보를 선택하시면, 해당 정보로 자동 입력 됩니다.<br>
+                    출국정보는 MY행복 > <label onclick="location.href='/departure/';" style="font-weight: bold; cursor: pointer">출국정보관리</label>에서 등록/수정이 가능합니다.
+                </label>
+            </div>
+            <div class="mb-3">
+                <table>
+                    <tr>
+                        <th>선택</th>
+                        <th>출국일시</th>
+                        <th>출발공항</th>
+                        <th>도착지</th>
+                    </tr>
+                    <tr th:each="departure: ${member.departureEntityList}">
+                        <td style="text-align: center"><input type="radio" name="departureRadio"
+                                                              th:attrappend="id=${departureStat.index}"></td>
+                        <td style="text-align: center" th:text="${departure.departureDate}"
+                            th:id="${'departureDate' + departureStat.index}"></td>
+                        <td style="text-align: center" th:text="${departure.departureAirport}"
+                            th:id="${'departureAirport' + departureStat.index}"></td>
+                        <td style="text-align: center" th:text="${departure.arrivalRegion}"
+                            th:id="${'arrivalRegion' + departureStat.index}"></td>
+                        <td style="text-align: center" th:text="${departure.departureNumber}"
+                            th:id="${'departureNumber' + departureStat.index}"
+                            hidden></td>
+                        <td style="text-align: center" th:text="${departure.departureFeature}"
+                            th:id="${'departureFeature' + departureStat.index}"
+                            hidden></td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
 </div>
-
 <table>
     <tr>
         <th>출국장소</th>
         <td>
-            <select name="departureAirport" id="departureAirport">
+            <select name="departureAirport" id="departureAirport" class="form-select-sm">
                 <option value="">선택하세요</option>
                 <option value="ICN">인천공항</option>
                 <option value="GMP">김포공항</option>
@@ -136,15 +351,15 @@
         </td>
     </tr>
     <tr>
-        <th>출국일시</th>
+        <th>출국일</th>
         <td>
-            <input type="text" id="datepicker" name="departureDate">
+            <input type="text" id="datepicker" name="departureDate" class="input-group-sm">
         </td>
     </tr>
     <tr>
         <th>편명</th>
         <td>
-            <input type="text" name="departureNumber" id="departureNumber">
+            <input type="text" name="departureNumber" id="departureNumber" class="input-group-sm">
             <a class="btn btn-primary" data-bs-toggle="modal" id="searchBtn" href="#exampleModalToggle" role="button"
                hidden></a>
             <a class="btn btn-primary" onclick="airportCheck()" role="button">편명 검색</a>
@@ -153,14 +368,20 @@
     <tr>
         <th>직항/경유 여부</th>
         <td>
-            <input type="radio" name="departureFeature" value="직항" checked="checked">직항
-            <input type="radio" name="departureFeature" value="경유">경유
+            <input type="radio" id="direct" name="departureFeature" value="직항" checked="checked" class="form-check-input">
+            <label class="form-check-label" for="direct">
+                직항
+            </label>
+            <input type="radio" id="trans" name="departureFeature" value="경유" class="form-check-input">
+            <label class="form-check-label" for="trans">
+                경유
+            </label>
         </td>
     </tr>
     <tr>
         <th>목적지</th>
         <td>
-            <select name="arrivalRegion" id="arrivalRegion">
+            <select name="arrivalRegion" id="arrivalRegion" class="form-select-sm">
                 <option value="">선택</option>
                 <option value="캐나다">캐나다</option>
                 <option value="중국">중국</option>
@@ -173,13 +394,14 @@
         </td>
     </tr>
 </table>
-
-<h2>할인정보</h2>
+<div class="pay_box" style="margin-top: 30px">
+    <h2>할인정보</h2>
+</div>
 <table>
     <tr>
         <th>쿠폰</th>
         <td>
-            <select id="selectCoupon" onchange="selectCoupon()">
+            <select id="selectCoupon" onchange="selectCoupon()" class="form-select-sm">
                 <option value="0">선택</option>
                 <option th:each="coupon : ${member.couponMemberEntityList}"
                         th:value="${coupon.couponEntity.couponValue}"
@@ -199,20 +421,31 @@
                 th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span><br>
             사용 가능한 적립금(총 주문 금액의 10%): <span
                 th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * session.exchangeRate * 0.1, 1, 'COMMA')} + '원'"></span><br>
-            <input id="inputPoint" type="text" onchange="inputPoint()" value="0">원
-            <input type="checkbox" id="useAll" onclick="useAll()">전액사용
+            <input id="inputPoint" type="text" onchange="inputPoint()" value="0" class="input-group-sm">원
+            <input type="checkbox" id="useAll" onclick="useAll()" class="form-check-input">전액사용
         </td>
     </tr>
 </table>
-
-<h2>결제정보</h2>
+<div class="pay_box" style="margin-top: 30px">
+    <h2>결제정보</h2>
+</div>
 <table>
     <tr>
         <th>결제수단</th>
         <td>
-            <input type="radio" id="card" name="payMethod" value="신용카드" onchange="payMethod()">신용카드
-            <input type="radio" id="kakao" name="payMethod" value="카카오페이" onchange="payMethod()" checked>카카오페이
-            <input type="radio" id="toss" name="payMethod" value="토스페이" onchange="payMethod()">토스페이
+
+            <input type="radio" id="card" name="payMethod" value="신용카드" onchange="payMethod()" class="form-check-input">
+            <label class="form-check-label" for="card">
+                신용카드
+            </label>
+            <input type="radio" id="kakao" name="payMethod" value="카카오페이" onchange="payMethod()" class="form-check-input">
+            <label class="form-check-label" for="kakao">
+                카카오페이
+            </label>
+            <input type="radio" id="toss" name="payMethod" value="토스페이" onchange="payMethod()" class="form-check-input" checked>
+            <label class="form-check-label" for="toss">
+                토스페이
+            </label>
         </td>
     </tr>
 </table>
@@ -237,8 +470,9 @@
 <!--        </tr>-->
 <!--    </table>-->
 <!--</div>-->
-
-<h2>최종 결제금액 내역</h2>
+<div class="pay_box" style="margin-top: 30px">
+    <h2>최종 결제금액 내역</h2>
+</div>
 <table>
     <tr>
         <td>총 주문 상품</td>
@@ -566,6 +800,7 @@
     // 아임포트
     const IMP = window.IMP;
     IMP.init("imp66752664");
+
     function requestPay(pgName) {
         // IMP.request_pay(param, callback) 결제창 호출
         IMP.request_pay({ // param

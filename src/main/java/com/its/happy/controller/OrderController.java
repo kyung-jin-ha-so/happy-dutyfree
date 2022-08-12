@@ -1,7 +1,6 @@
 package com.its.happy.controller;
 
 import com.its.happy.dto.*;
-import com.its.happy.repository.CartRepository;
 import com.its.happy.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +26,7 @@ public class OrderController {
     private final OrderDepartureService orderDepartureService;
     private final MemberService memberService;
     private final ExchangeRateService exchangeRateService;
+    private final PassportService passportService;
 
     // 장바구니 구매
     @GetMapping("/save-form")
@@ -58,8 +58,8 @@ public class OrderController {
         MemberDTO memberDTO = memberService.findById(loginId);
         model.addAttribute("member", memberDTO);
         // 바로구매 하려는 상품이 장바구니에 있는지 확인
-        CartDTO cartDTO = cartService.findByMemberEntityMemberId(productId, loginId);
-        if(cartDTO != null) { // 장바구니에 있으므로 수량만 변경
+        CartDTO cartDTO = cartService.findByProductIdMemberId(productId, loginId);
+        if (cartDTO != null) { // 장바구니에 있으므로 수량만 변경
             System.out.println("if");
             cartDTO.setCartQty(orderQty);
             CartDTO findCartDTO = cartService.save2(cartDTO);
@@ -192,30 +192,34 @@ public class OrderController {
     @GetMapping("/re-order")
     public String reOrder(@ModelAttribute CartArrayDTO cartArrayDTO, Model model, HttpSession session) {
         System.out.println("OrderController.reOrder");
-        List<CartDTO> cartDTOList = new ArrayList<>();
-        for (int i = 0; i < cartArrayDTO.getCarts().size(); i++) {
-            CartDTO cartDTO1 = cartArrayDTO.getCarts().get(i);
-            System.out.println("cartDTO1 = " + cartDTO1);
-            CartDTO cartDTO = cartService.save2(cartDTO1);
-            cartDTOList.add(cartDTO);
-            System.out.println("OrderController.reOrder");
-        }
-
         Long memberId = (Long) session.getAttribute("loginId");
-
-        model.addAttribute("cartList", cartDTOList);
+        // 다시 담으려는 상품이 장바구니에 있는지 확인
+        for (int i = 0; i < cartArrayDTO.getCarts().size(); i++) {
+            CartDTO saveCartDTO = cartArrayDTO.getCarts().get(i);
+            Long productId = saveCartDTO.getProductId();
+            CartDTO findCartDTO = cartService.findByProductIdMemberId(productId, memberId);
+            if (findCartDTO != null) { // 장바구니에 있으므로 추가X
+            } else { // 장바구니에 없으므로 담기
+                cartService.save2(saveCartDTO);
+            }
+        }
+        List<CartDTO> findAllCartDTOList = cartService.findByMemberId(memberId);
+        model.addAttribute("cartList", findAllCartDTOList);
 
         List<PointDTO> pointDTOList = pointService.findByPoint(memberId);
-        model.addAttribute("pointList",pointDTOList);
+        model.addAttribute("pointList", pointDTOList);
 
-        List<CouponMemberDTO> couponMemberDTOList  = couponService.findByMyCoupon(memberId);
+        List<CouponMemberDTO> couponMemberDTOList = couponService.findByMyCoupon(memberId);
         model.addAttribute("myCoupon", couponMemberDTOList);
 
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
 
         MemberDTO memberDTO = memberService.findById(memberId);
-        model.addAttribute("member",memberDTO);
+        model.addAttribute("member", memberDTO);
+
+        PassportDTO passportDTO = passportService.findByLoginId(memberId);
+        model.addAttribute("passport", passportDTO);
 
         return "cartPages/list";
     }
