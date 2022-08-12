@@ -92,6 +92,7 @@ public class MemberEntity extends BaseEntity{
 
     public static MemberEntity toSave(MemberDTO memberDTO){
         MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setMemberKakaoId(memberDTO.getMemberKakaoId());
         memberEntity.setMemberEmail(memberDTO.getMemberEmail());
         memberEntity.setMemberPassword(memberDTO.getMemberPassword());
         memberEntity.setMemberName(memberDTO.getMemberName());

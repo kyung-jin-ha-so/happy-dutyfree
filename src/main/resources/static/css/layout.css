@@ -11,7 +11,7 @@
 #haeder ul li:last-of-type a:after{display:none;}
 /* search_box */
 .search{position:relative; z-index:100;}
-ul{overflow: hidden}
+.search ul{overflow: hidden}
 .invisible {
     display: none;
 }
@@ -47,3 +47,6 @@ ul{overflow: hidden}
 /*=========================================================
 	footer
 ==========================================================*/
+.copy{text-align:center; height:50px; background:#fff;}
+.copy p{font-size:12px; letter-spacing:-0.025em; color:#222; font-weight:300; line-height:50px;}
+/*#footer {height:80px; text-align:center;}*/

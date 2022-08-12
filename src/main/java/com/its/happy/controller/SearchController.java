@@ -22,7 +22,6 @@ public class SearchController {
     @PostMapping("/find")
     public @ResponseBody List<SearchDTO> searchFind(@RequestParam Long loginId) {
         List<SearchDTO> searchDTOList = searchService.findByMemberId(loginId);
-        System.out.println("searchDTOList = " + searchDTOList);
         return searchDTOList;
     }
 

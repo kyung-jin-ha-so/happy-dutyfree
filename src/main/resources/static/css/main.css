@@ -2,20 +2,21 @@
 
 /* basic */
 #wrap{width:1200px; margin:0 auto; position:relative;}
-/* main_visual */
+/* `main_visual` */
 .main_visual{height:500px; overflow:hidden;}
 .main_visual .swiper-wrapper{width:100%; height:100%}
 .main_visual .swiper-wrapper .swiper-slide{width:100%; height:100%;}
 .main_visual .swiper-wrapper .swiper-slide img{width:100%;}
 
-/* img삽입후 삭제 */
+ /*img삽입후 삭제*/
 /*.main_visual .swiper-wrapper .swiper-slide:nth-of-type(1){background:#000}*/
 /*.main_visual .swiper-wrapper .swiper-slide:nth-of-type(2){background:#0f0}*/
 /*.main_visual .swiper-wrapper .swiper-slide:nth-of-type(3){background:#f00}*/
-/**/
+
+
 
 /* prod_list */
-.prod_list{font-size:0; letter-spacing:-4px; padding:100px 0 150px;}
+.prod_list{font-size:0; letter-spacing:-4px; padding:50px 0 150px;}
 .prod_list .main_tit{padding-bottom:30px; text-align:center;}
 .prod_list .main_tit p{font-size:34px; letter-spacing:-0.045em; color:#000; font-weight: bold;}
 .prod_list ul li{display:inline-block; vertical-align:top; width:calc(25% - 37.5px); margin-right:50px;}
