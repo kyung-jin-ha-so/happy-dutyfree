@@ -58,21 +58,20 @@
                                     <div id="recommend" class="invisible">
                                         <div id="recent_search" ></div>
                                     </div>
-                                    <a href="#"><img src="/img/input_click.png" id="search" alt=""></a>
                                 </div>
                             </div>
                             <div th:unless="${session.loginId}">
                                 <div class="input_box">
                                     <input type="text" name="q" placeholder="상품명 검색">
-                                    <a href="#"><img src="/img/input_click.png" alt=""></a>
                                 </div>
                             </div>
+                            <a href="javascript:;"><img src="/img/input_click.png" id="search" alt=""></a>
                         </form>
                     </div>
                     <!-- img_size 225 * 80 -->
                     <div class="right_box">
                         <a href="javascript:;">
-                            <img src="/img/event_banner.png" alt="">
+                            <img src="/img/event_banner.jpg" alt="">
                         </a>
                     </div>
                 </div>
@@ -88,12 +87,11 @@
             $("#searchForm").submit();
         });
 
+
         //최근 검색어 창 띄우는 함수
         $("#q").mousedown(function () {
-            const recommendBox = document.querySelector("#recommend");
             const loginId = [[${session.loginId}]];
             const recentSearch = document.getElementById("recent_search");
-            recommendBox.classList.remove('invisible');
 
             $.ajax({
                 method: 'post',
@@ -128,7 +126,27 @@
         });
 
         //최근 검색어 삭제하는 함수
+        // const searchDelete = (searchId) => {
+        //     $.ajax({
+        //         method: "post",
+        //         url: "/search/delete",
+        //         data: {"searchId": searchId},
+        //         dataType: "text",
+        //         success: function (res) {
+        //             console.log(res);
+        //             location.reload();
+        //         }, error: function () {
+        //             alert("ajax 오류")
+        //         }
+        // });
+        // };
+
+
         const searchDelete = (searchId) => {
+            let locationSearch = location.search;
+            const urlParams = new URLSearchParams(locationSearch);
+            const sq = urlParams.get('q');
+
             $.ajax({
                 method: "post",
                 url: "/search/delete",
@@ -136,11 +154,15 @@
                 dataType: "text",
                 success: function (res) {
                     console.log(res);
-                    location.reload();
+                    if(sq == null){
+                        location.reload();
+                    }else {
+                        location.href = "/product/search/?q=" + sq+ "&del=" + 1;
+                    }
                 }, error: function () {
                     alert("ajax 오류")
                 }
-        });
+            });
         };
 
         //최근 검색어 클릭시 검색창에 넣어지는 함수
@@ -169,6 +191,20 @@
         //     recommendBox.classList.add('invisible');
         // });
     </script>
+    <script th:inline="javascript">
+        function goCart() {
+            const loginId = [[${session.loginId}]];
+            console.log(loginId);
+            if (loginId == null) {
+                alert("로그인 후 이용 가능합니다.");
+            } else {
+                location.href = "/cart/cartList";
+            }
+        }
+
+
+    </script>
+
     <script th:inline="javascript">
         function goCart() {
             const loginId = [[${session.loginId}]];

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title>경진하소</title>
 	<meta charset="UTF-8">
@@ -32,11 +32,18 @@
             </div>
             <div class="path_box">
                 <ul>
-                    <li>상품관리</li>
-                    <li>상품등록</li>
+                    <li>행복 면세점 매출현황</li>
                 </ul>
             </div>
+
             <div class="content_box">
+                <h1 style="color: black;">오늘의 매출</h1>
+                <h1  style="color: black;" th:text="${#numbers.formatInteger(todayRev, 3, 'COMMA')} + '원'"></h1>
+
+                <div class="logo">
+                        <img src="/img/logo.jpg" width="300" height="200" alt="">
+                </div>
+
             </div>
         </div>
     </div>
