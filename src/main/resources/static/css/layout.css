@@ -47,3 +47,6 @@
 /*=========================================================
 	footer
 ==========================================================*/
+.copy{text-align:center; height:50px; background:#fff;}
+.copy p{font-size:12px; letter-spacing:-0.025em; color:#222; font-weight:300; line-height:50px;}
+/*#footer {height:80px; text-align:center;}*/
