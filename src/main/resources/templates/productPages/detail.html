@@ -613,7 +613,7 @@
             "        <div class=\"tab3_box\">\n" +
             "            <p style=\"font-weight: bolder\">웹사이트에서 신청 하기</p>\n" +
             "            <p>고객센터에서 교환/환불/AS 신청을 해 주세요</p>\n" +
-            "            <input type=\"button\" value=\"고객센터 바로가기\">\n" +
+            "            <input type=\"button\" onclick=\"kakaoChat()\" value=\"고객센터 바로가기\">\n" +
             // 1대 1 채팅 주소값 넣어주기
             "        </div>\n" +
             "        <p style=\"text-underline: black\">기억해주세요</p>\n" +
@@ -635,6 +635,10 @@
             "            </li>\n" +
             "        </ol>\n" +
             "    </div>"
+    }
+
+    const kakaoChat = () => {
+        window.open('https://open.kakao.com/o/sp1SU3ue', '_blank');
     }
 
 </script>

@@ -185,12 +185,9 @@
                 recommendBox.classList.remove('invisible');
             }
         })
-        // 검색창에서 마우스 포인터가 요소 밖으로 나갈때 최근 목록 사라짐
-        // $("#q").blur(function (){
-        //     const recommendBox = document.querySelector("#recommend");
-        //     recommendBox.classList.add('invisible');
-        // });
+
     </script>
+
     <script th:inline="javascript">
         function goCart() {
             const loginId = [[${session.loginId}]];
