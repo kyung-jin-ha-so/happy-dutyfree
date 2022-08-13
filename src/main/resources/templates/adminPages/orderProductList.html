@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <title>경진하소</title>
+    <script src="/js/jquery.js"></script>
+
+    <!-- css 연결 -->
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all" />
+
+    <!-- swiper 슬라이더 -->
+    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all" />
+    <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <style>
+
+        table {
+            width: 100%;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+        }
+
+        th {
+            border-bottom: 1px solid #444444;
+            padding: 10px;
+            text-align: center;
+            background-color: lightgray;
+            color:#222;
+        }
+
+        td {
+            border-bottom: 1px solid #444444;
+            padding: 10px;
+            text-align: center;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <div class="manage_content">
+        <div class="left_box">
+            <th:block th:replace="include/adminHeader :: adminHeader"></th:block>
+        </div>
+        <script>
+            $('.slide_box .box > ul > li > a').on('click', function(){
+                $(this).next().slideToggle();
+            })
+        </script>
+        <div class="right_box">
+            <div class="logout_box">
+                <a href="javscript:;">로그아웃</a>
+            </div>
+            <div class="path_box">
+                <ul>
+                    <li>매출관리</li>
+                    <li>판매내역</li>
+                </ul>
+            </div>
+            <div class="content_box">
+                <table>
+                    <colgroup>
+                        <col style="width:10%">
+                        <col style="width:10%">
+                        <col style="width:10%">
+                        <col style="width:20%">
+                        <col style="width:10%">
+                        <col style="width:10%">
+                        <col style="width:10%">
+                        <col style="width:10%">
+                    </colgroup>
+                    <tr>
+                        <th>교환권번호</th>
+                        <th>주문번호</th>
+                        <th>상품번호</th>
+                        <th>상품명</th>
+                        <th>판매금액</th>
+                        <th>수량</th>
+                        <th>할인률</th>
+                        <th>구매금액</th>
+                    </tr>
+                    <tr th:each="orderProduct: ${order.orderProductEntityList}">
+                        <td th:text="${orderProduct.orderProductId}"></td>
+                        <td th:text="${orderProduct.orderEntity.orderId}"></td>
+                        <td th:text="${orderProduct.productEntity.productId}"></td>
+                        <td>
+                            <span th:src="@{|/upload/${orderProduct.productEntity.productThumbnail}|}"></span>
+                            <a th:text="${orderProduct.productName}"
+                               th:href="@{|/product/detail/${orderProduct.productEntity.productId}|}"></a>
+                        </td>
+                        <td>
+            <span style="text-decoration: line-through; font-weight: bold"
+                  th:text="${orderProduct.productOriginalPrice}"></span><br>
+                            <span style="color: red; font-weight: bold" th:text="'$ ' + ${orderProduct.productPrice}"></span>
+                        </td>
+                        <td th:text="${orderProduct.orderQty} + '개'"></td>
+                        <td th:text="${orderProduct.productDiscount} + '%'"></td>
+                        <td>
+            <span style="color: red; font-weight: bold"
+                  th:text="'$ ' + ${orderProduct.productPrice * orderProduct.orderQty}"></span><br>
+                            <span style="color: gray; font-size: small"
+                                  th:text="'(' + ${#numbers.formatInteger(orderProduct.productPrice * orderProduct.orderQty * order.exchangeRate, 1, 'COMMA') } + '원)'"></span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

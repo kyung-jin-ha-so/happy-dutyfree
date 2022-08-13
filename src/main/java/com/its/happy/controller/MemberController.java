@@ -1,7 +1,9 @@
 package com.its.happy.controller;
 
 import com.its.happy.dto.MemberDTO;
+import com.its.happy.entity.CouponMemberEntity;
 import com.its.happy.entity.MemberEntity;
+import com.its.happy.entity.PointEntity;
 import com.its.happy.service.MemberService;
 import com.its.happy.service.PointService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 
 @Controller
@@ -48,11 +51,12 @@ public class MemberController {
         return emailResult;
     }
 
-    // 비밀번호찾기시 이메일 확인 후 DTO 넘겨주기
+    // 비밀번호찾기시 이메일 확인
     @PostMapping("/email-check")
-    public @ResponseBody MemberDTO emailCheck(@RequestParam String memberEmail){
-        MemberDTO memberDTO= memberService.emailCheck(memberEmail);
-        return memberDTO;
+    public @ResponseBody String emailCheck(@RequestParam String memberEmail){
+        String memberId = memberService.emailCheck(memberEmail).getMemberId()+"";
+        System.out.println(memberId);
+        return memberId;
     }
 
     // 핸드폰번호 중복체크
@@ -76,26 +80,34 @@ public class MemberController {
         if(loginResult != null){
             session.setAttribute("loginEmail",loginResult.getMemberEmail());
             session.setAttribute("loginId",loginResult.getMemberId());
-            session.setAttribute("loginName",loginResult.getMemberName());
-            return "index";
+            return "redirect:/";
         } else {
             return "/memberPages/login";
         }
     }
 
-    //카카오 간편로그인
-    @RequestMapping(value="/kakaoLogin",produces="application/json",method= {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String kakaoLogin(@RequestParam("code") String code){
-        String access_Token = memberService.getAccessToken(code);
-        System.out.println("controller access_token : " + access_Token);
-        return "index";
+    // 카카오 로그인
+    @GetMapping("/kakaoLogin")
+    public String kakaoLogin(@RequestParam("id") String membeerKakaoId, Model model,
+                             HttpSession session){
+        MemberDTO memberDTO = memberService.kakaoLogin(membeerKakaoId);
+        if(memberDTO != null){
+            session.setAttribute("loginId",memberDTO.getMemberId());
+            session.setAttribute("loginEmail",memberDTO.getMemberEmail());
+            return "redirect:/";
+        }
+        model.addAttribute("kakaoId",membeerKakaoId);
+        return "/memberPages/kakaoSave";
     }
+
+
 
 
     // 로그아웃 구현
     @GetMapping("/logout")
     public String logout(HttpSession session){
-        session.invalidate();
+        session.removeAttribute("loginId");
+        session.removeAttribute("loginEmail");
         return "redirect:/";
     }
 
@@ -118,6 +130,14 @@ public class MemberController {
         String mobileResult = memberService.mobileCheck(memberMobile);
         return mobileResult;
     }
+
+    // 비밀번호 찾기 - 해당 이메일, 핸드폰번호가 맞는지 확인
+    @PostMapping("/mobile-email-check")
+    public @ResponseBody String emailMobileCheck(@RequestParam String memberId,@RequestParam String memberMobile){
+        String result = memberService.emailMobileCheck(memberId,memberMobile);
+        return result;
+    }
+
 
 
     // 핸드폰 인증 완료시 해당 전화번호를 가지고 있는 이메일 보여주기
@@ -222,7 +242,10 @@ public class MemberController {
 
     // 회원탈퇴 페이지 이동
     @GetMapping("/deleteMyselfForm")
-    public String deleteMyselfForm(){
+    public String deleteMyselfForm(HttpSession session, Model model){
+        Long memberId = (Long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
         return "/memberPages/deleteMyself";
     }
 

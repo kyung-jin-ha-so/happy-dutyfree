@@ -1,92 +1,162 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+  <title>경진하소</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+  <script src="/js/jquery.js"></script>
+
+  <!-- css 연결 -->
+  <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all" />
+
+  <!-- swiper 슬라이더 -->
+  <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all" />
+  <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+  <style>
+
+    table {
+      width: 100%;
+      border-top: 1px solid #444444;
+      border-collapse: collapse;
+    }
+
+    th {
+      border-bottom: 1px solid #444444;
+      padding: 10px;
+      text-align: center;
+      background-color: lightgray;
+      color:#222;
+    }
+
+    td {
+      border-bottom: 1px solid #444444;
+      padding: 10px;
+      text-align: center;
+      color: black;
+    }
+    td a{
+      color: blue !important;
+      text-decoration: underline !important;
+    }
+    ul{padding-left:0;}
+    .pager_box{margin-top:30px;}
+  </style>
 </head>
 <body>
-ProductList
-
-<div class="container">
-
-    <table class="table table-hover">
-        <thead>
-        <tr>
+<div id="wrap">
+  <div class="manage_content">
+    <div class="left_box">
+      <th:block th:replace="include/adminHeader :: adminHeader"></th:block>
+    </div>
+    <script>
+      $('.slide_box .box > ul > li > a').on('click', function(){
+        $(this).next().slideToggle();
+      })
+    </script>
+    <div class="right_box">
+      <div class="logout_box">
+        <a href="javscript:;">로그아웃</a>
+      </div>
+      <div class="path_box">
+        <ul>
+          <li>상품관리</li>
+          <li>상품목록</li>
+        </ul>
+      </div>
+      <div class="content_box">
+        <table>
+          <colgroup>
+            <col style="width:10%">
+            <col style="width:20%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:10%">
+            <col style="width:20%">
+            <col style="width:10%">
+          </colgroup>
+          <tr>
             <th scope="col">상품번호</th>
             <th scope="col">상품이름</th>
             <th scope="col">상품할인가</th>
             <th scope="col">상품수량</th>
             <th scope="col">상품상태</th>
-            <th scope="col">수정</th>
-            <th scope="col">상품상태변경</th>
+            <th scope="col">상태변경</th>
             <th scope="col">수량수정</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="product: ${productList}">
+            <th scope="col">수정</th>
+
+          </tr>
+          <tr th:each="product: ${productList}">
             <td th:text="${product.productId}"></td>
-            <td><a th:href="@{|/product/detail/${product.productId}|}" th:text="${product.productName}">이름</a></td>
-            <td th:text="${product.productPrice}"></td>
+            <td><a th:href="@{|/product/detail/${product.productId}|}" th:text="${product.productName}"></a></td>
+            <td th:text="'$'+${product.productPrice}"></td>
             <td th:text="${product.productQuantity}"></td>
             <td th:text="${product.productStatus}"></td>
-            <td th:href="@{|/product/update/${product.productId}|}" th:text="수정"></td>
             <td th:if="${product.productStatus.toString().equals('판매중')}">
-                <a th:href="@{|/product/statusClose/${product.productId}|}" th:text="판매중지"></a>
+              <a th:href="@{|/product/statusClose/${product.productId}|}" th:text="판매중지"></a>
             </td>
             <td th:if="${product.productStatus.toString().equals('판매중지')}">
-                <a th:href="@{|/product/statusOpen/${product.productId}|}" th:text="판매"></a>
+              <a th:href="@{|/product/statusOpen/${product.productId}|}" th:text="판매"></a>
             </td>
             <td th:if="${product.productStatus.toString().equals('품절')}">
-                <span>수량추가 필요</span>
+              <span>수량추가 필요</span>
             </td>
             <td>
-                <form action="/product/changeQuantity" method="post" >
-                    <input type="hidden" name="productId" th:value="${product.productId}">
-                    <input name="productQuantity" style="width: 70px" th:value="${product.productQuantity}"
-                           type="text">
-                    <input type="submit" value="수량변경">
-                </form>
+              <form action="/product/changeQuantity" method="post" >
+                <input type="hidden" name="productId" th:value="${product.productId}">
+                <input name="productQuantity" style="width: 70px" th:value="${product.productQuantity}"
+                       type="text">
+                <input type="submit" value="수량변경">
+              </form>
             </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+            <td><a th:href="@{|/product/update/${product.productId}|}" th:text="수정"></a></td>
+          </tr>
+        </table>
 
-<div th:if="${startPage}" class="container">
-    <ul class="pagination justify-content-center" th:if="${sort.toString().equals('all')}">
-        <li class="page-item">
-            <a class="page-link" th:href="@{/product/(page=1)}">
+        <div th:if="${startPage}" class="container pager_box">
+          <ul class="pagination justify-content-center" th:if="${sort.toString().equals('all')}">
+            <li class="page-item">
+              <a class="page-link" th:href="@{/admin/productList/(page=1)}">
                 <span>First</span>
-            </a>
-        </li>
+              </a>
+            </li>
 
-        <li th:class="${productList.first} ? 'disabled'" class="page-item">
-            <a class="page-link"
-               th:href="${productList.first} ? '#' : @{/admin/productList/(page=${productList.number})}">
+            <li th:class="${productList.first} ? 'disabled'" class="page-item">
+              <a class="page-link"
+                 th:href="${productList.first} ? '#' : @{/admin/productList/(page=${productList.number})}">
                 <span><</span> <!-- < -->
-            </a>
-        </li>
+              </a>
+            </li>
 
-        <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
-            th:class="${page == productList.number + 1} ? 'page-item active'" class="page-item">
-            <a class="page-link" th:text="${page}" th:href="@{/admin/productList/(page=${page})}"></a>
-        </li>
+            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                th:class="${page == productList.number + 1} ? 'page-item active'" class="page-item">
+              <a class="page-link" th:text="${page}" th:href="@{/admin/productList/(page=${page})}"></a>
+            </li>
 
-        <li th:class="${productList.last} ? 'disabled'">
-            <a class="page-link"
-               th:href="${productList.last} ? '#' : @{/admin/productList/(page=${productList.number + 2})}">
+            <li th:class="${productList.last} ? 'disabled'">
+              <a class="page-link"
+                 th:href="${productList.last} ? '#' : @{/admin/productList/(page=${productList.number + 2})}">
                 <span>&gt;</span>
-            </a>
-        </li>
+              </a>
+            </li>
 
-        <li class="page-item">
-            <a class="page-link" th:href="@{/admin/productList/(page=${productList.totalPages})}">
+            <li class="page-item">
+              <a class="page-link" th:href="@{/admin/productList/(page=${productList.totalPages})}">
                 <span>Last</span>
-            </a>
-        </li>
-    </ul>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
 </div>
 </body>
 

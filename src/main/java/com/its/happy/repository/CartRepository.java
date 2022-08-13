@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<CartEntity, Long> {
@@ -14,4 +15,6 @@ public interface CartRepository extends JpaRepository<CartEntity, Long> {
     void cartQty(@Param("productId") Long productId, @Param("memberId") Long memberId, @Param("cartQty") int cartQty);
 
     Optional<CartEntity> findByProductEntity_ProductIdAndMemberEntity_MemberId(Long productId, Long memberId);
+
+    List<CartEntity> findByMemberEntity_MemberId(Long memberId);
 }

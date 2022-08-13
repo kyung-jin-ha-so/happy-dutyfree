@@ -1,8 +1,10 @@
 package com.its.happy.service;
 
 import com.its.happy.dto.CartDTO;
+import com.its.happy.dto.OrderDTO;
 import com.its.happy.entity.CartEntity;
 import com.its.happy.entity.MemberEntity;
+import com.its.happy.entity.OrderEntity;
 import com.its.happy.entity.ProductEntity;
 import com.its.happy.repository.CartRepository;
 import com.its.happy.repository.MemberRepository;
@@ -86,27 +88,36 @@ public class CartService {
         cartRepository.deleteById(cartId);
     }
 
-    public Long save2(CartDTO cartDTO) {
+    public CartDTO save2(CartDTO cartDTO) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(cartDTO.getMemberId());
         Optional<ProductEntity> optionalProductEntity = productRepository.findById(cartDTO.getProductId());
-        int cartQty = cartDTO.getCartQty();
         if (optionalMemberEntity.isPresent()) {
             if (optionalProductEntity.isPresent()) {
                 MemberEntity memberEntity = optionalMemberEntity.get();
                 ProductEntity productEntity = optionalProductEntity.get();
-                return cartRepository.save(CartEntity.toCartEntity(cartQty, productEntity, memberEntity)).getCartId();
+                return CartDTO.toCartDTO(cartRepository.save(CartEntity.toCartEntity2(cartDTO, memberEntity, productEntity)));
             }
         }
         return null;
     }
 
-    public CartDTO findByCartId(Long cartId) {
-        Optional<CartEntity> optionalCartEntity = cartRepository.findById(cartId);
-        if(optionalCartEntity.isPresent()) {
+    public CartDTO findByProductIdMemberId(Long productId, Long memberId) {
+        Optional<CartEntity> optionalCartEntity = cartRepository.findByProductEntity_ProductIdAndMemberEntity_MemberId(productId, memberId);
+        if (optionalCartEntity.isPresent()) {
             CartEntity cartEntity = optionalCartEntity.get();
             return CartDTO.toCartDTO(cartEntity);
         }
         return null;
+    }
+
+    public List<CartDTO> findByMemberId(Long memberId) {
+        List<CartEntity> cartEntityList = cartRepository.findByMemberEntity_MemberId(memberId);
+        List<CartDTO> cartDTOList = new ArrayList<>();
+        for (CartEntity c :
+                cartEntityList) {
+            cartDTOList.add(CartDTO.toCartDTO(c));
+        }
+        return cartDTOList;
     }
 }
 

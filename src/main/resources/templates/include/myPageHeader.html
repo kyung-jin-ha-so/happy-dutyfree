@@ -1,0 +1,35 @@
+<th:block th:fragment="myPageHeader">
+<div id="wrap">
+    <div class="sub_visual_tab">
+        <ul>
+            <li><a href="/">홈</a></li>
+            <li><p>Mypage</p></li>
+        </ul>
+    </div>
+    <div class="sub_visual">
+        <div class="top_box">
+            <!-- img_size 100*70 -->
+            <div class="img_box">
+            </div>
+            <div class="txt_box">
+                <label style="font-weight: bold;font-size: xx-large; color: black" th:text="${member.memberName + '님'}"></label>
+                <label th:text="${member.memberTier}" style="font-size: large; font-weight: bold"></label>
+                <span>온라인멤버는 <b>다양한 </b>할인혜택을 받으실 수 있습니다.</span>
+            </div>
+        </div>
+        <div class="bot_box">
+            <ul>
+                <li>
+                    <p><b>할인쿠폰 </b></p>
+                    <span th:text="${#lists.size(member.couponMemberEntityList.?[couponStatus=='사용 전'])} + '개'"></span>
+                </li>
+                <li>
+                    <p><b>적립금 </b></p>
+                    <span th:text="${#numbers.formatInteger(#aggregates.sum(member.pointEntityList.![pointValue]), 1, 'COMMA')} + '원'"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</th:block>
+

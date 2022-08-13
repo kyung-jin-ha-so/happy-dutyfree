@@ -45,6 +45,15 @@ public class MemberService {
         return memberRepository.save(memberEntity).getMemberId();
     }
 
+    // 카카오 로그인시 회원가입으로 이동
+    public MemberDTO kakaoLogin(String membeerKakaoId) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberKakaoId(membeerKakaoId);
+        if (optionalMemberEntity.isPresent()) {
+            return MemberDTO.toMemberDTO(optionalMemberEntity.get());
+        } else {
+            return null;
+        }
+    }
 
 
     // 이메일 중복체크
@@ -190,65 +199,24 @@ public class MemberService {
         memberRepository.save(MemberEntity.toUpdate(memberDTO));
     }
 
-    // 카카오톡 로그인
-    public String getAccessToken(String authorize_code) {
-        String access_Token = "";
-        String refresh_Token = "";
-        String reqURL = "https://kauth.kakao.com/oauth/token";
 
-        try {
-            URL url = new URL(reqURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            //    POST 요청을 위해 기본값이 false인 setDoOutput을 true로
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-
-            //    POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
-
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-            StringBuilder sb = new StringBuilder();
-            sb.append("grant_type=authorization_code");
-            sb.append("&client_id="+"a88489884189e052d191c60987e50cab");
-            sb.append("&redirect_uri=http://localhost:8080/memeber/kakaoLogin");
-            sb.append("&code=" + authorize_code);
-            bw.write(sb.toString());
-            bw.flush();
-
-            //    결과 코드가 200이라면 성공
-            int responseCode = conn.getResponseCode();
-            System.out.println("responseCode : " + responseCode);
-
-            //    요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line = "";
-            String result = "";
-
-            while ((line = br.readLine()) != null) {
-                result += line;
+    // 비밀번호찾기 - 멤버아이디랑 해당 멤버아이디의 핸드폰번호가 일치하는지 확인
+    public String emailMobileCheck(String memberId, String memberMobile) {
+        //스트링으로 받은 멤버아이디 형변환
+        Long longMemberId = Long.valueOf(memberId);
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberMobile(memberMobile);
+        if(optionalMemberEntity.isPresent()){
+            Long result = optionalMemberEntity.get().getMemberId();
+            if(result == longMemberId){
+                return "OK";
+            }else {
+                return "NO";
             }
-            System.out.println("response body : " + result);
-
-            //    Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(result);
-
-            access_Token = element.getAsJsonObject().get("access_token").getAsString();
-            refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
-
-            System.out.println("access_token : " + access_Token);
-            System.out.println("refresh_token : " + refresh_Token);
-
-            br.close();
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }else {
+            return "NO";
         }
-
-        return access_Token;
     }
-
-
 }
 
 

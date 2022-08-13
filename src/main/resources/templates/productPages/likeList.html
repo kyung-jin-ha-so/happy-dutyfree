@@ -1,42 +1,91 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>나의 찜목록</title>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 </head>
 <body>
-<div class="right_box">
-    <ul>
-        <h2>관심상품</h2>
-        <li>관심 상품 등록 시점의 가격과 실제 주문 시의 가격이 상이할 수 있으므로 결제 전 장바구니에서 가격을 확인하여 주시기 바랍니다.
-        </li>
-    </ul>
-    <br>
-    <div class="container">
-        <div class="row" style="border: 1px solid black;">
-            <div class="col-12" align="center" style="background-color: lightgray; padding: 10px 10px; margin-bottom: 20px">
-                <h4>관심상품 리스트</h4>
+<th:block th:replace="include/header :: header"></th:block>
+<th:block th:replace="include/myPageHeader :: myPageHeader"></th:block>
+<!-- mypage content -->
+<div id="wrap">
+    <div class="mypage_content">
+        <div class="left_box">
+            <div class="tit">
+                <p>MY행복</p>
             </div>
-            <div class="col-3" th:each="like: ${likeList}">
-                <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"><img
-                        th:src="@{|/upload/${like.productEntity.productThumbnail}|}" width="100"
-                        height="100"
-                        alt=""></a></div>
-                <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
-                        th:text="${like.productEntity.productName}" style="font-size: large"></a></div>
-                <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"><strike
-                        th:text="${like.productEntity.productOriginalPrice}"></strike></a></div>
-                <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
-                        th:text="${like.productEntity.productPrice}"></a></div>
-                <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
-                        th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*like.productEntity.productPrice, 3, 'COMMA')} + '원'"></a>
+            <div class="box">
+                <p>나의 주문 내역</p>
+                <a href="/order/list">주문내역</a>
+            </div>
+            <div class="box">
+                <p>나의 쇼핑 혜택</p>
+                <a href="/coupon/myCouponList">할인쿠폰</a>
+                <a href="/point/findByMemberId">적립금</a>
+            </div>
+            <div class="box">
+                <p>나의 쇼핑 컨텐츠</p>
+                <a href="/product/likeList">찜상품</a>
+                <a th:href="@{|/review/findByMemberId/${session.loginId}|}">나의 후기</a>
+                <a href="javascript:;">1:1 채팅</a>
+            </div>
+            <div class="box">
+                <p>나의 회원 정보</p>
+                <a href="/member/passwordCheckDetail">기본 정보 관리</a>
+                <a href="/passport/save-form">여권 정보 관리</a>
+                <a href="/departure/">출국 정보 관리</a>
+                <a href="/member/passwordCheck">비밀번호 변경</a>
+                <a href="/member/passwordCheckDelete">회원 탈퇴</a>
+            </div>
+        </div>
+        <div class="right_box" style="width: 840px;">
+            <!-- 내용삽입자리 -->
+            <ul><br>
+                <h2>관심상품</h2>
+                <li>- 관심 상품 등록 시점의 가격과 실제 주문 시의 가격이 상이할 수 있으므로 결제 전 장바구니에서 가격을 확인하여 주시기 바랍니다.
+                </li>
+            </ul>
+            <br>
+            <div class="container">
+                <div class="row" style="border: 1px solid black;">
+                    <div class="col-12" align="center"
+                         style="background-color: lightgray; padding: 10px 10px; margin-bottom: 20px">
+                        <h4>관심상품 리스트</h4>
+                    </div>
+                    <div class="col-3" th:each="like: ${likeList}">
+                        <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"><img
+                                th:src="@{|/upload/${like.productEntity.productThumbnail}|}" width="100"
+                                height="100"
+                                alt=""></a></div>
+                        <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
+                                th:text="${like.productEntity.productName}" style="font-size: large"></a></div>
+                        <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"><strike
+                                th:text="${like.productEntity.productOriginalPrice}"></strike></a></div>
+                        <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
+                                th:text="${like.productEntity.productPrice}"></a></div>
+                        <div><a th:href="@{|/product/detail/${like.productEntity.productId}|}"
+                                th:text="${#numbers.formatInteger(exchangeRateDTO.exchangeRate*like.productEntity.productPrice, 3, 'COMMA')} + '원'"></a>
+                        </div>
+                        <input type="button" onclick="deleteWish()" value="찜 삭제" style="margin-bottom: 20px;">
+                    </div>
                 </div>
-                <input type="button" onclick="deleteWish()" value="찜 삭제" style="margin-bottom: 20px;">
             </div>
         </div>
     </div>
+    <!-- mypage content -->
+
+    <!-- footer -->
+
+    <!-- footer// -->
+</div>
+<!--html 인클루드시 사용 -->
+
 </div>
 </body>
 </html>

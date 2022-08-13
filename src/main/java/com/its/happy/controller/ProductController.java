@@ -31,13 +31,11 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final ReviewService reviewService;
     private final ProductFilesService productFilesService;
     private final CartService cartService;
-
     private final CategoryService categoryService;
-
     private final ExchangeRateService exchangeRateService;
+    private final MemberService memberService;
 
     @GetMapping("/save")
     public String saveForm(Model model) {
@@ -51,7 +49,7 @@ public class ProductController {
                        @ModelAttribute CategoryDTO categoryDTO) throws IOException {
         Long savedId = productService.save(productDTO, categoryDTO);
         productService.fileSave(savedId, multipartFileList);
-        return "index";
+        return "redirect:/";
     }
 
     @GetMapping("/")
@@ -172,7 +170,6 @@ public class ProductController {
         Long memberId = (Long) session.getAttribute("loginId");
         LikeDTO likeDTO = productService.findByLike(productId, memberId);
         model.addAttribute("like", likeDTO);
-        System.out.println("likeDTO = " + likeDTO);
         CartDTO cartDTO = cartService.findByCart(productId, memberId);
         model.addAttribute("cart", cartDTO);
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
@@ -210,7 +207,7 @@ public class ProductController {
                          @ModelAttribute CategoryDTO categoryDTO) throws IOException {
         Long updatedId = productService.update(productDTO, categoryDTO);
         productService.fileSave(updatedId, multipartFileList);
-        return "index";
+        return "redirect:/";
     }
 
     @PostMapping("/deleteFile")
@@ -221,13 +218,15 @@ public class ProductController {
     }
 
     @GetMapping("/search/")
-    public String search(@RequestParam("q") String q, @PageableDefault(page = 1) Pageable pageable, Model model, HttpSession session){
+    public String search(@RequestParam("q") String q,
+                         @RequestParam(name = "del", defaultValue = "nd",required = false) String del,
+                         @PageableDefault(page = 1) Pageable pageable, Model model, HttpSession session){
         Long loginId = (Long) session.getAttribute("loginId");
         Page<ProductDTO> productList = null;
         if(loginId != null){
-            productList = productService.findSearch(pageable, q, loginId);
+            productList = productService.findSearch(pageable, q, loginId, del);
         } else {
-            productList = productService.findSearchWithoutId(pageable,q);
+            productList = productService.findSearchWithoutId(pageable,q, del);
         }
         model.addAttribute("productList", productList);
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
@@ -236,6 +235,8 @@ public class ProductController {
         if(startPage == 0 || endPage == 0){
             startPage = 1; endPage = 1;
         }
+        long count = productService.countSearch(q);
+        model.addAttribute("count", count);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("q", q);
@@ -269,6 +270,8 @@ public class ProductController {
         model.addAttribute("likeList", likeDTOList);
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         model.addAttribute("exchangeRateDTO", exchangeRateDTO);
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member", memberDTO);
         return "/productPages/likeList";
     }
 

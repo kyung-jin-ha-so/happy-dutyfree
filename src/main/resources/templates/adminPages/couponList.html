@@ -1,78 +1,100 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
-    <style>
-        .container-01 {
-            width: 900px;
-        }
+  <title>경진하소</title>
+  <meta charset="UTF-8">
 
-        .container-02 {
-            width: 100%;
-            margin-top: 50px;
-        }
+  <script src="/js/jquery.js"></script>
 
-        .coupon-title {
-            font-weight: 600;
-            font-size: 1.3rem
-        }
+  <!-- css 연결 -->
+  <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all" />
 
-        table {
-            width: 100%;
-            border-top: 1px solid #444444;
-            border-collapse: collapse;
-        }
+  <!-- swiper 슬라이더 -->
+  <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all" />
+  <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+  <style>
 
-        th {
-            border-bottom: 1px solid #444444;
-            padding: 10px;
-            text-align: center;
-            background-color: lightgray;
-        }
+    table {
+      width: 100%;
+      border-top: 1px solid #444444;
+      border-collapse: collapse;
+    }
 
-        td {
-            border-bottom: 1px solid #444444;
-            padding: 10px;
-            text-align: center;
-        }
-    </style>
+    th {
+      border-bottom: 1px solid #444444;
+      padding: 10px;
+      text-align: center;
+      background-color: lightgray;
+      color:#222;
+    }
+
+    td {
+      border-bottom: 1px solid #444444;
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-<div class="container-01">
-    <div class="coupon-title">
-        <span>쿠폰 관리</span>
-        <span> > </span>
-        <span>쿠폰 목록 조회</span>
+<div id="wrap">
+  <div class="manage_content">
+    <div class="left_box">
+      <th:block th:replace="include/adminHeader :: adminHeader"></th:block>
     </div>
-    <div class="container-02">
+    <script>
+      $('.slide_box .box > ul > li > a').on('click', function(){
+        $(this).next().slideToggle();
+      })
+    </script>
+    <div class="right_box">
+      <div class="logout_box">
+        <a href="javscript:;">로그아웃</a>
+      </div>
+      <div class="path_box">
+        <ul>
+          <li>쿠폰 관리</li>
+          <li>쿠폰 목록 조회</li>
+        </ul>
+      </div>
+      <div class="content_box">
         <table>
-            <tr>
-                <th>쿠폰 번호</th>
-                <th>쿠폰 이름</th>
-                <th>쿠폰 금액</th>
-                <th>쿠폰 최소 금액</th>
-                <th>수정</th>
-                <th>삭제</th>
-            </tr>
-            <tr th:each="coupon: ${couponList}">
-                <td th:text="${coupon.couponId}"></td>
-                <td th:text="${coupon.couponName}"></td>
-                <td th:text="${#numbers.formatInteger(coupon.couponValue, 3, 'COMMA')}"></td>
-                <td th:text="${#numbers.formatInteger(coupon.couponMinimumValue, 3, 'COMMA')}"></td>
-                <td><input type="button" th:onclick="toDelete([[${coupon.couponId}]])" value="삭제"></td>
-                <td><input type="button" th:onclick="toUpdate([[${coupon.couponId}]])" value="수정"></td>
-            </tr>
+          <colgroup>
+            <col style="width:10%">
+            <col style="width:30%">
+            <col style="width:20%">
+            <col style="width:20%">
+            <col style="width:20%">
+          </colgroup>
+          <tr>
+            <th>쿠폰 번호</th>
+            <th>쿠폰 이름</th>
+            <th>쿠폰 금액</th>
+            <th>쿠폰 최소 금액</th>
+            <th>수정</th>
+          </tr>
+          <tr th:each="coupon: ${couponList}">
+            <td th:text="${coupon.couponId}"></td>
+            <td th:text="${coupon.couponName}"></td>
+            <td th:text="${#numbers.formatInteger(coupon.couponValue, 3, 'COMMA')}"></td>
+            <td th:text="${#numbers.formatInteger(coupon.couponMinimumValue, 3, 'COMMA')}"></td>
+            <td><input type="button" th:onclick="toUpdate([[${coupon.couponId}]])" value="수정"></td>
+          </tr>
         </table>
+      </div>
     </div>
+  </div>
 </div>
-<script th:inline="javascript" th:each="coupon: ${couponList}">
-    const toDelete = (couponId) => {
-        location.href = "/coupon/delete/" + couponId;
-        alert("삭제성공")
-    }
-    const toUpdate = (couponId) => {
-        location.href = "/coupon/update-form/" + couponId;
-    }
-</script>
 </body>
+<script th:inline="javascript" th:each="coupon: ${couponList}">
+  const toDelete = (couponId) => {
+    location.href = "/coupon/delete/" + couponId;
+    alert("삭제성공")
+  }
+  const toUpdate = (couponId) => {
+    location.href = "/coupon/update-form/" + couponId;
+  }
+</script>
 </html>

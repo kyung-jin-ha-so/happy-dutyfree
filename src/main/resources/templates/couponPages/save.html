@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
+    <!-- css 연결 -->
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
+
+    <!-- swiper 슬라이더 -->
+    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all"/>
+    <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <title>경진하소</title>
     <meta charset="UTF-8">
     <style>
         * {
@@ -126,60 +137,80 @@
     </style>
 </head>
 <body>
-<div class="save-title">
-    <span>쿠폰 관리</span>
-    <span> > </span>
-    <span>쿠폰 등록</span>
-</div>
-
-<form action="/coupon/save" method="post" enctype="multipart/form-data">
-    <div class="save-container">
-        <div class="head-title-wrap">
-            <h2 class="head-title">쿠폰 등록</h2>
+<div id="wrap">
+    <div class="manage_content">
+        <div class="left_box">
+            <th:block th:replace="include/adminHeader :: adminHeader"></th:block>
         </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">쿠폰 종류</span>
+        <script>
+            $('.slide_box .box > ul > li > a').on('click', function () {
+                $(this).next().slideToggle();
+            })
+        </script>
+        <div class="right_box">
+            <div class="logout_box">
+                <a href="javscript:;">로그아웃</a>
             </div>
-            <div class="input-wrap">
-                <select name="couponName" id="couponName">
-                    <option value=""> -- 선택 --</option>
-                    <option value="조건없음">조건없음</option>
-                    <option value="생일">생일</option>
-                    <option value="띠">띠</option>
-                </select><br>
+            <div class="path_box">
+                <ul>
+                    <li>쿠폰 관리</li>
+                    <li>쿠폰 등록</li>
+                </ul>
+            </div>
+            <div class="content_box">
+                <form action="/coupon/save" method="post" enctype="multipart/form-data">
+                    <div class="save-container">
+                        <div class="head-title-wrap">
+                            <h2 class="head-title">쿠폰 등록</h2>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">쿠폰 종류</span>
+                            </div>
+                            <div class="input-wrap">
+                                <select name="couponName" id="couponName">
+                                    <option value=""> -- 선택 --</option>
+                                    <option value="조건없음">조건없음</option>
+                                    <option value="생일">생일</option>
+                                    <option value="띠">띠</option>
+                                </select><br>
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">쿠폰 금액</span>
+                            </div>
+                            <div class="input-wrap">
+                                <div class="input-wrap">
+                                    <input type="text" name="couponValue">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">쿠폰 최소금액</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="couponMinimumValue">
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">쿠폰 사진</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="file" name="couponThumbnailFile">
+                            </div>
+                        </div>
+                        <input type="submit"
+                               style="width: 150px; background-color: lightgray; border-radius: 5px; margin-bottom: 30px;"
+                               value="제출">
+                        <br>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">쿠폰 금액</span>
-            </div>
-            <div class="input-wrap">
-                <div class="input-wrap">
-                    <input type="text" name="couponValue">
-                </div>
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">쿠폰 최소금액</span>
-            </div>
-            <div class="input-wrap">
-                <input type="text" name="couponMinimumValue">
-            </div>
-        </div>
-        <div class="save-item">
-            <div class="title-wrap">
-                <span class="title">쿠폰 사진</span>
-            </div>
-            <div class="input-wrap">
-                <input type="file" name="couponThumbnailFile">
-            </div>
-        </div>
-        <input type="submit" style="width: 150px; background-color: lightgray; border-radius: 5px; margin-bottom: 30px;"
-               value="제출">
-        <br>
     </div>
-</form>
+</div>
 </body>
 </html>

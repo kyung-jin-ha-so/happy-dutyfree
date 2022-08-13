@@ -193,21 +193,26 @@ public class ProductService {
         return null;
     }
 
-    public Page<ProductDTO> findSearch(Pageable pageable, String q, Long loginId) {
+    public Page<ProductDTO> findSearch(Pageable pageable, String q, Long loginId, String del) {
+        System.out.println(del);
         int page = pageReturn(pageable);
         Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), q);
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(loginId);
-        if(optionalMemberEntity.isPresent()){
-            MemberEntity memberEntity = optionalMemberEntity.get();
-            searchRepository.save(SearchEntity.toSaveEntity(q ,memberEntity));
+        if(del.equals("nd")){
+            if(optionalMemberEntity.isPresent()){
+                MemberEntity memberEntity = optionalMemberEntity.get();
+                searchRepository.save(SearchEntity.toSaveEntity(q ,memberEntity));
+            }
         }
         return pageEntityToDTO(productEntities);
     }
 
-    public Page<ProductDTO> findSearchWithoutId(Pageable pageable, String q) {
+    public Page<ProductDTO> findSearchWithoutId(Pageable pageable, String q, String del) {
         int page = pageReturn(pageable);
         Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), q);
+        if(del.equals("nd")){
         searchRepository.save(SearchEntity.toSaveWithOutMember(q));
+        }
         return pageEntityToDTO(productEntities);
     }
 
@@ -231,14 +236,16 @@ public class ProductService {
         }
         return null;
     }
+
     public LikeDTO findByLike(Long productId, Long memberId) {
         Optional<LikeEntity> optionalLikeEntity = likeRepository.findByProductEntity_ProductIdAndMemberEntity_MemberId(productId, memberId);
-        if(optionalLikeEntity.isPresent()){
+        if (optionalLikeEntity.isPresent()) {
             return LikeDTO.toLikeDTO(optionalLikeEntity.get());
         } else {
             return null;
         }
     }
+
     @Transactional
     public void deleteById(Long memberId, Long productId) {
         likeRepository.deleteByMemberEntity_MemberIdAndProductEntity_ProductId(memberId, productId);
@@ -247,10 +254,10 @@ public class ProductService {
     public List<LikeDTO> findByLikeList(Long memberId) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
         List<LikeDTO> likeDTOList = new ArrayList<>();
-        if(optionalMemberEntity.isPresent()){
+        if (optionalMemberEntity.isPresent()) {
             MemberEntity memberEntity = optionalMemberEntity.get();
             List<LikeEntity> likeEntityList = memberEntity.getLikeEntityList();
-            for(LikeEntity likeEntity : likeEntityList){
+            for (LikeEntity likeEntity : likeEntityList) {
                 likeDTOList.add(LikeDTO.toLikeDTO(likeEntity));
             }
         }
@@ -260,10 +267,11 @@ public class ProductService {
     //상품 할인율이 23퍼센트 이상인 목록 출력
     public List<ProductDTO> findMainAll() {
         List<ProductDTO> productDTOList = new ArrayList<>();
-        List<ProductEntity> productEntityList = productRepository.findByProductDiscountGreaterThanEqual(1L);
-        for (ProductEntity product: productEntityList) {
+        List<ProductEntity> productEntityList = productRepository.findByProductDiscountGreaterThanEqual(23L);
+        for (ProductEntity product : productEntityList) {
             productDTOList.add(ProductDTO.toDTO(product));
-        }return productDTOList;
+        }
+        return productDTOList;
     }
 
     public long count() {
@@ -279,6 +287,10 @@ public class ProductService {
         ProductEntity productEntity = productRepository.save(ProductEntity.toUpdateEntity(productDTO, productDTO.getCategoryEntity()));
         productRepository.save(productEntity);
 
+    }
+
+    public long countSearch(String q) {
+        return productRepository.countAllByProductNameContaining(q);
     }
 }
 

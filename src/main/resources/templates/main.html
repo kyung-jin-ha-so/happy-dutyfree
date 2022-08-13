@@ -4,91 +4,56 @@
     <title>경진하소</title>
     <meta charset="UTF-8">
 
-    <script src="/js/jquery.js"></script>
-
+    <script src="js/jquery.js"></script>
     <!-- css 연결 -->
-    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
-
+    <link rel="stylesheet" href="css/layout.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="css/main.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="css/basic.css" type="text/css" media="all"/>
     <!-- swiper 슬라이더 -->
-    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all"/>
-    <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="css/swiper.min.css" type="text/css" media="all"/>
+    <script src="js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <!--    최근검색어 클릭시 안보이게 하기 위함-->
+    <style>
+        .invisible {
+            display: none;
+        }
+        #recent_search{background:#fff; font-size:16px; color:#222; font-weight:700; padding:10px 10px;}
+        #recent_search #recommend_item{padding-top:10px}
+        #recent_search #recommend_item:after{content:''; display:block; clear:both;}
+        #recent_search .right{float:right}
+        #recent_search span.text{font-size:15px; color:#222; font-weight: 700}
+        #recent_search span.align-self-end{font-size:15px; color:#666; font-weight: 400}
+        #recent_search span.btn{cursor:pointer;}
+    </style>
 
 </head>
 <body>
 <div id="wrap">
-    <!-- header -->
-    <div id="haeder">
-        <div class="gnb">
-            <ul>
-                <li><a href="/member/login">로그인</a></li>
-                <li><a href="/member/save">회원가입</a></li>
-                <li><a href="/myPageMain">MY행복</a></li>
-                <li><a href="/cart/cartList">장바구니</a></li>
-                <li><a href="javascript:;">오늘의 환율 1$ = <b id="rate" th:text="${session.exchangeRate}"></b>원</a></li>
-            </ul>
-        </div>
-    </div>
-    <!-- header// -->
-
-    <div class="content">
-        <!-- header 아래 검색창 -->
-        <div class="search">
-            <div class="left_box">
-                <!-- logo img_size 133 * 57 -->
-                <div class="logo">
-                    <a href="/">
-                         <img src="/img/logo.jpg" alt="">
-                    </a>
-                </div>
-                <div class="category">
-                    <a href="javascript:;">카테고리</a>
-                    <ul class="depth02">
-                        <li th:each="category: ${categoryList}">
-                            <a th:href="@{|/product/${category.categoryId}/|}" th:utext="${category.categoryName}"></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="center_box">
-                <form action="/product/search/" method="get" name="searchForm" id="searchForm">
-                    <div class="input_box">
-                        <input type="text" name="q" id="q" placeholder="상품명 검색">
-                        <a href="#"><img src="/img/input_click.png" id="search" alt=""></a>
-                    </div>
-                </form>
-            </div>
-            <!-- img_size 225 * 80 -->
-            <div class="right_box">
-                <a href="javascript:;">
-                    <!-- <img src="" alt=""> -->
-                </a>
-            </div>
-        </div>
+    <th:block th:replace="include/header :: header"></th:block>
         <!-- header 아래 검색창 -->
         <!-- main_visual -->
         <div class="main_visual">
             <ul class="swiper-wrapper">
-                <!-- img_size 1400*500 -->
+                <!-- img_size 1200*500 -->
                 <li class="swiper-slide">
-                    <!-- <img src="" alt=""> -->
+                     <img src="/img/every.jpg" alt="">
                 </li>
                 <li class="swiper-slide">
-                    <!-- <img src="" alt=""> -->
+                    <img src="/img/tiger.jpg" alt="">
                 </li>
                 <li class="swiper-slide">
-                    <!-- <img src="" alt=""> -->
+                    <img src="/img/birth.jpg" alt="">
                 </li>
             </ul>
         </div>
-        <!-- 상품창 -->
-        <div class="prod_list">
+<!--         상품창-->
+        <div class="prod_list" style="overflow:hidden;">
             <div class="main_tit">
-                <p>상품목록</p>
+                <p>오늘의 상품</p>
             </div>
-            <ul>
-                <li th:each="product: ${productList}">
+            <ul class="swiper-wrapper">
+                <li th:each="product: ${productList}" class="swiper-slide">
                     <a th:href="@{|/product/detail/${product.productId}|}">
                         <!-- img_size 310*200 -->
                         <div class="img_box">
@@ -99,60 +64,48 @@
                             <p class="desc" th:text="${product.productName}"></p>
                             <p class="tit"><STRIKE th:text="|$${product.productOriginalPrice}|"></STRIKE></p>
                             <p class="txt" th:text="|$${product.productPrice}|"></p>
-                            <p class="text">(49,844원)</p>
+                            <p class="text"
+                               th:text="'(' + ${#numbers.formatInteger(session.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></p>
                         </div>
                     </a>
                 </li>
             </ul>
         </div>
+        <script>
+            var main_prod = new Swiper('.prod_list', {
+//					loop:true,
+                //오늘의상품이 4개 이상일시 아래 주석 풀어주세요
+                autoplay: {   // 슬라이드 자동
+                    delay: 4000,  // 멈춰있는시간
+                    disableOnInteraction: false, // 마우스로 드래그 해도 계속해서 슬라이드 진행
+                },
+                // loop:true,
+                slidesPerView: 4,
+                spaceBetween: 50,
+            });
+        </script>
         <!-- 상품창 -->
         <!-- main_visual -->
-
-
         <!-- footer -->
-
         <!-- footer// -->
     </div>
-    <!--html 인클루드시 사용 -->
 </div>
+<th:block th:replace="include/footer :: footer"></th:block>
 </body>
-<script>
-    var main_visual_sldie = new Swiper('.main_visual', {
-//					loop:true,
+<script th:inline="javascript">
+    var main_visual_slide = new Swiper('.main_visual', {
+        // loop:true,
         autoplay: {   // 슬라이드 자동
             delay: 6000,  // 멈춰있는시간
             disableOnInteraction: false, // 마우스로 드래그 해도 계속해서 슬라이드 진행
         },
     });
 
+
     $("#search").click(function () {
         $("#searchForm").submit();
     });
 
-    $(document).ready(function () {
 
-        const exchangeRate = document.getElementById("rate");
-        let exchange = "";
-
-        var myHeaders = new Headers();
-        myHeaders.append("apikey", "");
-
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow',
-            headers: myHeaders
-        };
-
-        fetch("https://api.apilayer.com/exchangerates_data/convert?to=KRW&from=USD&amount=1", requestOptions)
-            .then(response => {
-                return response.json();
-            })
-            .then(json => {
-                exchangeRate.innerHTML = json["result"].toFixed(2);
-                exchange = json["result"];
-            })
-            .catch(error => console.log('error', error));
-    });
 </script>
-
 </html>

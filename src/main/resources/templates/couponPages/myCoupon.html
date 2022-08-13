@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <title>내 쿠폰 조회</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 
-    <title>내쿠폰 조회</title>
     <style>
         .container-01 {
             width: 900px;
@@ -39,51 +39,73 @@
     </style>
 </head>
 <body>
-<div class="container-01">
-    <div class="container-02">
-        <h1>할인쿠폰</h1>
-    </div>
-    <div class="container-03">
-        <ul>
-            <li>하나의 주문 건에 하나의 쿠폰만 사용가능합니다.</li>
-            <li>결제 시 쿠폰을 적용하지 않으면 할인이 적용되지 않습니다.</li>
-            <br>
-            <div th:each="coupon: ${myCoupon}">
-                <div class="coupon_info_td">
-                    <input type="hidden" class="individual_totalCoupon_input"
-                           th:value="${#lists.size('coupon')}">
-                </div>
+<th:block th:replace="include/header :: header"></th:block>
+<th:block th:replace="include/myPageHeader :: myPageHeader"></th:block>
+<!-- mypage content -->
+<div id="wrap">
+    <div class="mypage_content">
+        <div class="left_box">
+            <div class="tit">
+                <p>MY행복</p>
             </div>
-        </ul>
-        <span class="total"></span>
+            <div class="box">
+                <p>나의 주문 내역</p>
+                <a href="/order/list">주문내역</a>
+            </div>
+            <div class="box">
+                <p>나의 쇼핑 혜택</p>
+                <a href="/coupon/myCouponList">할인쿠폰</a>
+                <a href="/point/findByMemberId">적립금</a>
+            </div>
+            <div class="box">
+                <p>나의 쇼핑 컨텐츠</p>
+                <a href="/product/likeList">찜상품</a>
+                <a th:href="@{|/review/findByMemberId/${session.loginId}|}">나의 후기</a>
+                <a href="javascript:;">1:1 채팅</a>
+            </div>
+            <div class="box">
+                <p>나의 회원 정보</p>
+                <a href="/member/passwordCheckDetail">기본 정보 관리</a>
+                <a href="/passport/save-form">여권 정보 관리</a>
+                <a href="/departure/">출국 정보 관리</a>
+                <a href="/member/passwordCheck">비밀번호 변경</a>
+                <a href="/member/passwordCheckDelete">회원 탈퇴</a>
+            </div>
+        </div>
+        <div class="right_box" style="width: 840px;">
+            <div class="container-01">
+                <div class="container-02">
+                    <br>
+                    <h1>할인쿠폰</h1>
+                </div>
+                <div class="container-03">
+                    <ul><br>
+                        <li>하나의 주문 건에 하나의 쿠폰만 사용가능합니다.</li>
+                        <li>결제 시 쿠폰을 적용하지 않으면 할인이 적용되지 않습니다.</li><br>
+                        <li th:text="${member.memberName}+'님께서 보유하신 할인 쿠폰은 총 '+${#lists.size(member.couponMemberEntityList.?[couponStatus=='사용 전'])} + '개 입니다.'"></li>
+                        <br>
+                    </ul>
+                    <span class="total"></span>
+                </div>
+                <table>
+                    <tr>
+                        <th>쿠폰명</th>
+                        <th>할인액</th>
+                        <th>최소금액</th>
+                        <th>쿠폰상태</th>
+                    </tr>
+                    <div th:each="coupon: ${myCoupon}">
+                        <tr th:if="${coupon.couponStatus == '사용 전'}">
+                            <td th:text="${coupon.couponEntity.couponName}"></td>
+                            <td th:text="${coupon.couponEntity.couponValue}"></td>
+                            <td th:text="${coupon.couponEntity.couponMinimumValue}"></td>
+                            <td th:text="${coupon.couponStatus}"></td>
+                        </tr>
+                    </div>
+                </table>
+            </div>
+        </div>
     </div>
-    <table>
-        <tr>
-            <th>쿠폰명</th>
-            <th>할인액</th>
-            <th>최소금액</th>
-            <th>쿠폰상태</th>
-        </tr>
-        <tr th:each="coupon: ${myCoupon}">
-            <td th:text="${coupon.couponEntity.couponName}"></td>
-            <td th:text="${coupon.couponEntity.couponValue}"></td>
-            <td th:text="${coupon.couponEntity.couponMinimumValue}"></td>
-            <td th:text="${coupon.couponStatus}"></td>
-        </tr>
-    </table>
 </div>
 </body>
-<script th:inline="javascript" th:each="coupon: ${myCoupon}">
-    const loginId =[[${session.loginId}]];
-    $(document).ready(function () {
-        totalInfo();
-    });
-    function totalInfo() {
-        let totalPrice = 0;
-        $(".coupon_info_td").each(function (index, element) {
-            totalPrice += parseFloat($(element).find(".individual_totalCoupon_input").val());
-        });
-        $(".total").text(loginId+"님께서 보유하신 할인 쿠폰은 총 " + totalPrice.toLocaleString() +"개 입니다.");
-    }
-</script>
 </html>

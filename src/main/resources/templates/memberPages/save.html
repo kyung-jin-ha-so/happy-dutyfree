@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>MemberSave</title>
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
     <style>
         .mt-10{margin-top:10px;}
         a{outline:0px;}
@@ -16,19 +17,19 @@
         input.text01{width:274px;}
         input.text02{width:198px;}
         input[type="submit"]{background:#222; color:#fff; margin-top:30px; height:50px; padding:0;}
-        a{margin-left:10px; display:inline-block; height:40px; line-height:40px; text-align:center; width:60px; background:#222; color:#fff; font-size:16px; letter-spacing:-0.04em; font-weight:400;}
+        a.black02{margin-left:10px; display:inline-block; height:40px; line-height:40px; text-align:center; width:60px; background:#222; color:#fff; font-size:16px; letter-spacing:-0.04em; font-weight:400; font-size:12px;}
         p{margin:0 0 10px 0; padding-top:20px;}
 
-        #wrap{width:350px; margin:50px auto 150px;}
+        #wrap02{width:350px; margin:50px auto 150px;}
         .tit{ text-align:center; padding-bottom:30px;}
         .tit a{display:block;}
         .tit a img{max-width:100%;}
         .tit p{font-size:32px; letter-spacing:-0,045em; color:#222; font-weight:bold; padding-top:20px;}
-
     </style>
 </head>
 <body>
-<div id="wrap">
+<th:block th:replace="include/header :: header"></th:block>
+<div id="wrap02">
     <div class="tit">
         <a href="/" class="logo">
             <img src="" alt="">
@@ -38,7 +39,7 @@
     <form action="/member/save" method="post" >
         <p>이메일계정</p>
         <input type="text" name="memberEmail" placeholder="이메일계정" id="email" class="text01">
-        <a href="javascript:;" onclick="emailDuplicateCheck()">중복확인</a>
+        <a href="javascript:;" onclick="emailDuplicateCheck()" class="black02">중복확인</a>
         <div id="emailResult"></div>
         <p>비밀번호</p>
         <input type="password" name="memberPassword" placeholder="비밀번호">
@@ -48,10 +49,10 @@
         <input type="text" name="memberName" placeholder="이름">
         <p>전화번호</p>
         <input type="text" name="memberMobile" id="memberMobile" placeholder="숫자만입력해주세요" class="text02">
-        <a href="javascript:;" onclick="mobileDuplicateCheck()">중복확인</a>
-        <a href="javascript:;" id="sendSMS">인증하기</a>
+        <a href="javascript:;" class="black02" onclick="mobileDuplicateCheck()">중복확인</a>
+        <a href="javascript:;" class="black02" id="sendSMS">인증하기</a>
         <input type="text" id="userNum" placeholder="인증번호입력" class="text01 mt-10">
-        <a href="javascript:;" id="mobileCk" class="mt-10">확인</a>
+        <a href="javascript:;" id="mobileCk" class="mt-10 black02">확인</a>
         <p>생년월일</p>
         <select id="year">
             <option>연</option>
@@ -66,7 +67,6 @@
         <input type="submit" value="회원가입">
     </form>
 </div>
-
 </body>
 <script th:inline="javascript">
     // 연월일 select 옵션 만들기
