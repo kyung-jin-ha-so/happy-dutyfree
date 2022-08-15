@@ -101,8 +101,6 @@ public class MemberController {
     }
 
 
-
-
     // 로그아웃 구현
     @GetMapping("/logout")
     public String logout(HttpSession session){
@@ -137,8 +135,6 @@ public class MemberController {
         String result = memberService.emailMobileCheck(memberId,memberMobile);
         return result;
     }
-
-
 
     // 핸드폰 인증 완료시 해당 전화번호를 가지고 있는 이메일 보여주기
     @GetMapping("/findEmailResult")

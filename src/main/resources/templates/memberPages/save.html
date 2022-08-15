@@ -42,15 +42,19 @@
         <a href="javascript:;" onclick="emailDuplicateCheck()" class="black02">중복확인</a>
         <div id="emailResult"></div>
         <p>비밀번호</p>
-        <input type="password" name="memberPassword" placeholder="비밀번호">
+        <input type="password" name="memberPassword" id="pw" placeholder="비밀번호" onblur="pw_check()">
+        <div id="pw_check_result"></div>
         <p>비밀번호확인</p>
-        <input type="password" placeholder="비밀번호확인">
+        <input type="password" id="pw_reaffirming" onblur="pw_check2()" placeholder="비밀번호 확인">
+        <div id="pw_reaffirming_result"></div>
         <p>이름</p>
-        <input type="text" name="memberName" placeholder="이름">
+        <input type="text" name="memberName" id="name" placeholder="이름" onblur="name_check()">
+        <div id="name_result"></div>
         <p>전화번호</p>
-        <input type="text" name="memberMobile" id="memberMobile" placeholder="숫자만입력해주세요" class="text02">
+        <input type="text" name="memberMobile" id="memberMobile" onblur="mobile_check()" class="text02">
         <a href="javascript:;" class="black02" onclick="mobileDuplicateCheck()">중복확인</a>
         <a href="javascript:;" class="black02" id="sendSMS">인증하기</a>
+        <div id="mobile_result"></div>
         <input type="text" id="userNum" placeholder="인증번호입력" class="text01 mt-10">
         <a href="javascript:;" id="mobileCk" class="mt-10 black02">확인</a>
         <p>생년월일</p>
@@ -180,5 +184,73 @@
         });
 
     });
+
+    // 비밀번호 정규식
+    function pw_check(){
+        let pw_check = document.getElementById("pw").value;
+        let result = document.getElementById("pw_check_result")
+        /* 8~16자 영문 대 소문자, 숫자, 특수문자(-,_,!)를 사용하세요.
+        영어 소문자 + 숫자는 필수 */
+        const exp = /^(?=.*[a-z])(?=.*\d)[a-z\dA-Z-_!]{8,16}$/;
+        if(pw_check.match(exp)){
+            result.innerHTML = "사용 가능한 비밀번호입니다"
+            result.style.color = "green"
+        }else if(pw_check.length == 0){
+            result.innerHTML = "필수정보 입니다"
+            result.style.color = "red"
+        }else{
+            result.innerHTML = "8~16자 영문 대 소문자, 숫자, 특수문자(-,_,!)를 사용하세요"
+            result.style.color = "red"
+        }
+    }
+
+    // 비밀번호 재확인
+    function pw_check2(){
+        let password = document.getElementById("pw").value;
+        let pw_check = document.getElementById("pw_reaffirming").value;
+        let pw_reaffirming_result = document.getElementById("pw_reaffirming_result");
+        if(pw_check.length == 0){
+            pw_reaffirming_result.innerHTML = "필수정보입니다"
+            pw_reaffirming_result.style.color = "red";
+        }else if(password == pw_check){
+            pw_reaffirming_result.innerHTML = "비밀번호가 일치합니다";
+            pw_reaffirming_result.style.color = "green";
+
+        }else{
+            pw_reaffirming_result.innerHTML = "비밀번호가 일치하지 않습니다"
+            pw_reaffirming_result.style.color = "red";
+        }
+    }
+
+    // 이름 정규식
+    function name_check(){
+        let name_check = document.getElementById("name").value;
+        let result = document.getElementById("name_result");
+        const exp = /^[a-z A-Z 가-힣]{2,16}$/;
+        if(name_check.length == 0){
+            result.innerHTML = "필수정보 입니다"
+            result.style.color = "red"
+        }else if(name_check.match(exp)){
+            result.innerHTML = "완벽한 이름 입니다!"
+            result.style.color = "green"
+        }else{
+            result.innerHTML = "영어와 한글만 사용 가능합니다"
+            result.style.color = "red"
+        }
+    }
+
+    //핸드폰 정규식체크
+    function mobile_check(){
+        let mobile_check = document.getElementById("memberMobile").value;
+        let result = document.getElementById("mobile_result");
+        let exp = /^\d{3}-\d{3,4}-\d{4}$/;
+        if(mobile_check.match(exp)){
+            result.innerHTML = "중복확인을 진행해주세요!";
+            result.style.color = "green";
+        }else{
+            result.innerHTML = "전화번호를 확인해주세요";
+            result.style.color = "red";
+        }
+    }
 </script>
 </html>

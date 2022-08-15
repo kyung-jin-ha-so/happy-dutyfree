@@ -1,24 +1,212 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <head>
+    <!-- css 연결 -->
+    <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
+
+    <!-- swiper 슬라이더 -->
+    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="all"/>
+    <script src="/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <title>경진하소</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .save-container {
+            max-width: 800px;
+            text-align: center;
+            min-width: 800px;
+            border: 1px solid #e5e5e5;
+            background-color: rgba(107, 201, 170, 0.3);
+        }
+
+        .save-container .head-title-wrap {
+            margin-bottom: 3rem;
+        }
+
+        .save-container > div:not(:last-child) {
+            margin-bottom: 1rem;
+        }
+
+        .save-container .head-title-wrap .head-title {
+            font-size: 1.5rem;
+            font-family: inherit;
+            color: #212529;
+            position: relative;
+            width: 700px;
+            font-weight: 600;
+        }
+
+        .save-container .save-item {
+            display: flex;
+            flex-direction: row;
+            padding: 0 2rem;
+        }
+
+        .save-container .save-item .title-wrap {
+            padding-top: 8px;
+            width: 200px;
+        }
+
+        .save-container .save-item span {
+            font-size: 1.125rem;
+            position: relative;
+            font-family: inherit;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+            font-weight: 600;
+        }
+
+        .save-container .save-item input {
+            border: 1px solid #ccc;
+            outline: none;
+            background-color: #fff;
+            color: #666;
+            width: 25rem;
+            height: 40px;
+            padding: 2px 10px;
+            font-size: 0.833rem;
+        }
+
+        .save-container .save-item input[type=file] {
+            padding: 6px 10px;
+        }
+
+        .save-container .save-item .select-input {
+            border: 1px solid #ccc;
+            outline: none;
+            background-color: #fff;
+            color: #666;
+            width: 25rem;
+            height: 40px;
+            padding: 2px 10px;
+            font-size: 0.833rem;
+        }
+
+        .save-container .save-item .textarea-input {
+            border: 1px solid #ccc;
+            outline: none;
+            background-color: #fff;
+            color: #666;
+            width: 25rem;
+            height: 150px;
+            padding: 10px;
+            font-size: 0.833rem;
+            resize: none;
+            word-break: keep-all;
+        }
+
+        .save-container .save-item .title-wrap {
+            padding-right: 5rem;
+        }
+
+        .save-container .btn-wrap {
+            width: 700px;
+            margin-bottom: 20px
+        }
+
+        .save-container .btn-wrap .save-btn {
+            border: 1px solid #20c997;
+            outline: none;
+            background-color: #fff;
+            color: #20c997;
+            font-size: 1.125rem;
+            width: 10rem;
+            padding: 8px 20px;
+            height: 50px;
+        }
+
+        .save-container .btn-wrap .save-btn:hover {
+            border: none;
+            background-color: #20c997;
+            color: #fff;
+            transition: 0.3s ease;
+        }
+
+        .save-title {
+            font-weight: 600;
+            font-size: 1.3rem
+        }
+    </style>
 </head>
 <body>
-<h2>쿠폰수정</h2>
-<form action="/coupon/update" method="post" enctype="multipart/form-data">
-    <input type="text" name="couponId" th:value="${coupon.couponId}">
-    <input type="text" name="couponThumbnail" th:value="${coupon.couponThumbnail}"><br>
-    쿠폰종류
-    <select name="couponName" id="couponName">
-        <option value=""> -- 선택 --</option>
-        <option value="조건없음">조건없음</option>
-        <option value="생일">생일</option>
-        <option value="띠">띠</option>
-    </select><br>
-    쿠폰 금액<input type="text" name="couponValue" th:value="${coupon.couponValue}"><br>
-    쿠폰 최소금액<input type="text" name="couponMinimumValue" th:value="${coupon.couponMinimumValue}"><br>
-    <input type="submit">
-</form>
+<div id="wrap">
+    <div class="manage_content">
+        <div class="left_box">
+            <th:block th:replace="include/adminHeader :: adminHeader"></th:block>
+        </div>
+        <script>
+            $('.slide_box .box > ul > li > a').on('click', function () {
+                $(this).next().slideToggle();
+            })
+        </script>
+        <div class="right_box">
+            <div class="logout_box">
+                <a href="javscript:;">로그아웃</a>
+            </div>
+            <div class="path_box">
+                <ul>
+                    <li>쿠폰 관리</li>
+                    <li>쿠폰 수정</li>
+                </ul>
+            </div>
+            <div class="content_box">
+                <form action="/coupon/update" method="post" enctype="multipart/form-data">
+                    <div class="save-container">
+                        <div class="head-title-wrap">
+                            <h2 class="head-title">쿠폰 수정</h2>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">쿠폰 종류</span>
+                            </div>
+                            <div class="input-wrap">
+                                <select name="couponName" id="couponName">
+                                    <option value=""> -- 선택 --</option>
+                                    <option value="조건없음">조건없음</option>
+                                    <option value="생일">생일</option>
+                                    <option value="띠">띠</option>
+                                </select><br>
+                            </div>
+                        </div>
+                        <input type="hidden" name="couponId" th:value="${coupon.couponId}">
+                        <input type="hidden" name="couponThumbnail" th:value="${coupon.couponThumbnail}"><br>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">쿠폰 금액</span>
+                            </div>
+                            <div class="input-wrap">
+                                <div class="input-wrap">
+                                    <input type="text" name="couponValue" th:value="${coupon.couponValue}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="save-item">
+                            <div class="title-wrap">
+                                <span class="title">쿠폰 최소금액</span>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" name="couponMinimumValue" th:value="${coupon.couponMinimumValue}">
+                            </div>
+                        </div>
+                        <input type="submit"
+                               style="width: 150px; background-color: lightgray; border-radius: 5px; margin-bottom: 30px;"
+                               value="제출">
+                        <br>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
 </html>
