@@ -76,10 +76,7 @@ public class DepartureController {
         System.out.println("flightDTO = " + flightDTO);
         String flight = ApiExplorer.getFlight(flightDTO);
         JSONObject jObject = new JSONObject(flight);
-        JSONObject  jObject2 = jObject.getJSONObject("response");
-        JSONObject  jObject3 = jObject2.getJSONObject("body");
-        JSONObject  jObject4 = jObject3.getJSONObject("items");
-        JSONArray jArray  = jObject4.getJSONArray("item");
+        JSONArray jArray = jObject.getJSONObject("response").getJSONObject("body").getJSONObject("items").getJSONArray("item");
         List<FlightDTO> flightDTOList = new ArrayList<>();
         for (int i = 0; i < jArray.length(); i++) {
             FlightDTO flightDTO1 = new FlightDTO();
@@ -89,7 +86,6 @@ public class DepartureController {
             flightDTO1.setInternationalNum(obj.getString("internationalNum"));
             flightDTO1.setInternationalTime(obj.getString("internationalTime"));
             flightDTO1.setAirlineKorean(obj.getString("airlineKorean"));
-            System.out.println("flightDTO1 = " + flightDTO1);
             flightDTOList.add(flightDTO1);
         }
         System.out.println("flightDTOList = " + flightDTOList);
@@ -98,5 +94,4 @@ public class DepartureController {
         }
         return flightDTOList;
     }
-
 }

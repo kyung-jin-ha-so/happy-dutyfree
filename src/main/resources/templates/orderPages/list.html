@@ -121,14 +121,14 @@
                 </tr>
                 <tr th:each="order: ${orderList}">
                     <td th:text="${order.orderId}"></td>
-                    <td th:text="${order.orderCreatedTime}"></td>
+                    <td th:text="${#temporals.format(order.orderCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                     <td>
                         <a style="color: #0d6efd; cursor: pointer; text-decoration: underline; font-size: small" th:if="${order.orderProductEntityList.size() == 1}"  th:href="@{|/order/detail/${order.orderId}|}" th:text="${order.orderProductEntityList.get(0).productName}"></a>
-                        <a style="color: #0d6efd; cursor: pointer; text-decoration: underline; font-size: small"  th:if="${order.orderProductEntityList.size() != 1}"th:href="@{|/order/detail/${order.orderId}|}" th:text="${order.orderProductEntityList.get(0).productName + '외' + (order.orderProductEntityList.size() - 1) + '개'}"></a>
+                        <a style="color: #0d6efd; cursor: pointer; text-decoration: underline; font-size: small" th:if="${order.orderProductEntityList.size() != 1}"th:href="@{|/order/detail/${order.orderId}|}" th:text="${order.orderProductEntityList.get(0).productName + '외' + (order.orderProductEntityList.size() - 1) + '개'}"></a>
                     </td>
-                    <td th:text="${'$' + order.orderUsd + '(' + order.orderWon + '원)'}"></td>
+                    <td th:text="${'$' + #numbers.formatInteger(order.orderUsd, 1, 'COMMA') + '(' + #numbers.formatInteger(order.orderWon, 1, 'COMMA') + '원)'}"></td>
                     <td th:text="${order.orderStatus}"></td>
-                    <td th:text="${order.orderDepartureEntity.orderDepartureDate}"></td>
+                    <td th:text="${#temporals.createDate(order.orderDepartureEntity.orderDepartureDate, 'yyyyMMdd')}"></td>
                     <td>
                         <a style="color: #0d6efd; cursor: pointer; text-decoration: underline" th:href="@{|/order/cancel/${order.orderId}|}">취소</a>
                     </td>
