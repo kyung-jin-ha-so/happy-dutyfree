@@ -3,7 +3,7 @@
 /* basic */
 #wrap{width:1200px; margin:0 auto; position:relative;}
 /* `main_visual` */
-.main_visual{height:500px; overflow:hidden;}
+.main_visual{height:450px; overflow:hidden;}
 .main_visual .swiper-wrapper{width:100%; height:100%}
 .main_visual .swiper-wrapper .swiper-slide{width:100%; height:100%;}
 .main_visual .swiper-wrapper .swiper-slide img{width:100%;}

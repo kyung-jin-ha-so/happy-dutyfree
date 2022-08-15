@@ -37,6 +37,7 @@ public class ProductController {
     private final ExchangeRateService exchangeRateService;
     private final MemberService memberService;
 
+    //상품 등록 페이지 이동
     @GetMapping("/save")
     public String saveForm(Model model) {
         List<CategoryDTO> categoryDTOList = categoryService.findAll();
@@ -44,6 +45,7 @@ public class ProductController {
         return "/productPages/save";
     }
 
+    //상품 등록
     @PostMapping("/save")
     public String save(@ModelAttribute ProductDTO productDTO, @RequestParam("productFile") List<MultipartFile> multipartFileList,
                        @ModelAttribute CategoryDTO categoryDTO) throws IOException {
@@ -52,29 +54,27 @@ public class ProductController {
         return "redirect:/";
     }
 
+    //상품 목록 (카테고리 x)
     @GetMapping("/")
     public String findAll(@PageableDefault(page = 1) Pageable pageable,
                           @RequestParam(defaultValue = "5", required = false) int pageLimit, Model model) {
         Page<ProductDTO> productList = productService.findAll(pageable, pageLimit);
         long count = productService.count();
-        model.addAttribute("productList", productList);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1)     < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
-        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
-        System.out.println("exchangeRateDTO = " + exchangeRateDTO);
+        model.addAttribute("productList", productList);
         model.addAttribute("count", count);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("sort", "all");
-        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "/productPages/list";
     }
 
+    //상품목록 (카테고리별)
     @GetMapping("/{categoryId}/")
     public String findByCategory(@PathVariable Long categoryId, @RequestParam(defaultValue = "2", required = false) int pageLimit,
                                  @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByCategory(pageable, categoryId, pageLimit);
-        model.addAttribute("productList", productList);
         long count = productService.countByCategoryId(categoryId);
         CategoryDTO categoryDTO = categoryService.findById(categoryId);
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
@@ -82,17 +82,18 @@ public class ProductController {
         if(startPage == 0 || endPage == 0){
             startPage = 1; endPage = 1;
         }
-        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
+        model.addAttribute("productList", productList);
         model.addAttribute("count", count);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("categoryDTO", categoryDTO);
         model.addAttribute("sort", "basic");
-        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
+        model.addAttribute("pageLimit", pageLimit);
         return "/productPages/list";
     }
 
+    //가격 높은 순으로 상품 목록 출력
     @GetMapping("/highPrice/{categoryId}/")
     public String findByHighPrice(@PathVariable Long categoryId, @RequestParam(defaultValue = "2", required = false) int pageLimit,
                                   @PageableDefault(page = 1) Pageable pageable, Model model) {
@@ -105,17 +106,16 @@ public class ProductController {
         if(startPage == 0 || endPage == 0){
             startPage = 1; endPage = 1;
         }
-        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         model.addAttribute("count", count);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("sort", "highPrice");
         model.addAttribute("categoryDTO", categoryDTO);
-        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
+        model.addAttribute("pageLimit", pageLimit);
         return "/productPages/list";
     }
-
+    //가격 낮은 순으로 상품 목록 출력
     @GetMapping("/lowPrice/{categoryId}/")
     public String findByLowPrice(@PathVariable Long categoryId,  @RequestParam(defaultValue = "2", required = false) int pageLimit,
                                  @PageableDefault(page = 1) Pageable pageable, Model model) {
@@ -128,17 +128,17 @@ public class ProductController {
         if(startPage == 0 || endPage == 0){
             startPage = 1; endPage = 1;
         }
-        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         model.addAttribute("count", count);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("categoryDTO", categoryDTO);
         model.addAttribute("sort", "lowPrice");
-        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
+        model.addAttribute("pageLimit", pageLimit);
         return "/productPages/list";
     }
 
+    // 별점 높은 순으로 상품 목록 출력
     @GetMapping("/star/{categoryId}/")
     public String findByStar(@PathVariable Long categoryId, @RequestParam(defaultValue = "2", required = false) int pageLimit,
                              @PageableDefault(page = 1) Pageable pageable, Model model) {
@@ -151,49 +151,51 @@ public class ProductController {
         if(startPage == 0 || endPage == 0){
             startPage = 1; endPage = 1;
         }
-        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         model.addAttribute("count", count);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("sort", "star");
-        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         model.addAttribute("categoryDTO", categoryDTO);
+        model.addAttribute("pageLimit", pageLimit);
         return "/productPages/list";
     }
 
+    // 상품 상세 페이지 보기
     @GetMapping("/detail/{productId}")
     public String findById(@PathVariable Long productId, Model model, HttpSession session) {
         ProductDTO productDTO = productService.findById(productId);
         model.addAttribute("product", productDTO);
-        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         Long memberId = (Long) session.getAttribute("loginId");
         LikeDTO likeDTO = productService.findByLike(productId, memberId);
         model.addAttribute("like", likeDTO);
         CartDTO cartDTO = cartService.findByCart(productId, memberId);
         model.addAttribute("cart", cartDTO);
-        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "/productPages/detail";
     }
 
+    //상품 상태 판매중지로 변경
     @GetMapping("/statusClose/{productId}")
     public String statusClose(@PathVariable Long productId) {
         productService.statusClose(productId);
         return "redirect:/admin/productList/";
     }
 
+    //상품 상태 판매중으로 변경
     @GetMapping("/statusOpen/{productId}")
     public String statusOpen(@PathVariable Long productId) {
         productService.statusOpen(productId);
         return "redirect:/admin/productList/";
     }
 
+    //상품 수량 변경
     @PostMapping("/changeQuantity")
     public String changeQuantity(@ModelAttribute ProductDTO productDTO) {
         productService.changeQuantity(productDTO);
         return "redirect:/admin/productList/";
     }
 
+    //상품 수정
     @GetMapping("/update/{productId}")
     public String updateForm(@PathVariable Long productId, Model model) {
         ProductDTO productDTO = productService.findById(productId);
@@ -202,6 +204,7 @@ public class ProductController {
         return "productPages/update";
     }
 
+    //상품 수정
     @PostMapping("/update")
     public String update(@ModelAttribute ProductDTO productDTO, @RequestParam("productFile") List<MultipartFile> multipartFileList,
                          @ModelAttribute CategoryDTO categoryDTO) throws IOException {
@@ -210,13 +213,14 @@ public class ProductController {
         return "redirect:/";
     }
 
+    //상품 상세페이지 이미지 삭제
     @PostMapping("/deleteFile")
     public @ResponseBody String deleteFile(@RequestParam("productFileId") Long productFileId) {
-        System.out.println("productFileId = " + productFileId);
         productFilesService.deleteById(productFileId);
         return "삭제";
     }
 
+    //상품 검색으로 목록 보여주기
     @GetMapping("/search/")
     public String search(@RequestParam("q") String q,
                          @RequestParam(name = "del", defaultValue = "nd",required = false) String del,
@@ -229,7 +233,6 @@ public class ProductController {
             productList = productService.findSearchWithoutId(pageable,q, del);
         }
         model.addAttribute("productList", productList);
-        ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / PagingConst.BLOCK_LIMIT))) - 1) * PagingConst.BLOCK_LIMIT + 1;
         int endPage = ((startPage + PagingConst.BLOCK_LIMIT - 1) < productList.getTotalPages()) ? startPage + PagingConst.BLOCK_LIMIT - 1 : productList.getTotalPages();
         if(startPage == 0 || endPage == 0){
@@ -241,9 +244,9 @@ public class ProductController {
         model.addAttribute("endPage", endPage);
         model.addAttribute("q", q);
         model.addAttribute("sort", "search");
-        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         return "/productPages/list";
     }
+
     //상품 찜하기
     @PostMapping("/like")
     public ResponseEntity like(@RequestParam("productId") Long productId,
@@ -277,7 +280,6 @@ public class ProductController {
 
     @PostMapping("/detailAjax")
     public @ResponseBody ProductDTO findByIdAjax(@RequestParam Long productId){
-        System.out.println("productId = " + productId);
         ProductDTO productDTO = productService.findById(productId);
         return productDTO;
     }

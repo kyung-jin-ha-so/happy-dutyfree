@@ -298,12 +298,12 @@
     <div class="col fw-bold text-lg-start fs-5 mt-5">
         <p>
             <STRIKE th:text="|$${product.productOriginalPrice} |"></STRIKE>
-            <STRIKE th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productOriginalPrice, 3, 'COMMA')} + '원)'"></STRIKE>
+            <STRIKE th:text="'(' + ${#numbers.formatInteger(session.exchangeRate*product.productOriginalPrice, 3, 'COMMA')} + '원)'"></STRIKE>
         </p>
 
         <p style="color: red">
             <span th:text="|$${product.productPrice}| "></span>
-            <span th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></span>
+            <span th:text="'(' + ${#numbers.formatInteger(session.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></span>
             <span th:text="${product.productDiscount} + '%↓'" style="font-size: small; align-content: end"></span>
         </p>
 
@@ -495,6 +495,7 @@
         }
     }
 
+    //상세내용 tap
     const tap1Info = () => {
         let tabCont = document.getElementById("tab_cont");
         let productDesc = [[${product.productDesc}]];
@@ -526,7 +527,7 @@
         tabCont.innerHTML = output;
 
     }
-
+    //상품후기 tap
     const tap2Info = () => {
         let tabCont = document.getElementById("tab_cont");
         let productStar = [[${product.productStar}]];
@@ -583,6 +584,7 @@
         tabCont.innerHTML = output;
     }
 
+    //AS및 환불 관련 tap
     const tap3Info = () => {
         let tabCont = document.getElementById("tab_cont");
 
@@ -613,7 +615,7 @@
             "        <div class=\"tab3_box\">\n" +
             "            <p style=\"font-weight: bolder\">웹사이트에서 신청 하기</p>\n" +
             "            <p>고객센터에서 교환/환불/AS 신청을 해 주세요</p>\n" +
-            "            <input type=\"button\" value=\"고객센터 바로가기\">\n" +
+            "            <input type=\"button\" onclick=\"kakaoChat()\" value=\"고객센터 바로가기\">\n" +
             // 1대 1 채팅 주소값 넣어주기
             "        </div>\n" +
             "        <p style=\"text-underline: black\">기억해주세요</p>\n" +
@@ -635,6 +637,10 @@
             "            </li>\n" +
             "        </ol>\n" +
             "    </div>"
+    }
+
+    const kakaoChat = () => {
+        window.open('https://open.kakao.com/o/sp1SU3ue', '_blank');
     }
 
 </script>

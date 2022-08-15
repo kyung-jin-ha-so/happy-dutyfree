@@ -139,8 +139,8 @@
                 <tr th:each="orderProduct: ${order.orderProductEntityList}">
                     <td th:text="${orderProduct.orderProductId}"></td>
                     <td>
-                        <span th:src="@{|/upload/${orderProduct.productEntity.productThumbnail}|}" width="100"
-                              height="100"></span>
+                        <img th:src="@{|/upload/${orderProduct.productEntity.productThumbnail}|}" width="100"
+                              height="100">
                         <a style="color: #0d6efd; cursor: pointer; text-decoration: underline; font-size: small"
                            th:text="${orderProduct.productName}"
                            th:href="@{|/product/detail/${orderProduct.productEntity.productId}|}"></a>
@@ -251,7 +251,7 @@
             </table>
 
             <h2>결제정보</h2>
-            <span th:text="${'결제금액: $' + order.orderUsd + '(' + order.orderWon + '원)'}" style="font-weight: bold; color: black;font-size: large"></span><br>
+            <span th:text="${'결제금액: $' + #numbers.formatInteger(order.orderUsd, 0, 'COMMA') + '(' + #numbers.formatInteger(order.orderWon, 1, 'COMMA') + '원)'}" style="font-weight: bold; color: black;font-size: large"></span><br>
             <div style="text-align: center">
                 <input type="button" th:onclick="location.href='/order/list';" value="목록" style="cursor: pointer" class="width25">
             </div>

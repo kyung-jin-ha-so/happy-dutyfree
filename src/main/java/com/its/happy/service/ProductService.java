@@ -93,28 +93,28 @@ public class ProductService {
     public Page<ProductDTO> findByCategory(Pageable pageable, Long categoryId, int pageLimit) {
         int page = pageReturn(pageable);
         PagingConst.PAGE_LIMIT = pageLimit;
-        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), categoryId);
+        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryIdAndProductStatusNotContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), categoryId, "판매중지");
         return pageEntityToDTO(productEntities);
     }
 
     public Page<ProductDTO> findByHighPrice(Pageable pageable, Long categoryId, int pageLimit) {
         int page = pageReturn(pageable);
         PagingConst.PAGE_LIMIT = pageLimit;
-        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productPrice")), categoryId);
+        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryIdAndProductStatusNotContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productPrice")), categoryId, "판매중지");
         return pageEntityToDTO(productEntities);
     }
 
     public Page<ProductDTO> findByLowPrice(Pageable pageable, Long categoryId, int pageLimit) {
         int page = pageReturn(pageable);
         PagingConst.PAGE_LIMIT = pageLimit;
-        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.ASC, "productPrice")), categoryId);
+        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryIdAndProductStatusNotContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.ASC, "productPrice")), categoryId, "판매중지");
         return pageEntityToDTO(productEntities);
     }
 
     public Page<ProductDTO> findByStar(Pageable pageable, Long categoryId, int pageLimit) {
         int page = pageReturn(pageable);
         PagingConst.PAGE_LIMIT = pageLimit;
-        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryId(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productStar")), categoryId);
+        Page<ProductEntity> productEntities = productRepository.findByCategoryEntityCategoryIdAndProductStatusNotContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productStar")), categoryId, "판매중지");
         return pageEntityToDTO(productEntities);
     }
 
@@ -196,7 +196,7 @@ public class ProductService {
     public Page<ProductDTO> findSearch(Pageable pageable, String q, Long loginId, String del) {
         System.out.println(del);
         int page = pageReturn(pageable);
-        Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), q);
+        Page<ProductEntity> productEntities = productRepository.findByProductNameContainingAndProductStatusIsNotContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), q, "판매중지");
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(loginId);
         if(del.equals("nd")){
             if(optionalMemberEntity.isPresent()){
@@ -209,7 +209,7 @@ public class ProductService {
 
     public Page<ProductDTO> findSearchWithoutId(Pageable pageable, String q, String del) {
         int page = pageReturn(pageable);
-        Page<ProductEntity> productEntities = productRepository.findByProductNameContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), q);
+        Page<ProductEntity> productEntities = productRepository.findByProductNameContainingAndProductStatusIsNotContaining(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "productId")), q, "판매중지");
         if(del.equals("nd")){
         searchRepository.save(SearchEntity.toSaveWithOutMember(q));
         }
@@ -267,7 +267,7 @@ public class ProductService {
     //상품 할인율이 23퍼센트 이상인 목록 출력
     public List<ProductDTO> findMainAll() {
         List<ProductDTO> productDTOList = new ArrayList<>();
-        List<ProductEntity> productEntityList = productRepository.findByProductDiscountGreaterThanEqual(23L);
+        List<ProductEntity> productEntityList = productRepository.findByProductDiscountGreaterThanEqualAndProductStatusNotContaining(23L, "판매중지");
         for (ProductEntity product : productEntityList) {
             productDTOList.add(ProductDTO.toDTO(product));
         }
@@ -279,7 +279,7 @@ public class ProductService {
     }
 
     public long countByCategoryId(Long categoryId) {
-        return productRepository.countByCategoryEntityCategoryId(categoryId);
+        return productRepository.countByCategoryEntityCategoryIdAndProductStatusIsNotContaining(categoryId, "판매중지");
     }
 
     public void updateQty(ProductDTO productDTO) {
@@ -290,7 +290,7 @@ public class ProductService {
     }
 
     public long countSearch(String q) {
-        return productRepository.countAllByProductNameContaining(q);
+        return productRepository.countAllByProductNameContainingAndProductStatusIsNotContaining(q, "판매중지");
     }
 }
 
