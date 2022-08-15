@@ -81,6 +81,6 @@ public class CouponController {
     @PostMapping("/update")
     public String update(@ModelAttribute CouponDTO couponDTO){
         couponService.update(couponDTO);
-        return "redirect:/coupon/couponList";
+        return "redirect:/admin/couponList";
     }
 }
