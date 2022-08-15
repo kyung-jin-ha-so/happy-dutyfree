@@ -88,10 +88,10 @@
                         <td th:text="${order.orderId}"></td>
                         <td th:text="${order.memberId}"></td>
                         <td th:text="${order.couponMemberId}"></td>
-                        <td th:text="${order.orderCreatedTime}"></td>
-                        <td th:text="${order.orderWon}"></td>
-                        <td th:text="${order.orderUsd}"></td>
-                        <td th:text="${order.pointUseValue}"></td>
+                        <td th:text="${#temporals.format(order.orderCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${#numbers.formatInteger(order.orderWon, 1, 'COMMA')} + '원'"></td>
+                        <td th:text="'$' + ${#numbers.formatInteger(order.orderUsd, 1, 'COMMA')}"></td>
+                        <td th:text="${order.pointUseValue} + '원'"></td>
                         <td><a style="color: #0d6efd" th:href="@{|/admin/orderProductList/${order.orderId}|}">조회</a></td>
                         <td th:text="${order.orderStatus}"></td>
                     </tr>
