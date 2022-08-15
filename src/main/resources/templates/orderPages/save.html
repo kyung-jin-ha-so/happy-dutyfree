@@ -512,7 +512,7 @@
         <td style="text-align: center">
             <p style="font-weight: bold; font-size: large; color: black">최종 결제금액</p>
             <span id="finalUsdText" style="font-weight: bold; font-size: xx-large; color: red"
-                  th:text="${'$' + #numbers.formatInteger(#aggregates.sum(cartList.![productPrice * cartQty]), 0, 'COMMA')}"></span><br>
+                  th:text="${'$' + #numbers.formatInteger(#aggregates.sum(cartList.![productPrice * cartQty]), 1, 'COMMA')}"></span><br>
             <input type="hidden" id="finalUsd" th:value="${#aggregates.sum(cartList.![productPrice * cartQty])}">
             <span id="finalWonText" style="font-size: large"
                   th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productPrice * cartQty]) * session.exchangeRate, 1, 'COMMA')} + '원'"></span><br>
@@ -829,7 +829,7 @@
             console.log("function 진입")
             if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
                 console.log("rsp.success" + rsp.success)
-                alert("완료" + rsp.imp_uid + rsp.merchant_uid)
+                alert("결제 완료")
                 save();
             } else {
                 alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
