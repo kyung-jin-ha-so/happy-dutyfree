@@ -94,8 +94,8 @@
                         </td>
                         <td>
             <span style="text-decoration: line-through; font-weight: bold"
-                  th:text="${orderProduct.productOriginalPrice}"></span><br>
-                            <span style="color: red; font-weight: bold" th:text="'$ ' + ${orderProduct.productPrice}"></span>
+                  th:text="${#numbers.formatInteger(orderProduct.productOriginalPrice, 1, 'COMMA')} + '원'"></span><br>
+                            <span style="color: red; font-weight: bold" th:text="'$' + ${#numbers.formatInteger(orderProduct.productPrice, 1, 'COMMA')}"></span>
                         </td>
                         <td th:text="${orderProduct.orderQty} + '개'"></td>
                         <td th:text="${orderProduct.productDiscount} + '%'"></td>

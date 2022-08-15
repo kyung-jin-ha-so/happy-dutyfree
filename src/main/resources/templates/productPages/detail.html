@@ -298,12 +298,12 @@
     <div class="col fw-bold text-lg-start fs-5 mt-5">
         <p>
             <STRIKE th:text="|$${product.productOriginalPrice} |"></STRIKE>
-            <STRIKE th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productOriginalPrice, 3, 'COMMA')} + '원)'"></STRIKE>
+            <STRIKE th:text="'(' + ${#numbers.formatInteger(session.exchangeRate*product.productOriginalPrice, 3, 'COMMA')} + '원)'"></STRIKE>
         </p>
 
         <p style="color: red">
             <span th:text="|$${product.productPrice}| "></span>
-            <span th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></span>
+            <span th:text="'(' + ${#numbers.formatInteger(session.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></span>
             <span th:text="${product.productDiscount} + '%↓'" style="font-size: small; align-content: end"></span>
         </p>
 
@@ -424,7 +424,7 @@
                 },
                 dataType: "text",
                 success: function (result) {
-                    alert("장바구니 담기")
+                    alert("장바구니 담기 성공!")
                     location.reload();
                 }, error: function () {
                     alert("장바구니 담기 실패")
@@ -495,6 +495,7 @@
         }
     }
 
+    //상세내용 tap
     const tap1Info = () => {
         let tabCont = document.getElementById("tab_cont");
         let productDesc = [[${product.productDesc}]];
@@ -526,7 +527,7 @@
         tabCont.innerHTML = output;
 
     }
-
+    //상품후기 tap
     const tap2Info = () => {
         let tabCont = document.getElementById("tab_cont");
         let productStar = [[${product.productStar}]];
@@ -583,6 +584,7 @@
         tabCont.innerHTML = output;
     }
 
+    //AS및 환불 관련 tap
     const tap3Info = () => {
         let tabCont = document.getElementById("tab_cont");
 

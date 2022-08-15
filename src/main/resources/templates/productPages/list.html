@@ -112,7 +112,7 @@
                     <h5 class="card-title" th:text="${product.productName}"></h5>
                     <span class="card-text"><STRIKE th:text="|$${product.productOriginalPrice}|"></STRIKE></span>
                     <span class="card-text" style="color: red" th:text="|$${product.productPrice}|"></span>
-                    <p class="card-text" style="color:dimgray;" th:text="'(' + ${#numbers.formatInteger(exchangeRateDTO.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></p>
+                    <p class="card-text" style="color:dimgray;" th:text="'(' + ${#numbers.formatInteger(session.exchangeRate*product.productPrice, 3, 'COMMA')} + '원)'"></p>
                 </div>
             </a>
         </div>
@@ -159,153 +159,153 @@
 
         <li th:class="${productList.first} ? 'disabled'" class="page-item">
             <a class="page-link"
-               th:href="${productList.first} ? '#' : @{|/product/${categoryId}/?page=${productList.number}|}">
+               th:href="${productList.first} ? '#' : @{|/product/${categoryId}/?page=${productList.number}&pageLimit=${pageLimit}|}">
                 <span><</span> <!-- < -->
             </a>
         </li>
 
         <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
             th:class="${page == productList.number + 1} ? 'page-item active'" class="page-item">
-            <a class="page-link" th:text="${page}" th:href="@{|/product/${categoryId}/?page=${page}|}"></a>
+            <a class="page-link" th:text="${page}" th:href="@{|/product/${categoryId}/?page=${page}&pageLimit=${pageLimit}|}"></a>
         </li>
 
         <li th:class="${productList.last} ? 'disabled'">
             <a class="page-link"
-               th:href="${productList.last} ? '#' : @{|/product/${categoryId}/?page=${productList.number + 2}|}">
+               th:href="${productList.last} ? '#' : @{|/product/${categoryId}/?page=${productList.number + 2}&pageLimit=${pageLimit}|}">
                 <span>&gt;</span>
             </a>
         </li>
 
         <li class="page-item">
-            <a class="page-link" th:href="@{|/product/${categoryId}/?page=${productList.totalPages}|}">
+            <a class="page-link" th:href="@{|/product/${categoryId}/?page=${productList.totalPages}&pageLimit=${pageLimit}|}">
                 <span>Last</span>
             </a>
         </li>
     </ul>
     <ul class="pagination justify-content-center" th:if="${sort.toString().equals('highPrice')}">
         <li class="page-item">
-            <a class="page-link" th:href="@{|/product/highPrice/${categoryId}/?page=1|}">
+            <a class="page-link" th:href="@{|/product/highPrice/${categoryId}/?page=1&pageLimit=${pageLimit}|}">
                 <span>First</span>
             </a>
         </li>
 
         <li th:class="${productList.first} ? 'disabled'" class="page-item">
             <a class="page-link"
-               th:href="${productList.first} ? '#' : @{|/product/highPrice/${categoryId}/?page=${productList.number}|}">
+               th:href="${productList.first} ? '#' : @{|/product/highPrice/${categoryId}/?page=${productList.number}&pageLimit=${pageLimit}|}">
                 <span><</span> <!-- < -->
             </a>
         </li>
 
         <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
             th:class="${page == productList.number + 1} ? 'page-item active'" class="page-item">
-            <a class="page-link" th:text="${page}" th:href="@{|/product/highPrice/${categoryId}/?page=${page}|}"></a>
+            <a class="page-link" th:text="${page}" th:href="@{|/product/highPrice/${categoryId}/?page=${page}&pageLimit=${pageLimit}|}"></a>
         </li>
 
         <li th:class="${productList.last} ? 'disabled'">
             <a class="page-link"
-               th:href="${productList.last} ? '#' : @{|/product/highPrice/${categoryId}/?page=${productList.number + 2}|}">
+               th:href="${productList.last} ? '#' : @{|/product/highPrice/${categoryId}/?page=${productList.number + 2}&pageLimit=${pageLimit}|}">
                 <span>&gt;</span>
             </a>
         </li>
 
         <li class="page-item">
-            <a class="page-link" th:href="@{|/product/highPrice/${categoryId}/?page=${productList.totalPages}|}">
+            <a class="page-link" th:href="@{|/product/highPrice/${categoryId}/?page=${productList.totalPages}&pageLimit=${pageLimit}|}">
                 <span>Last</span>
             </a>
         </li>
     </ul>
     <ul class="pagination justify-content-center" th:if="${sort.toString().equals('lowPrice')}">
         <li class="page-item">
-            <a class="page-link" th:href="@{|/product/lowPrice/${categoryId}/?page=1|}">
+            <a class="page-link" th:href="@{|/product/lowPrice/${categoryId}/?page=1&pageLimit=${pageLimit}|}">
                 <span>First</span>
             </a>
         </li>
 
         <li th:class="${productList.first} ? 'disabled'" class="page-item">
             <a class="page-link"
-               th:href="${productList.first} ? '#' : @{|/product/lowPrice/${categoryId}/?page=${productList.number}|}">
+               th:href="${productList.first} ? '#' : @{|/product/lowPrice/${categoryId}/?page=${productList.number}&pageLimit=${pageLimit}|}">
                 <span><</span> <!-- < -->
             </a>
         </li>
 
         <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
             th:class="${page == productList.number + 1} ? 'page-item active'" class="page-item">
-            <a class="page-link" th:text="${page}" th:href="@{|/product/lowPrice/${categoryId}/?page=${page}|}"></a>
+            <a class="page-link" th:text="${page}" th:href="@{|/product/lowPrice/${categoryId}/?page=${page}&pageLimit=${pageLimit}|}"></a>
         </li>
 
         <li th:class="${productList.last} ? 'disabled'">
             <a class="page-link"
-               th:href="${productList.last} ? '#' : @{|/product/lowPrice/${categoryId}/?page=${productList.number + 2}|}">
+               th:href="${productList.last} ? '#' : @{|/product/lowPrice/${categoryId}/?page=${productList.number + 2}&pageLimit=${pageLimit}|}">
                 <span>&gt;</span>
             </a>
         </li>
 
         <li class="page-item">
-            <a class="page-link" th:href="@{|/product/lowPrice/${categoryId}/?page=${productList.totalPages}|}">
+            <a class="page-link" th:href="@{|/product/lowPrice/${categoryId}/?page=${productList.totalPages}&pageLimit=${pageLimit}|}">
                 <span>Last</span>
             </a>
         </li>
     </ul>
     <ul class="pagination justify-content-center" th:if="${sort.toString().equals('star')}">
         <li class="page-item">
-            <a class="page-link" th:href="@{|/product/star/${categoryId}/?page=1|}">
+            <a class="page-link" th:href="@{|/product/star/${categoryId}/?page=1&pageLimit=${pageLimit}|}">
                 <span>First</span>
             </a>
         </li>
 
         <li th:class="${productList.first} ? 'disabled'" class="page-item">
             <a class="page-link"
-               th:href="${productList.first} ? '#' : @{|/product/star/${categoryId}/?page=${productList.number}|}">
+               th:href="${productList.first} ? '#' : @{|/product/star/${categoryId}/?page=${productList.number}&pageLimit=${pageLimit}|}">
                 <span><</span> <!-- < -->
             </a>
         </li>
 
         <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
             th:class="${page == productList.number + 1} ? 'page-item active'" class="page-item">
-            <a class="page-link" th:text="${page}" th:href="@{|/product/star/${categoryId}/?page=${page}|}"></a>
+            <a class="page-link" th:text="${page}" th:href="@{|/product/star/${categoryId}/?page=${page}&pageLimit=${pageLimit}|}"></a>
         </li>
 
         <li th:class="${productList.last} ? 'disabled'">
             <a class="page-link"
-               th:href="${productList.last} ? '#' : @{|/product/star/${categoryId}/?page=${productList.number + 2}|}">
+               th:href="${productList.last} ? '#' : @{|/product/star/${categoryId}/?page=${productList.number + 2}&pageLimit=${pageLimit}|}">
                 <span>&gt;</span>
             </a>
         </li>
 
         <li class="page-item">
-            <a class="page-link" th:href="@{|/product/star/${categoryId}/?page=${productList.totalPages}|}">
+            <a class="page-link" th:href="@{|/product/star/${categoryId}/?page=${productList.totalPages}&pageLimit=${pageLimit}|}">
                 <span>Last</span>
             </a>
         </li>
     </ul>
     <ul class="pagination justify-content-center" th:if="${sort.toString().equals('search')}">
         <li class="page-item">
-            <a class="page-link" th:href="@{|/product/search/?q=${q}&?page=1|}">
+            <a class="page-link" th:href="@{|/product/search/?q=${q}&?page=1&pageLimit=${pageLimit}|}">
                 <span>First</span>
             </a>
         </li>
 
         <li th:class="${productList.first} ? 'disabled'" class="page-item">
             <a class="page-link"
-               th:href="${productList.first} ? '#' : @{|/product/search/?q=${q}&?page=${productList.number}|}">
+               th:href="${productList.first} ? '#' : @{|/product/search/?q=${q}&?page=${productList.number}&pageLimit=${pageLimit}|}">
                 <span><</span> <!-- < -->
             </a>
         </li>
 
         <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
             th:class="${page == productList.number + 1} ? 'page-item active'" class="page-item">
-            <a class="page-link" th:text="${page}" th:href="@{|/product/search/?q=${q}&?page=${page}|}"></a>
+            <a class="page-link" th:text="${page}" th:href="@{|/product/search/?q=${q}&?page=${page}&pageLimit=${pageLimit}|}"></a>
         </li>
 
         <li th:class="${productList.last} ? 'disabled'">
             <a class="page-link"
-               th:href="${productList.last} ? '#' : @{|/product/search/?q={q}&?page=${productList.number + 2}|}">
+               th:href="${productList.last} ? '#' : @{|/product/search/?q={q}&?page=${productList.number + 2}&pageLimit=${pageLimit}|}">
                 <span>&gt;</span>
             </a>
         </li>
 
         <li class="page-item">
-            <a class="page-link" th:href="@{|/product/search/?q=${q}&?page=${productList.totalPages}|}">
+            <a class="page-link" th:href="@{|/product/search/?q=${q}&?page=${productList.totalPages}&pageLimit=${pageLimit}|}">
                 <span>Last</span>
             </a>
         </li>
