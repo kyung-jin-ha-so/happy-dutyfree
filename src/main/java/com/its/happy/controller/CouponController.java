@@ -34,7 +34,7 @@ public class CouponController {
     @PostMapping("/save")
     public String save(@ModelAttribute CouponDTO couponDTO)throws IOException {
         couponService.save(couponDTO);
-        return "index";
+        return "redirect:/admin/couponList";
     }
     //쿠폰발급
     @PostMapping("/issueCoupon")
@@ -81,6 +81,6 @@ public class CouponController {
     @PostMapping("/update")
     public String update(@ModelAttribute CouponDTO couponDTO){
         couponService.update(couponDTO);
-        return "redirect:/coupon/couponList";
+        return "redirect:/admin/couponList";
     }
 }
