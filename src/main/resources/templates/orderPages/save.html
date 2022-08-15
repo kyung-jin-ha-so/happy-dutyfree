@@ -33,6 +33,7 @@
             padding: 10px;
             text-align: center;
             background-color: lightgray;
+            width: 20%;
         }
 
         td {
@@ -190,6 +191,22 @@
             color: #444;
             font-weight: bold;
         }
+
+        input[type="button"] {
+            background: #222;
+            color: #fff;
+            margin-top: 30px;
+            height: 50px;
+            padding: 0;
+        }
+
+        input.width25 {
+            width: 24.3%
+        }
+
+        input.width50 {
+            width: 49.5%
+        }
     </style>
 </head>
 <body>
@@ -246,18 +263,21 @@
         <th>구매금액</th>
     </tr>
     <tr th:each="cart: ${cartList}">
-        <td style="text-align: center">
-            <span th:src="@{|/upload/${cart.productThumbnail}|}" width="100" height="100"></span>
-            <span th:text="${cart.productName}"></span></td>
+        <td style="text-align: left">
+            <img th:src="@{|/upload/${cart.productThumbnail}|}" width="100" height="100">
+            <a style="color: #0d6efd; cursor: pointer; text-decoration: underline; font-size: small"
+               th:text="${cart.productName}"
+               th:href="@{|/product/detail/${cart.productId}|}"></a>
+        </td>
         <td style="text-align: center">
             <span style="text-decoration: line-through; font-weight: bold"
-                  th:text="'$ ' + ${cart.productOriginalPrice}"></span><br>
-            <span style="color: red; font-weight: bold" th:text="'$ ' + ${cart.productPrice}"></span>
+                  th:text="'$ ' + ${#numbers.formatInteger(cart.productOriginalPrice, 0, 'COMMA')}"></span><br>
+            <span style="color: red; font-weight: bold" th:text="'$ ' + ${#numbers.formatInteger(cart.productPrice, 0, 'COMMA')}"></span>
         </td>
         <td style="text-align: center" th:text="${cart.cartQty}"></td>
         <td style="text-align: center" th:text="${cart.productDiscount} + '%'"></td>
         <td style="text-align: center">
-            <span style="color: red; font-weight: bold" th:text="'$ ' + ${cart.productPrice * cart.cartQty}"></span><br>
+            <span style="color: red; font-weight: bold" th:text="'$ ' + ${#numbers.formatInteger(cart.productPrice * cart.cartQty, 0, 'COMMA')}"></span><br>
             <span style="color: gray; font-size: small"
                   th:text="'(' + ${#numbers.formatInteger(cart.productPrice * cart.cartQty * session.exchangeRate, 1, 'COMMA') } + '원)'"></span>
         </td>
@@ -299,14 +319,15 @@
                 data-bs-auto-close="outside">
             나의 출국 예정일 불러오기
         </button>
-        <form class="dropdown-menu p-4" id="myDropdown">
+        <form class="dropdown-menu p-4">
             <div class="mb-3">
                 <label class="form-label">나의 출국정보</label>
             </div>
             <div class="mb-3">
                 <label class="form-label">
                     아래 출국정보를 선택하시면, 해당 정보로 자동 입력 됩니다.<br>
-                    출국정보는 MY행복 > <label onclick="location.href='/departure/';" style="font-weight: bold; cursor: pointer">출국정보관리</label>에서 등록/수정이 가능합니다.
+                    출국정보는 MY행복 > <label onclick="location.href='/departure/';"
+                                        style="font-weight: bold; cursor: pointer">출국정보관리</label>에서 등록/수정이 가능합니다.
                 </label>
             </div>
             <div class="mb-3">
@@ -319,7 +340,7 @@
                     </tr>
                     <tr th:each="departure: ${member.departureEntityList}">
                         <td style="text-align: center"><input type="radio" name="departureRadio"
-                                                              th:attrappend="id=${departureStat.index}"></td>
+                                                              th:attrappend="id=${departureStat.index}" data-bs-auto-close="dropdown"></td>
                         <td style="text-align: center" th:text="${departure.departureDate}"
                             th:id="${'departureDate' + departureStat.index}"></td>
                         <td style="text-align: center" th:text="${departure.departureAirport}"
@@ -353,13 +374,13 @@
     <tr>
         <th>출국일</th>
         <td>
-            <input type="text" id="datepicker" name="departureDate" class="input-group-sm">
+            <input type="text" id="datepicker" name="departureDate" class="input-group-sm" value="" autocomplete="off">
         </td>
     </tr>
     <tr>
         <th>편명</th>
         <td>
-            <input type="text" name="departureNumber" id="departureNumber" class="input-group-sm">
+            <input type="text" name="departureNumber" id="departureNumber" class="input-group-sm" value="">
             <a class="btn btn-primary" data-bs-toggle="modal" id="searchBtn" href="#exampleModalToggle" role="button"
                hidden></a>
             <a class="btn btn-primary" onclick="airportCheck()" role="button">편명 검색</a>
@@ -368,7 +389,8 @@
     <tr>
         <th>직항/경유 여부</th>
         <td>
-            <input type="radio" id="direct" name="departureFeature" value="직항" checked="checked" class="form-check-input">
+            <input type="radio" id="direct" name="departureFeature" value="직항" checked="checked"
+                   class="form-check-input">
             <label class="form-check-label" for="direct">
                 직항
             </label>
@@ -433,100 +455,79 @@
     <tr>
         <th>결제수단</th>
         <td>
-
             <input type="radio" id="card" name="payMethod" value="신용카드" onchange="payMethod()" class="form-check-input">
             <label class="form-check-label" for="card">
                 신용카드
             </label>
-            <input type="radio" id="kakao" name="payMethod" value="카카오페이" onchange="payMethod()" class="form-check-input">
+            <input type="radio" id="kakao" name="payMethod" value="카카오페이" onchange="payMethod()"
+                   class="form-check-input">
             <label class="form-check-label" for="kakao">
                 카카오페이
             </label>
-            <input type="radio" id="toss" name="payMethod" value="토스페이" onchange="payMethod()" class="form-check-input" checked>
+            <input type="radio" id="toss" name="payMethod" value="토스페이" onchange="payMethod()" class="form-check-input"
+                   checked>
             <label class="form-check-label" for="toss">
                 토스페이
             </label>
         </td>
     </tr>
 </table>
-<!--    신용카드 결제-->
-<!--<div id="cardDiv" style="display: none">-->
-<!--    <table>-->
-<!--        <tr>-->
-<!--            <th>카드종류</th>-->
-<!--            <td>-->
-<!--                <select>-->
-<!--                    <option value=""></option>-->
-<!--                </select>-->
-<!--            </td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <th>할부선택</th>-->
-<!--            <td>-->
-<!--                <select>-->
-<!--                    <option value=""></option>-->
-<!--                </select>-->
-<!--            </td>-->
-<!--        </tr>-->
-<!--    </table>-->
-<!--</div>-->
 <div class="pay_box" style="margin-top: 30px">
     <h2>최종 결제금액 내역</h2>
 </div>
 <table>
-    <tr>
-        <td>총 주문 상품</td>
-        <td th:text="${cartList.size()} + '개'"></td>
-        <td>
-            <button onclick="location.href='/cart/cartList';">상품 수정</button>
+    <tr style="vertical-align: top">
+        <td style="text-align: center">
+            <p style="font-weight: bold; font-size: large; color: black">총 주문 상품</p>
+            <span th:text="${#aggregates.sum(cartList.![cartQty])} + '개'"></span><br><br>
+            <button onclick="location.href='/cart/cartList';" class="btn btn-outline-dark">상품 수정</button>
         </td>
-    </tr>
-    <tr>
-        <td>총 주문금액</td>
-        <td th:text="'$ ' + ${#aggregates.sum(cartList.![productOriginalPrice * cartQty])}"></td>
-        <td th:text="'(' + ${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * session.exchangeRate, 1, 'COMMA') } + '원)'"></td>
-    </tr>
-    <tr>
-        <!--        모든 할인(인터넷할인, 적립금, 쿠폰)-->
-        <td>총 할인금액</td>
-        <td id="dcUsdText"
-            th:text="'$ ' + ${#numbers.formatInteger(#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty]), 1, 'COMMA')}"></td>
-        <input id="dcUsd" type="hidden"
-               th:value="${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}">
-        <td id="dcWonText"
-            th:text="'(' + ${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * session.exchangeRate, 1, 'COMMA')} + '원)'"></td>
-        <input id="dcWon" type="hidden"
-               th:value="${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * session.exchangeRate, 1)}">
+        <td style="text-align: center">
+            <p style="font-weight: bold; font-size: large; color: black">총 주문 금액</p>
+            <span style="font-weight: bold; font-size: xx-large; color: black"
+                  th:text="${'$' + #numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]), 1, 'COMMA')}"></span><br>
+            <span style="font-size: large"
+                  th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productOriginalPrice * cartQty]) * session.exchangeRate, 1, 'COMMA') + '원'}"></span><br>
+        </td>
+        <td style="text-align: center">
+            <p style="font-weight: bold; font-size: large; color: black">총 할인 금액</p>
+            <span id="dcUsdText" style="font-weight: bold; font-size: xx-large; color: black"
+                  th:text="${'$' + #numbers.formatInteger(#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty]), 1, 'COMMA')}"></span><br>
+            <input id="dcUsd" type="hidden"
+                   th:value="${#aggregates.sum(cartList.![(productOriginalPrice - productPrice) * cartQty])}">
+            <span id="dcWonText" style="font-size: large"
+                  th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * session.exchangeRate, 1, 'COMMA') + '원'}"></span><br>
+            <input id="dcWon" type="hidden"
+                   th:value="${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * session.exchangeRate, 1)}">
+            <span style="font-size: small">인터넷 회원 할인 적용(비과세)</span>
+            <span style="font-size: small; font-weight: bold"
+                  th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * session.exchangeRate, 1, 'COMMA') } + '원'"></span><br>
+            <span style="font-size: small">적립금 할인 적용(비과세)</span>
+            <span id="usePoint" style="font-size: small; font-weight: bold"
+            >0</span><span>원</span><br>
+            <span style="font-size: small">쿠폰 할인 적용(비과세)</span>
+            <span id="useCoupon" style="font-size: small; font-weight: bold"
+            ></span><span>원</span><br>
+        </td>
+        <td style="text-align: center">
+            <p style="font-weight: bold; font-size: large; color: black">최종 결제금액</p>
+            <span id="finalUsdText" style="font-weight: bold; font-size: xx-large; color: red"
+                  th:text="${'$' + #numbers.formatInteger(#aggregates.sum(cartList.![productPrice * cartQty]), 0, 'COMMA')}"></span><br>
+            <input type="hidden" id="finalUsd" th:value="${#aggregates.sum(cartList.![productPrice * cartQty])}">
+            <span id="finalWonText" style="font-size: large"
+                  th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productPrice * cartQty]) * session.exchangeRate, 1, 'COMMA')} + '원'"></span><br>
+            <input type="hidden" id="finalWon"
+                   th:value="${#numbers.formatInteger(#aggregates.sum(cartList.![productPrice * cartQty]) * session.exchangeRate, 0)}">
+        </td>
     </tr>
 </table>
-<table>
-    <tr>
-        <td>인터넷 회원 할인</td>
-        <td th:text="'-' + ${#numbers.formatInteger(#aggregates.sum(cartList.![((productOriginalPrice - productPrice) * cartQty)]) * session.exchangeRate, 1, 'COMMA') } + '원'"></td>
-    </tr>
-    <tr>
-        <td>적립금 사용</td>
-        <td>
-            <span id="usePoint">0</span><span>원</span>
-        </td>
-    </tr>
-    <tr>
-        <td>쿠폰 사용</td>
-        <td>
-            <span id="useCoupon">0</span><span>원</span>
-        </td>
-    </tr>
-</table>
-<p>최종 결제금액</p>
-<span id="finalUsdText" th:text="'$ ' + ${#aggregates.sum(cartList.![productPrice * cartQty])}"></span><br>
-<input type="hidden" id="finalUsd" th:value="${#aggregates.sum(cartList.![productPrice * cartQty])}">
-<span id="finalWonText"
-      th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![productPrice * cartQty]) * session.exchangeRate, 1, 'COMMA')} + '원'"></span>
-<input type="hidden" id="finalWon"
-       th:value="${#numbers.formatInteger(#aggregates.sum(cartList.![productPrice * cartQty]) * session.exchangeRate, 0)}">
-<p><input type="checkbox">주문 정보를 확인하였으며, 구매에 동의합니다.</p>
-<button id="requestPay" onclick="requestPay(this.name)" name="kakaopay.TC0ONETIME">주문하기
-</button>
+<div class="pay_box" style="margin-top: 30px">
+
+</div>
+<div style="text-align: center">
+    <p><input type="checkbox" class="form-check-input" id="payApprove">주문 정보를 확인하였으며, 구매에 동의합니다.</p>
+    <input type="button" id="requestPay" onclick="requestPay(this.name)" name="tosspay.tosstest" value="주문하기" class="width25" style="cursor: pointer">
+</div>
 
 <!--     modal-->
 <div class="modal fade modal-lg" id="exampleModalToggle" aria-hidden="true"
@@ -648,13 +649,13 @@
             console.log("useAll-if")
             // 적립금 사용 표현
             document.getElementById("inputPoint").value = pointWon;
-            document.getElementById("usePoint").innerHTML = (-pointWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
+            document.getElementById("usePoint").innerHTML = pointWon.toLocaleString('ko-KR', {maximumFractionDigits: 0});
             // 달러 총 할인금액 표현
             document.getElementById("dcUsd").value = netDcUsd + pointUsd + couponValueUsd;
             document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + pointUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
             // 원화 총 할인금액 표현
             document.getElementById("dcWon").value = netDcWon + pointWon + couponValueWon;
-            document.getElementById("dcWonText").innerText = '(' + (netDcWon + pointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            document.getElementById("dcWonText").innerText = (netDcWon + pointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
             // 최종 결제 달러 표현
             document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - pointUsd - couponValueUsd;
             document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - pointUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
@@ -665,13 +666,13 @@
             console.log("useAll-else if")
             // 적립금 사용 표현
             document.getElementById("inputPoint").value = finalWon;
-            document.getElementById("usePoint").innerHTML = (-finalWon).toLocaleString();
+            document.getElementById("usePoint").innerHTML = finalWon.toLocaleString();
             // 달러 총 할인금액 표현
             document.getElementById("dcUsd").value = netDcUsd + finalUsd + couponValueUsd;
             document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + finalUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
             // 원화 총 할인금액 표현
             document.getElementById("dcWon").value = netDcWon + finalWon + couponValueWon;
-            document.getElementById("dcWonText").innerText = '(' + (netDcWon + finalWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            document.getElementById("dcWonText").innerText = (netDcWon + finalWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
             // 최종 결제 달러 표현
             document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - finalUsd - couponValueUsd;
             document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - finalUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
@@ -688,7 +689,7 @@
             document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
             // 원화 총 할인금액 표현
             document.getElementById("dcWon").value = netDcWon + couponValueWon;
-            document.getElementById("dcWonText").innerText = '(' + (netDcWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            document.getElementById("dcWonText").innerText = (netDcWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
             // 최종 결제 달러 표현
             document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - couponValueUsd;
             document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
@@ -729,13 +730,13 @@
             console.log("inputPoint-else-if1")
             // 적립금 사용 표현
             document.getElementById("inputPoint").value = inputPointWon;
-            document.getElementById("usePoint").innerHTML = (-inputPointWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
+            document.getElementById("usePoint").innerHTML = inputPointWon.toLocaleString('ko-KR', {maximumFractionDigits: 0});
             // 달러 총 할인금액 표현
             document.getElementById("dcUsd").value = netDcUsd + inputPointUsd + couponValueUsd;
             document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + inputPointUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
             // 원화 총 할인금액 표현
             document.getElementById("dcWon").value = netDcWon + inputPointWon + couponValueWon;
-            document.getElementById("dcWonText").innerText = '(' + (netDcWon + inputPointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            document.getElementById("dcWonText").innerText = (netDcWon + inputPointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
             // 최종 결제 달러 표현
             document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd;
             document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
@@ -764,13 +765,13 @@
         const couponMemberId = $("#selectCoupon option:selected").attr("name");
         if (couponMemberId != null && couponValueWon <= finalWon) { // 쿠폰 선택 and 최종결제금액이 쿠폰금액보다 크거나 같음
             // 쿠폰 사용 표현
-            document.getElementById("useCoupon").innerHTML = (-couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
+            document.getElementById("useCoupon").innerHTML = couponValueWon.toLocaleString('ko-KR', {maximumFractionDigits: 0});
             // 달러 총 할인금액 표현
             document.getElementById("dcUsd").value = netDcUsd + inputPointUsd + couponValueUsd;
             document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + inputPointUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
             // 원화 총 할인금액 표현
             document.getElementById("dcWon").value = netDcWon + inputPointWon + couponValueWon;
-            document.getElementById("dcWonText").innerText = '(' + (netDcWon + inputPointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            document.getElementById("dcWonText").innerText = (netDcWon + inputPointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
             // 최종 결제 달러 표현
             document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd;
             document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
@@ -779,15 +780,16 @@
             document.getElementById("finalWonText").innerText = (totalOriginWon - netDcWon - inputPointWon - couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
         } else if (couponMemberId != null && couponValueWon > finalWon) { // 쿠폰 선택 and 최종결제금액이 쿠폰금액보다 작음
             alert("쿠폰 금액이 최종 결제 금액보다 큽니다.")
+            $("#selectCoupon option:eq(0)").prop("selected", true);
         } else { // '선택'을 선택
             // 쿠폰 사용 표현
-            document.getElementById("useCoupon").innerHTML = (-couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0});
+            document.getElementById("useCoupon").innerHTML = couponValueWon.toLocaleString('ko-KR', {maximumFractionDigits: 0});
             // 달러 총 할인금액 표현
             document.getElementById("dcUsd").value = netDcUsd + inputPointUsd + couponValueUsd;
             document.getElementById("dcUsdText").innerText = '$ ' + (netDcUsd + inputPointUsd + couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
             // 원화 총 할인금액 표현
             document.getElementById("dcWon").value = netDcWon + inputPointWon + couponValueWon;
-            document.getElementById("dcWonText").innerText = '(' + (netDcWon + inputPointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원)';
+            document.getElementById("dcWonText").innerText = (netDcWon + inputPointWon + couponValueWon).toLocaleString('ko-KR', {maximumFractionDigits: 0}) + '원';
             // 최종 결제 달러 표현
             document.getElementById("finalUsd").value = totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd;
             document.getElementById("finalUsdText").innerText = '$ ' + (totalOriginUsd - netDcUsd - inputPointUsd - couponValueUsd).toLocaleString('ko-KR', {maximumFractionDigits: 1});
@@ -800,8 +802,19 @@
     // 아임포트
     const IMP = window.IMP;
     IMP.init("imp66752664");
-
     function requestPay(pgName) {
+        if($("#departureAirport option:selected").val() == "") {
+            alert("출국장소를 선택해 주십시오.");
+        } else if(document.getElementById("datepicker").value == "") {
+            alert("출국일을 선택해 주십시오.");
+        } else if(document.getElementById("departureNumber").value == "") {
+            alert("편명을 선택해 주십시오.");
+        } else if($("#arrivalRegion option:selected").val() == "") {
+            alert("목적지를 선택해 주십시오.");
+        }
+        else if($('#payApprove').is(":checked") == false) {
+            alert("구매 동의를 체크해 주십시오.");
+        } else {
         // IMP.request_pay(param, callback) 결제창 호출
         IMP.request_pay({ // param
             pg: pgName,
@@ -823,7 +836,7 @@
             }
         });
     }
-
+    }
     function save() {
         const couponMemberId = $("#selectCoupon option:selected").attr("name");
         const memberId = [[${member.memberId}]];

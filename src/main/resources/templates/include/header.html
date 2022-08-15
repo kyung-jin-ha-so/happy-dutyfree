@@ -7,14 +7,14 @@
             <div id="haeder">
                 <div class="gnb">
                     <ul>
-                        <li><a href="/member/login">로그인</a></li>
-                        <li><a href="/member/save">회원가입</a></li>
-                        <li><a href="/myPageMain">MY행복</a></li>
-                        <li><a href="javascript:;" onclick="goCart()">장바구니</a></li>
-                        <li><a href="/member/logout">로그아웃</a></li>
+                        <li><div th:if="${session.loginEmail== null}"><a href="/member/login">로그인</a></div></li>
+                        <li><div th:if="${session.loginEmail== null}"><a href="/member/save">회원가입</a></div></li>
+                        <li><div th:if="${session.loginEmail=='admin'}"><a href="/adminMain">관리자페이지</a></div></li>
+                        <li><div th:if="${session.loginEmail!='admin'}"><a href="javascript:;" onclick="goMypage()">MY행복</a></div></li>
+                        <li><div th:if="${session.loginEmail!='admin'}"><a href="javascript:;" onclick="goCart()">장바구니</a></div></li>
+                        <li><div th:if="${session.loginEmail!= null}"><a href="/member/logout">로그아웃</a></div></li>
                         <li><a href="/index">인덱스</a></li>
-                        <li><a href="/adminMain">관리자페이지</a></li>
-                        <li><a href="https://open.kakao.com/o/sp1SU3ue" target=_blank>카카오 오픈채팅</a></li>
+                        <li><div th:if="${session.loginEmail!='admin'}"><a href="https://open.kakao.com/o/sp1SU3ue" target=_blank>카카오채팅 문의하기</a></div></li>
                         <li><a href="javascript:;">오늘의 환율 1$ = <b id="rate" th:text="${session.exchangeRate}"></b>원</a></li>
                         </li>
                     </ul>
@@ -192,34 +192,6 @@
         // });
     </script>
     <script th:inline="javascript">
-        function goCart() {
-            const loginId = [[${session.loginId}]];
-            console.log(loginId);
-            if (loginId == null) {
-                alert("로그인 후 이용 가능합니다.");
-            } else {
-                location.href = "/cart/cartList";
-            }
-        }
-
-
-    </script>
-
-    <script th:inline="javascript">
-        function goCart() {
-            const loginId = [[${session.loginId}]];
-            console.log(loginId);
-            if (loginId == null) {
-                alert("로그인 후 이용 가능합니다.");
-            } else {
-                location.href = "/cart/cartList";
-            }
-        }
-
-
-    </script>
-
-    <script th:inline="javascript">
         //비로그인시 장바구니 접근 불가
         function goCart() {
             console.log("함수 들어옴");
@@ -230,6 +202,18 @@
                 location.href = "/member/login";
             } else {
                 location.href = "/cart/cartList";
+            }
+        }
+
+        //비로그인시 my행복 접근불가
+        function goMypage() {
+            const loginId = [[${session.loginId}]];
+            console.log(loginId);
+            if (loginId == null) {
+                alert("로그인 후 이용 가능합니다.");
+                location.href = "/member/login";
+            } else {
+                location.href = "/myPageMain";
             }
         }
     </script>
