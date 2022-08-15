@@ -55,7 +55,6 @@ public class MemberService {
         }
     }
 
-
     // 이메일 중복체크
     public String emailDuplicateCheck(String memberEmail) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberEmail);
@@ -66,15 +65,6 @@ public class MemberService {
         }
     }
 
-    // 비밀번호 찾기 시 이메일 확인
-    public MemberDTO emailCheck(String memberEmail) {
-        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberEmail);
-        if (optionalMemberEntity.isPresent()) {
-            return MemberDTO.toMemberDTO(optionalMemberEntity.get());
-        } else {
-            return null;
-        }
-    }
 
     //핸드폰번호 중복체크
     public String mobileDuplicateCheck(String memberMobile) {
@@ -191,7 +181,6 @@ public class MemberService {
         return "NO";
     }
 
-
     public void passwordUpdate(MemberDTO memberDTO) {
         String password = memberDTO.getMemberPassword();
         String encodedPassword = passwordEncoder.encode(password);
@@ -199,7 +188,15 @@ public class MemberService {
         memberRepository.save(MemberEntity.toUpdate(memberDTO));
     }
 
-
+    // 비밀번호 찾기 시 이메일 확인
+    public MemberDTO emailCheck(String memberEmail) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberEmail);
+        if (optionalMemberEntity.isPresent()) {
+            return MemberDTO.toMemberDTO(optionalMemberEntity.get());
+        } else {
+            return null;
+        }
+    }
 
     // 비밀번호찾기 - 멤버아이디랑 해당 멤버아이디의 핸드폰번호가 일치하는지 확인
     public String emailMobileCheck(String memberId, String memberMobile) {
