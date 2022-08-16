@@ -14,17 +14,17 @@
         }
 
         .container-01 {
-            width: 100%;
-            height: 330px;
+            width: 90%;
+            height: 400px;
             display: flex;
-            margin: 0;
+            margin: auto;
             padding: 2rem 10rem;
         }
 
         .container-02 {
-            width: 100%;
+            width: 90%;
             display: flex;
-            margin: 0;
+            margin: auto;
             padding: 2rem 10rem;
         }
 
@@ -55,31 +55,42 @@
             padding: 5px;
             border: 1px solid #ccc;
         }
-        .search-container{
+
+        .search-container {
             width: 100%;
             display: flex;
-            margin: 0;
-            padding: 2rem 10rem;
+            padding-top: 30px;
+            padding-left: 1100px;
+        }
+
+        a {
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
 <th:block th:replace="include/header :: header"></th:block>
 
-<div class="search-container">
-    <form action="/event/search" method="get">
-        <input type="text" name="q" placeholder="이벤트 검색">
-        <input type="submit" value="검색">
-    </form>
-</div>
+<!--<div class="search-container">-->
+<!--    <form action="/event/search" method="get">-->
+<!--        <input type="text" name="q" placeholder="이벤트 검색">-->
+<!--        <input type="submit" value="검색">-->
+<!--    </form>-->
+<!--</div>-->
 <div class="container-01">
     <div class="nav-container">
         <div class="item item-01"
-             style="background-color: gray; color: white; font-weight: bold; font-size: 20px; padding-top: 10px">행복면세 쿠폰 혜택
+             style="background-color: gray; color: white; font-weight: bold; font-size: 25px; padding-top: 20px">행복면세 쿠폰
+            혜택
         </div>
-        <div class="item item-02" onclick="changeImg02()" style="height: 100px;">행복 회원분들! 쿠폰 챙겨가세요!</div>
-        <div class="item item-03" onclick="changeImg03()" style="height: 100px;">행복이가 생일을 챙겨드려요!</div>
-        <div class="item item-04" onclick="changeImg04()" style="height: 100px;">임진년을 맞아 호랑이띠 회원을 챙겨드려요!</div>
+        <div class="item item-02" onclick="changeImg02()" style="padding-top: 30px;font-weight: bold;">행복 회원분들! 쿠폰
+            챙겨가세요!
+        </div>
+        <div class="item item-03" onclick="changeImg03()" style="padding-top: 30px;font-weight: bold;">행복이가 생일을 챙겨드려요!
+        </div>
+        <div class="item item-04" onclick="changeImg04()" style="padding-top: 30px;font-weight: bold;">임진년을 맞아 호랑이띠 회원을
+            챙겨드려요!
+        </div>
     </div>
     <div class="img-container">
         <a href="#" class="img-link">
@@ -97,9 +108,9 @@
                     <img th:src="@{|/upload/${event.eventThumbnailName}|}" class="card-img-top" alt="..."></a>
                 <div class="card-body">
                     <a th:href="@{|/event/${event.eventId}(couponName=${event.couponEntity.couponName},couponId=${event.couponEntity.couponId})}"
-                       style="color: black"><h5 class="card-title" th:text="${event.eventTitle}"></h5></a>
-                    <a th:href="@{|/event/${event.eventId}(couponName=${event.couponEntity.couponName},couponId=${event.couponEntity.couponId})}"
-                       style="color: black"><p class="card-text" th:text="${event.eventContents}"></p></a>
+                       style="color: black;text-decoration:none;text-align: center;"><h5 class="card-title"
+                                                                                         th:text="${event.eventTitle}"></h5>
+                    </a>
                 </div>
             </div>
         </div>
@@ -161,10 +172,11 @@
         item02.style.backgroundColor = 'lightpink';
         item03.style.backgroundColor = '#fff';
         item04.style.backgroundColor = '#fff';
-        img.src = '/img/event_banner01.jpg';
-        link.href = "/event/6?couponName=띠&couponId=3"
+        img.src = '/img/every.jpg';
+        link.href = "/event/1?couponName=조건없음&couponId=1"
     }
     const changeImg03 = () => {
+        const link = document.querySelector('.img-link');
         const img = document.querySelector('.img');
         const item02 = document.querySelector('.item-02');
         const item03 = document.querySelector('.item-03');
@@ -173,9 +185,11 @@
         item03.style.backgroundColor = 'lightpink';
         item02.style.backgroundColor = '#fff';
         item04.style.backgroundColor = '#fff';
-        img.src = '/img/event_banner02.jpg';
+        img.src = '/img/birth.jpg';
+        link.href = "/event/2?couponName=생일&couponId=2"
     }
     const changeImg04 = () => {
+        const link = document.querySelector('.img-link');
         const img = document.querySelector('.img');
         const item02 = document.querySelector('.item-02');
         const item03 = document.querySelector('.item-03');
@@ -184,7 +198,8 @@
         item04.style.backgroundColor = 'lightpink';
         item02.style.backgroundColor = '#fff';
         item03.style.backgroundColor = '#fff';
-        img.src = '/img/event_banner03.jpg';
+        img.src = '/img/tiger.jpg';
+        link.href = "/event/3?couponName=띠&couponId=3"
     }
 </script>
 </html>
