@@ -219,7 +219,8 @@
         <div><img th:src="@{|/upload/${product.productThumbnail}|}" width="400" height="300" alt=""></div>
         <!--        상품 별점 표시 줄-->
         <div id="star_area">
-            <span th:text="'상품 만족도 ' + ${product.productStar}"></span>
+            <span th:text="'상품 만족도 ' + ${#numbers.formatDecimal(product.productStar, 1, 1)}"></span>
+
             <span th:if="${product.productStar >= 1}">
                     <i class="bi bi-star-fill"></i>
                 </span>
@@ -530,7 +531,7 @@
     //상품후기 tap
     const tap2Info = () => {
         let tabCont = document.getElementById("tab_cont");
-        let productStar = [[${product.productStar}]];
+        let productStar = [[${#numbers.formatDecimal(product.productStar, 1, 1)}]];
         let productReviewArray = new Array();
         let productReview = new Object();
 
