@@ -58,9 +58,9 @@
 
         .search-container {
             width: 100%;
-            display: flex;
             padding-top: 30px;
-            padding-left: 1100px;
+            text-align:center;
+            margin-bottom:20px;
         }
 
         a {
@@ -71,12 +71,7 @@
 <body>
 <th:block th:replace="include/header :: header"></th:block>
 
-<!--<div class="search-container">-->
-<!--    <form action="/event/search" method="get">-->
-<!--        <input type="text" name="q" placeholder="이벤트 검색">-->
-<!--        <input type="submit" value="검색">-->
-<!--    </form>-->
-<!--</div>-->
+
 <div class="container-01">
     <div class="nav-container">
         <div class="item item-01"
@@ -115,6 +110,12 @@
             </div>
         </div>
     </div>
+</div>
+<div class="search-container">
+    <form action="/event/search" method="get">
+        <input type="text" name="q">
+        <input type="submit" value="검색">
+    </form>
 </div>
 <div style="display: block">
     <div th:if="${startPage}" class="container">
@@ -159,7 +160,9 @@
             </li>
         </ul>
     </div>
+    <th:block th:replace="include/footer :: footer"></th:block>
 </div>
+
 </body>
 <script th:inline="javascript" th:each="event: ${eventList}">
     const changeImg02 = () => {

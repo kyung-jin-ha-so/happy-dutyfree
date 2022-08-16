@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />
     <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
     <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
+    <style>
+        .right_box {text-align:center;}
+        .right_box h2{font-size:40px; letter-spacing:-0.04em; color:#222; text-align:left}
+        .right_box p{padding-top:100px; font-size:24px; letter-spacing:-0.04em; color:#222; font-weight:bold}
+        .right_box p b{color:red}
+        .right_box .btn_box{padding-top:20px;}
+        .right_box .btn_box a{display:inline-block; width:100px; padding:10px; box-sizing:border-box; text-align:center; margin-right:10px; font-size:16px; letter-spacing:-0.04em; color:#fff; background:#aaa;}
+        .right_box .btn_box a:last-of-type{margin-right:0; background:red}
+    </style>
 </head>
 <body>
 <th:block th:replace="include/header :: header"></th:block>
@@ -41,11 +50,15 @@
             </div>
         </div>
         <div class="right_box">
-            <h1>회원탈퇴</h1>
-            회원 탈퇴시 복구가 불가능합니다<br>
-            정말 탈퇴하시겠습니까? <br>
-            <a href="/myPageMain">이전</a>
-            <button th:onclick="deleteMyself([[${session.loginId}]])">회원탈퇴</button>
+            <h2>회원탈퇴</h2>
+            <p>
+                회원 탈퇴시 <b>복구가 불가능</b>합니다. <br>
+                정말 <b>탈퇴</b> 하시겠습니까?
+            </p>
+            <div class="btn_box">
+                <a href="/myPageMain">이전</a>
+                <a th:onclick="deleteMyself([[${session.loginId}]])" class="red">회원탈퇴</a>
+            </div>
         </div>
     </div>
 </div>
