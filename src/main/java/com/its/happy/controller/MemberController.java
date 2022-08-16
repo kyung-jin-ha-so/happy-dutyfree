@@ -157,7 +157,7 @@ public class MemberController {
     @PostMapping("/passwordUpdate")
     public String passwordUpdate(@ModelAttribute MemberDTO memberDTO){
         memberService.passwordUpdate(memberDTO);
-        return "redirect:/member/login";
+        return "redirect:/myPageMain";
     }
 
     //비밀번호찾기 화면 이동
