@@ -47,6 +47,10 @@
 /*=========================================================
 	footer
 ==========================================================*/
-.copy{text-align:center; height:50px; background:#fff;}
-.copy p{font-size:12px; letter-spacing:-0.025em; color:#222; font-weight:300; line-height:50px;}
-/*#footer {height:80px; text-align:center;}*/
+#footer{width:1200px; margin:0 auto; padding:50px 0 10px; text-align:center;}
+#footer .logo{display:inline-block; vertical-align:middle;}
+#footer .addr_box{display:inline-block; vertical-align:middle; padding-left:50px; box-sizing:border-box; text-align:left;}
+#footer .addr_box ul li{display:inline-block; margin-right:10px; padding:3px 0; box-sizing:border-box; font-size:12px; color:#222;}
+#footer .copy{padding-top:20px;}
+#footer .copy p{font-size:12px; color:#999;}
+

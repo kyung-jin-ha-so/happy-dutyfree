@@ -1,9 +1,11 @@
 package com.its.happy.controller;
 
+import com.its.happy.dto.MemberDTO;
 import com.its.happy.dto.ReviewDTO;
 import com.its.happy.entity.OrderProductEntity;
 import com.its.happy.entity.ReviewEntity;
 import com.its.happy.repository.OrderProductRepository;
+import com.its.happy.service.MemberService;
 import com.its.happy.service.OrderProductService;
 import com.its.happy.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +30,18 @@ public class ReviewController {
 
     private final ReviewService reviewService;
     private final OrderProductService orderProductService;
+    private final MemberService memberService;
 
     //후기 저장하는 폼 보여주기
     @GetMapping("/save/{orderProductId}")
-    public String saveForm(@PathVariable Long orderProductId, Model model){
+    public String saveForm(@PathVariable Long orderProductId, Model model, HttpSession session){
         OrderProductEntity orderProductEntity = orderProductService.findById(orderProductId);
         model.addAttribute("productId", orderProductEntity.getProductEntity().getProductId());
         model.addAttribute("productName", orderProductEntity.getProductEntity().getProductName());
         model.addAttribute("orderId", orderProductEntity.getOrderEntity().getOrderId());
+        Long memberId = (long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
         return "/reviewPages/save";
     }
     //상품 후기 저장
@@ -51,14 +57,19 @@ public class ReviewController {
     public String findByMemberId(@PathVariable Long memberId, Model model){
         List<ReviewDTO> reviewDTOList = reviewService.findByMemberId(memberId);
         model.addAttribute("reviewList", reviewDTOList);
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
         return "/reviewPages/list";
     }
 
     //후기 수정 form 보여주기
     @GetMapping("/update/{reviewId}")
-    public String updateForm(@PathVariable Long reviewId, Model model){
+    public String updateForm(@PathVariable Long reviewId, Model model, HttpSession session){
         ReviewDTO reviewDTO = reviewService.findById(reviewId);
         model.addAttribute("review", reviewDTO);
+        Long memberId = (long) session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findById(memberId);
+        model.addAttribute("member",memberDTO);
         return "/reviewPages/update";
     }
 

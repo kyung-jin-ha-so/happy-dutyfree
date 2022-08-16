@@ -6,6 +6,16 @@
     <link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />
     <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
     <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
+    <style>
+        .right_box h1{color:#222; padding-bottom:30px;}
+        table{width:60%;}
+        table thead tr{border-bottom:1px solid #aaa;}
+        table thead tr th{padding:10px; box-sizing:border-box; background:#f5f5f5; text-align:center; font-size:16px; font-weight:bold; color:#222;}
+        table thead tr th:nth-of-type(1){border-right:1px solid #aaa;}
+        table tbody tr{border-bottom:1px solid #aaa;}
+        table tbody tr td{padding:10px; box-sizing:border-box; font-size:16px; color:#222; text-align:Center;}
+        table tbody tr td:nth-of-type(1){border-right:1px solid #aaa;}
+    </style>
 </head>
 <th:block th:replace="include/header :: header"></th:block>
 <th:block th:replace="include/myPageHeader :: myPageHeader"></th:block>
@@ -40,17 +50,27 @@
             </div>
         </div>
         <div class="right_box">
+            <h1>적립금 내역</h1>
             <table>
-                <tr>
-                    <th>포인트아이디</th>
-                    <th>사용금액</th>
-                    <th>사용시간</th>
-                </tr>
-                <tr th:each="point: ${pointList}">
-                    <td th:text="${point.pointId}"></td>
-                    <td th:text="${point.pointValue}"></td>
-                    <td th:text="${point.pointCreatedTime}"></td>
-                </tr>
+                <colgroup>
+<!--                    <col style="width:33%">-->
+                    <col style="width:50%">
+                    <col style="width:50%">
+                </colgroup>
+                <thead>
+                    <tr>
+<!--                        <th>포인트아이디</th>-->
+                        <th>사용금액(원)</th>
+                        <th>사용시간</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="point: ${pointList}">
+<!--                        <td th:text="${point.pointId}"></td>-->
+                        <td th:text="${point.pointValue}"></td>
+                        <td th:text="${point.pointCreatedTime}"></td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>

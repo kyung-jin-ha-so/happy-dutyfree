@@ -91,7 +91,7 @@ public class OrderService {
 
 //    오늘의 매출 계산
     public double findTodayRevenue() {
-        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0,0,0));
+        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
         LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
 
         List<OrderEntity> orderEntityList = orderRepository.findAllByCreatedTimeBetween(startDatetime, endDatetime);

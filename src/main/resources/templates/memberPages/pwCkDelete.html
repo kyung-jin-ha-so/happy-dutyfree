@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />
     <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
     <link rel="stylesheet" href="/css/basic.css" type="text/css" media="all"/>
+    <style>
+        .right_box {text-align:center;}
+        .right_box h2{font-size:40px; letter-spacing:-0.04em; color:#222; text-align:left}
+        .right_box p{padding-top:100px; font-size:24px; letter-spacing:-0.04em; color:#222; font-weight:bold}
+        .right_box p b{color:red}
+        .right_box form{margin-top:30px;}
+        .right_box input{width:200px; padding:10px; box-sizing:border-box;}
+        .right_box input[type="button"]{background:#222; color:#fff; margin-top:20px; height:30px; padding:0 10px; box-sizing:border-box; width:auto; font-size:16px;}
+    </style>
 </head>
 <body>
 <th:block th:replace="include/header :: header"></th:block>
@@ -43,11 +52,13 @@
         </div>
         <div class="right_box">
             <h2>비밀번호 확인</h2>
-            안전한 개인정보 보호를 위해 <br>
-            비밀번호를 다시한번 확인해주시기 바랍니다<br>
+            <p>
+                안전한 <b>개인정보 보호를 위해 <br>
+                비밀번호</b>를 다시한번 확인해주시기 바랍니다
+            </p>
             <form action="/member/passwordCheck" method="post" name="passwordUpdate">
                 <input type="hidden" name="memberId" id="memberId" th:value="${session.loginId}">
-                <input type="password" name="memberPassword" id="password" placeholder="비밀번호">
+                <input type="password" name="memberPassword" id="password" placeholder="비밀번호"> <br>
                 <input type="button" th:onclick="passwordCk()" value="확인">
             </form>
         </div>
