@@ -32,6 +32,9 @@
             bottom: 2em;
             padding-left: 40px;
         }
+        a {
+            text-decoration: none;
+        }
     </style>
     <title>Title</title>
 </head>
@@ -65,8 +68,8 @@
     <div class="event-contents">
     <div th:text="${event.eventContents}"></div>
     </div>
-    <th:block th:replace="include/footer :: footer"></th:block>
 </div>
+<th:block th:replace="include/footer :: footer"></th:block>
 
 </body>
 <script>

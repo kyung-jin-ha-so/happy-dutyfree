@@ -42,7 +42,6 @@ public class HomeController {
         ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByDate();
         model.addAttribute("categoryList", categoryDTOList);
         model.addAttribute("productList", productDTOList);
-//        model.addAttribute("exchangeRateDTO", exchangeRateDTO);
         session.setAttribute("exchangeRate", exchangeRateDTO.getExchangeRate());
         return "main";
     }

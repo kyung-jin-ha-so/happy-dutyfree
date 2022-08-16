@@ -126,22 +126,6 @@
         });
 
         //최근 검색어 삭제하는 함수
-        // const searchDelete = (searchId) => {
-        //     $.ajax({
-        //         method: "post",
-        //         url: "/search/delete",
-        //         data: {"searchId": searchId},
-        //         dataType: "text",
-        //         success: function (res) {
-        //             console.log(res);
-        //             location.reload();
-        //         }, error: function () {
-        //             alert("ajax 오류")
-        //         }
-        // });
-        // };
-
-
         const searchDelete = (searchId) => {
             let locationSearch = location.search;
             const urlParams = new URLSearchParams(locationSearch);

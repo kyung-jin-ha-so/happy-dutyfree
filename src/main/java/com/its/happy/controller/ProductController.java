@@ -72,7 +72,7 @@ public class ProductController {
 
     //상품목록 (카테고리별)
     @GetMapping("/{categoryId}/")
-    public String findByCategory(@PathVariable Long categoryId, @RequestParam(defaultValue = "2", required = false) int pageLimit,
+    public String findByCategory(@PathVariable Long categoryId, @RequestParam(defaultValue = "5", required = false) int pageLimit,
                                  @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByCategory(pageable, categoryId, pageLimit);
         long count = productService.countByCategoryId(categoryId);
@@ -95,7 +95,7 @@ public class ProductController {
 
     //가격 높은 순으로 상품 목록 출력
     @GetMapping("/highPrice/{categoryId}/")
-    public String findByHighPrice(@PathVariable Long categoryId, @RequestParam(defaultValue = "2", required = false) int pageLimit,
+    public String findByHighPrice(@PathVariable Long categoryId, @RequestParam(defaultValue = "5", required = false) int pageLimit,
                                   @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByHighPrice(pageable, categoryId, pageLimit);
         model.addAttribute("productList", productList);
@@ -117,7 +117,7 @@ public class ProductController {
     }
     //가격 낮은 순으로 상품 목록 출력
     @GetMapping("/lowPrice/{categoryId}/")
-    public String findByLowPrice(@PathVariable Long categoryId,  @RequestParam(defaultValue = "2", required = false) int pageLimit,
+    public String findByLowPrice(@PathVariable Long categoryId,  @RequestParam(defaultValue = "5", required = false) int pageLimit,
                                  @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByLowPrice(pageable, categoryId, pageLimit);
         model.addAttribute("productList", productList);
@@ -140,7 +140,7 @@ public class ProductController {
 
     // 별점 높은 순으로 상품 목록 출력
     @GetMapping("/star/{categoryId}/")
-    public String findByStar(@PathVariable Long categoryId, @RequestParam(defaultValue = "2", required = false) int pageLimit,
+    public String findByStar(@PathVariable Long categoryId, @RequestParam(defaultValue = "5", required = false) int pageLimit,
                              @PageableDefault(page = 1) Pageable pageable, Model model) {
         Page<ProductDTO> productList = productService.findByStar(pageable, categoryId, pageLimit);
         model.addAttribute("productList", productList);

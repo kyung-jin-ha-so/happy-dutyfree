@@ -58,6 +58,7 @@
 
         .search-container {
             width: 100%;
+            display: flex;
             padding-top: 30px;
             text-align:center;
             margin-bottom:20px;
@@ -111,12 +112,12 @@
         </div>
     </div>
 </div>
-<div class="search-container">
-    <form action="/event/search" method="get">
-        <input type="text" name="q">
-        <input type="submit" value="검색">
-    </form>
-</div>
+<!--<div class="search-container">-->
+<!--    <form action="/event/search" method="get">-->
+<!--        <input type="text" name="q">-->
+<!--        <input type="submit" value="검색">-->
+<!--    </form>-->
+<!--</div>-->
 <div style="display: block">
     <div th:if="${startPage}" class="container">
         <ul class="pagination justify-content-center">
@@ -162,7 +163,6 @@
     </div>
     <th:block th:replace="include/footer :: footer"></th:block>
 </div>
-
 </body>
 <script th:inline="javascript" th:each="event: ${eventList}">
     const changeImg02 = () => {
