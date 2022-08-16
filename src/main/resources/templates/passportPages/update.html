@@ -108,7 +108,7 @@
         <div class="right_box" style="width: 840px;">
             <!-- 내용삽입자리 -->
             <h1>여권정보관리</h1>
-            반드시 본인의 여권정보를 입력해주시기 바랍니다.
+            <span style="">반드시 본인의 여권정보를 입력해주시기 바랍니다.</span>
             <form action="/passport/save" method="post">
                 <td><input type="hidden" name="passportId" th:value="${passport.passportId}"></td>
                 <table>
@@ -122,11 +122,11 @@
                     </tr>
                     <tr>
                         <th>여권만료일</th>
-                        <td><input type="text" name="passportDate" th:value="${passport.passportDate}"></td>
+                        <td><input type="text" name="passportDate" th:value="${passport.passportDate}" placeholder="2025-09-24"></td>
                     </tr>
                     <tr>
                         <th>영문이름</th>
-                        <td><input type="text" name="passportName" th:value="${passport.passportName}"></td>
+                        <td><input type="text" name="passportName" th:value="${passport.passportName}" placeholder="HONG GILDOG"></td>
                     </tr>
                 </table>
                 <input type="submit" value="수정완료">
