@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="/css/layout.css" type="text/css" media="all"/>
+    <style>
+        .type01{text-align:center; padding-top:200px;}
+        .type01 p{font-size:24px; letter-spacing:-0.04em; color:#222; font-weight:500}
+    </style>
 </head>
 <body>
 <th:block th:replace="include/header :: header"></th:block>
-아이디 : <span th:text="${member.memberEmail}"></span>
+<!--아이디 : <span th:text="${member.memberEmail}"></span>-->
+<div id="wrap" class="type01">
+    <p>당신의 아이디는 "<b th:text="${member.memberEmail}"></b>" 입니다.</p>
+</div>
 </body>
 </html>
