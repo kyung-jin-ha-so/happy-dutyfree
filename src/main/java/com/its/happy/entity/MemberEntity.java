@@ -58,11 +58,11 @@ public class MemberEntity extends BaseEntity{
     private List<SearchEntity> searchEntityList = new ArrayList<>();
 
     // 회원(1)이 찜(n)한테 참조당함
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<LikeEntity> likeEntityList = new ArrayList<>();
 
     // 회원(1)이 장바구니(n)한테 참조당함
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CartEntity> cartEntityList = new ArrayList<>();
 
     // 회원(1)이 주문(n)한테 참조당함
@@ -70,15 +70,15 @@ public class MemberEntity extends BaseEntity{
     private List<OrderEntity> orderEntityList = new ArrayList<>();
 
     // 회원(1)이 주문출국정보(n)한테 참조당함 orderDeparture
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderDepartureEntity> orderDepartureEntityList = new ArrayList<>();
 
     // 회원(1)이 쿠폰회원연결테이블(n)한테 참조당함 coupon_member
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CouponMemberEntity> couponMemberEntityList = new ArrayList<>();
 
     //회원(1)이 출국정보(n)한테 참조당함 departure
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DepartureEntity> departureEntityList = new ArrayList<>();
 
 
