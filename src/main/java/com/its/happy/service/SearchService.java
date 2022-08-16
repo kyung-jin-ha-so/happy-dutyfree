@@ -18,6 +18,7 @@ public class SearchService {
 
     private final SearchRepository searchRepository;
 
+    //회원별 최근 검색어 찾기
     public List<SearchDTO> findByMemberId(Long loginId) {
         List<SearchEntity> searchEntityList = searchRepository.findTop10ByMemberEntityMemberId(loginId, Sort.by(Sort.Direction.DESC, "createdTime"));
         List<SearchDTO> searchDTOList = new ArrayList<>();
@@ -26,6 +27,7 @@ public class SearchService {
         }return searchDTOList;
     }
 
+    // 최근 검색어 삭제
     public void deleteById(Long searchId) {
         searchRepository.deleteById(searchId);
     }

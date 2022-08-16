@@ -19,12 +19,14 @@ public class SearchController {
 
     private final SearchService searchService;
 
+    //최근 검색어 찾기
     @PostMapping("/find")
     public @ResponseBody List<SearchDTO> searchFind(@RequestParam Long loginId) {
         List<SearchDTO> searchDTOList = searchService.findByMemberId(loginId);
         return searchDTOList;
     }
 
+    //최근 검색어 테이블에서 검색어 삭제
     @PostMapping("/delete")
     public @ResponseBody String searchDeleteById(@RequestParam("searchId") Long searchId) {
         searchService.deleteById(searchId);
