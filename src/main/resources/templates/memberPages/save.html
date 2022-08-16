@@ -19,6 +19,7 @@
         input[type="submit"]{background:#222; color:#fff; margin-top:30px; height:50px; padding:0;}
         a.black02{margin-left:10px; display:inline-block; height:40px; line-height:40px; text-align:center; width:60px; background:#222; color:#fff; font-size:16px; letter-spacing:-0.04em; font-weight:400; font-size:12px;}
         p{margin:0 0 10px 0; padding-top:20px;}
+        form > div{font-size:13px;}
 
         #wrap02{width:350px; margin:50px auto 150px;}
         .tit{ text-align:center; padding-bottom:30px;}
@@ -154,20 +155,15 @@
 
     // 인증문자 보내기
     $('#sendSMS').click(function() {
-
         const memberMobile = $('#memberMobile').val();
-
         $.ajax ({
             url: '/member/sendSMS',
             type: 'GET',
             data: {"memberMobile" : memberMobile},
             success: function(data) {
                 const checkNum = data;
-
                 console.log(checkNum)
-
                 alert('문자를 확인해주세요');
-
                 // 인증문자확인 버튼 클릭시 호출
                 $('#mobileCk').click(function() {
                     const userNum = $('#userNum').val();
@@ -179,10 +175,8 @@
                         alert('인증 실패하였습니다. 다시 입력해주세요.');
                     }
                 });
-
             }
         });
-
     });
 
     // 비밀번호 정규식

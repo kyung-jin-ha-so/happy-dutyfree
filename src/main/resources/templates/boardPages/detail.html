@@ -65,7 +65,9 @@
     <div class="event-contents">
     <div th:text="${event.eventContents}"></div>
     </div>
+    <th:block th:replace="include/footer :: footer"></th:block>
 </div>
+
 </body>
 <script>
     const eventDelete = () => {

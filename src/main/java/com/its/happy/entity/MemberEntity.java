@@ -42,7 +42,7 @@ public class MemberEntity extends BaseEntity{
     private String memberTier;
 
     // 회원(1)이 적립금(n)한테 참조당함
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PointEntity> pointEntityList = new ArrayList<>();
 
     // 회원(1)이 여권정보(1)한테 참조당함
