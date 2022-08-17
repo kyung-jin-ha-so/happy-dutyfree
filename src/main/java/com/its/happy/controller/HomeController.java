@@ -51,7 +51,7 @@ public class HomeController {
         Long memberId = (Long) session.getAttribute("loginId");
         MemberDTO memberDTO = memberService.findById(memberId);
         model.addAttribute("member",memberDTO);
-        return "myPages/main";
+        return "/myPages/main";
     }
 
     @GetMapping("/adminMain")
